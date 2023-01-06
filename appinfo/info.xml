@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
+    <!--
+    SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
+    SPDX-License-Identifier: CC0-1.0
+    -->
+    <id>openincryptpad</id>
+    <name>Open In Cryptpad</name>
+    <summary>Open files in CryptPad</summary>
+    <description><![CDATA[Open files in CryptPad and collaborate in real time.]]></description>
+    <version>0.0.1</version>
+    <licence>agpl</licence>
+    <author mail="wolfgang.ginolas@xwiki.com" homepage="https://xwiki.com">Wolfgang Ginolas</author>
+    <namespace>OpenInCryptpad</namespace>
+    <category>integration</category>
+    <bugs>https://xwiki.com</bugs>
+    <dependencies>
+        <nextcloud min-version="25" max-version="25"/>
+    </dependencies>
+    <navigations>
+        <navigation>
+            <name>Open In Cryptpad</name>
+            <route>openincryptpad.page.index</route>
+        </navigation>
+    </navigations>
+</info>
