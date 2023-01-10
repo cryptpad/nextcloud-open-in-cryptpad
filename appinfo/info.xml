@@ -14,14 +14,11 @@
     <author mail="wolfgang.ginolas@xwiki.com" homepage="https://xwiki.com">Wolfgang Ginolas</author>
     <namespace>OpenInCryptpad</namespace>
     <category>integration</category>
+    <types>
+      <filesystem/> <!-- TODO is this needed? Remove if not -->
+    </types>
     <bugs>https://xwiki.com</bugs>
     <dependencies>
         <nextcloud min-version="25" max-version="25"/>
     </dependencies>
-    <navigations>
-        <navigation>
-            <name>Open In Cryptpad</name>
-            <route>openincryptpad.page.index</route>
-        </navigation>
-    </navigations>
 </info>

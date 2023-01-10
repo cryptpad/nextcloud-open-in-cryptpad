@@ -6,11 +6,29 @@ declare(strict_types=1);
 namespace OCA\OpenInCryptpad\AppInfo;
 
 use OCP\AppFramework\App;
+use OCP\AppFramework\Bootstrap\IBootContext;
+use OCP\AppFramework\Bootstrap\IBootstrap;
+use OCP\AppFramework\Bootstrap\IRegistrationContext;
+use OCP\Util;
+use function OCP\Log\logger;
 
-class Application extends App {
+class Application extends App implements IBootstrap {
 	public const APP_ID = 'openincryptpad';
 
 	public function __construct() {
 		parent::__construct(self::APP_ID);
+		logger(self::APP_ID)->error('openincryptpad __construct');
+	}
+
+	public function register(IRegistrationContext $context): void {
+		logger(self::APP_ID)->error('openincryptpad register');
+		/**
+		 * Always add main script
+		 */
+		Util::addScript(self::APP_ID, 'openincryptpad-main');
+	}
+
+	public function boot(IBootContext $context): void {
+		logger(self::APP_ID)->error('openincryptpad boot');
 	}
 }
