@@ -19,6 +19,7 @@ return [
 	'routes' => [
 		['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
 		['name' => 'note_api#preflighted_cors', 'url' => '/api/0.1/{path}',
-			'verb' => 'OPTIONS', 'requirements' => ['path' => '.+']]
+			'verb' => 'OPTIONS', 'requirements' => ['path' => '.+']],
+        ['name' => 'cryptpad_session#get', 'url' => '/session/{id}', 'verb' => 'GET'],
 	]
 ];
