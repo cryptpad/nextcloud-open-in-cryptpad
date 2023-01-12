@@ -25,24 +25,14 @@ class Version000000Date20181013124731 extends SimpleMigrationStep {
 		if (!$schema->hasTable('openincryptpad')) {
 			$table = $schema->createTable('openincryptpad');
 			$table->addColumn('id', 'integer', [
-				'autoincrement' => true,
 				'notnull' => true,
 			]);
-			$table->addColumn('title', 'string', [
+			$table->addColumn('session_key', 'string', [
 				'notnull' => true,
-				'length' => 200
-			]);
-			$table->addColumn('user_id', 'string', [
-				'notnull' => true,
-				'length' => 200,
-			]);
-			$table->addColumn('content', 'text', [
-				'notnull' => true,
-				'default' => ''
+				'length' => 64
 			]);
 
 			$table->setPrimaryKey(['id']);
-			$table->addIndex(['user_id'], 'openincryptpad_user_id_index');
 		}
 		return $schema;
 	}
