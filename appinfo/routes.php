@@ -22,5 +22,7 @@ return [
 			'verb' => 'OPTIONS', 'requirements' => ['path' => '.+']],
 		['name' => 'cryptpad_session#get', 'url' => '/session/{id}', 'verb' => 'GET'],
 		['name' => 'cryptpad_session#put', 'url' => '/session/{id}', 'verb' => 'PUT'],
+		['name' => 'settings#getCryptPadUrl', 'url' => '/settings/cryptPadUrl', 'verb' => 'GET'],
+		['name' => 'settings#setCryptPadUrl', 'url' => '/settings/cryptPadUrl', 'verb' => 'PUT'],
 	]
 ];

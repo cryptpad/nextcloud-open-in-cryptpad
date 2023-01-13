@@ -21,4 +21,8 @@
     <dependencies>
         <nextcloud min-version="25" max-version="25"/>
     </dependencies>
+    <settings>
+        <admin>OCA\OpenInCryptpad\Settings\Admin</admin>
+        <admin-section>OCA\OpenInCryptpad\Settings\AdminSection</admin-section>
+    </settings>
 </info>
