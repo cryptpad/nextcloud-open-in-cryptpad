@@ -17,11 +17,9 @@ class Application extends App implements IBootstrap {
 
 	public function __construct() {
 		parent::__construct(self::APP_ID);
-		logger(self::APP_ID)->error('openincryptpad __construct');
 	}
 
 	public function register(IRegistrationContext $context): void {
-		logger(self::APP_ID)->error('openincryptpad register');
 		/**
 		 * Always add main script
 		 */
@@ -29,6 +27,5 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function boot(IBootContext $context): void {
-		logger(self::APP_ID)->error('openincryptpad boot');
 	}
 }

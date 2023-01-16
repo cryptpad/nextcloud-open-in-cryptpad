@@ -1,8 +1,3 @@
-import { generateFilePath } from '@nextcloud/router'
-
-// eslint-disable-next-line
-__webpack_public_path__ = generateFilePath(appName, '', 'js/')
-
 async function handleOpenInCryptpad(filename, context) {
     console.log('Open in CryptPad', filename, context);
     const fileId = context.fileInfoModel.id;
