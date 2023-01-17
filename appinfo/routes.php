@@ -12,14 +12,7 @@ declare(strict_types=1);
  * it's instantiated in there
  */
 return [
-	'resources' => [
-		'note' => ['url' => '/notes'],
-		'note_api' => ['url' => '/api/0.1/notes']
-	],
 	'routes' => [
-		['name' => 'page#index', 'url' => '/', 'verb' => 'GET'],
-		['name' => 'note_api#preflighted_cors', 'url' => '/api/0.1/{path}',
-			'verb' => 'OPTIONS', 'requirements' => ['path' => '.+']],
 		['name' => 'cryptpad_session#get', 'url' => '/session/{id}', 'verb' => 'GET'],
 		['name' => 'cryptpad_session#put', 'url' => '/session/{id}', 'verb' => 'PUT'],
 		['name' => 'settings#getCryptPadUrl', 'url' => '/settings/cryptPadUrl', 'verb' => 'GET'],

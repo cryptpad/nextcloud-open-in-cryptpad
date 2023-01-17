@@ -1,6 +1,12 @@
+import { confirmPassword } from '@nextcloud/password-confirmation'
+import '@nextcloud/password-confirmation/dist/style.css' // Required for dialog styles
+
 async function handleSave() {
     const url = document.getElementById('openincryptpad-url').value;
     console.log("save", url);
+
+    await confirmPassword();
+
     await fetch(
         OC.generateUrl('/apps/openincryptpad/settings/cryptPadUrl'),
         {
