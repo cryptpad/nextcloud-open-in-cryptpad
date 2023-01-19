@@ -1,21 +1,25 @@
+import simpleCache from "./simpleCache";
+
 async function handleOpenInCryptpad(filename, context) {
     console.log('Open in CryptPad', filename, context);
-    const fileId = context.fileInfoModel.id;
+    await loadCryptPadApi();
+    console.log('API loaded');
+    // const fileId = context.fileInfoModel.id;
 
-    let sessionKey = await getSessionForFile(fileId);
+    // let sessionKey = await getSessionForFile(fileId);
 
-    if (sessionKey == null || !CryptPad.isSessionActive(sessionKey)) {
-        sessionKey = CryptPad.getSessionKey();
-        await updateSessionForFile(fileId, sessionKey);
-    }
+    // if (sessionKey == null || !CryptPad.isSessionActive(sessionKey)) {
+    //     sessionKey = CryptPad.getSessionKey();
+    //     await updateSessionForFile(fileId, sessionKey);
+    // }
 
-    CryptPad.start({
-        application: 'code',
-        document: 'TODO',
-        sessionKey: sessionKey,
-        onSave: function () {console.log('CryptPad onSave');},
-        userData: null,
-    });
+    // CryptPad.start({
+    //     application: 'code',
+    //     document: 'TODO',
+    //     sessionKey: sessionKey,
+    //     onSave: function () {console.log('CryptPad onSave');},
+    //     userData: null,
+    // });
 }
 
 async function getSessionForFile(fileId) {
@@ -47,6 +51,37 @@ async function updateSessionForFile(fileId, sessionKey) {
             body: JSON.stringify({sessionKey: sessionKey})
         }
     );
+}
+
+const loadCryptPadApi = simpleCache(async function() {
+    await loadJavaScript(OC.generateUrl('/apps/openincryptpad/cryptpad-api.js'));
+});
+
+async function getCryptPadApiJsUrl() {
+    const response = await fetch(
+        OC.generateUrl('/apps/openincryptpad/settings/cryptPadUrl'),
+        {
+            headers: {
+                requesttoken: OC.requestToken
+            }
+        }
+    );
+    if (response.ok) {
+        const body = await response.json();
+        return body.url;
+    } else {
+        return null;
+    }
+}
+
+function loadJavaScript(url) {
+    return new Promise((resolve) => {
+        const script = document.createElement('script');
+        script.nonce = OC.requestToken;
+        script.onload = resolve
+        script.src = url;
+        document.head.appendChild(script);
+    });
 }
 
 window.addEventListener('DOMContentLoaded', function() {
