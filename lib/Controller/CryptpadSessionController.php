@@ -66,11 +66,8 @@ class CryptpadSessionController extends Controller {
 	}
 
 	private function hasWritePermission(int $fileId): bool {
-		$this->logger->error('hasWritePermission', ['fileId' => $fileId]);
 		$nodes = $this->rootFolder->getById($fileId);
-		$this->logger->error('hasWritePermission nodes', ['nodes' => $nodes]);
 		foreach ($nodes as &$node) {
-			$this->logger->error('hasWritePermission node', ['node' => $node]);
 			if ($node->isUpdateable()) {
 				return true;
 			}
