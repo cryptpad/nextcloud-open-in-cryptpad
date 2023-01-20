@@ -18,5 +18,6 @@ return [
 		['name' => 'settings#getCryptPadUrl', 'url' => '/settings/cryptPadUrl', 'verb' => 'GET'],
 		['name' => 'settings#setCryptPadUrl', 'url' => '/settings/cryptPadUrl', 'verb' => 'PUT'],
 		['name' => 'cryptpad_api#load', 'url' => '/cryptpad-api.js', 'verb' => 'GET'],
+		['name' => 'editor#page', 'url' => '/editor/{fileId}', 'verb' => 'GET'],
 	]
 ];

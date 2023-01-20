@@ -4,5 +4,6 @@ const path = require('path')
 const webpackConfig = require('@nextcloud/webpack-vue-config')
 
 webpackConfig.entry.settings = path.resolve(path.join('src', 'settings.js'));
+webpackConfig.entry.editor = path.resolve(path.join('src', 'editor.js'));
 
 module.exports = webpackConfig

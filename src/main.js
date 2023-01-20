@@ -2,9 +2,9 @@ import simpleCache from "./simpleCache";
 
 async function handleOpenInCryptpad(filename, context) {
     console.log('Open in CryptPad', filename, context);
-    await loadCryptPadApi();
-    console.log('API loaded');
-    // const fileId = context.fileInfoModel.id;
+    const fileId = context.fileInfoModel.id;
+    location.href = OC.generateUrl(`/apps/openincryptpad/editor/${fileId}`);
+
 
     // let sessionKey = await getSessionForFile(fileId);
 
@@ -20,37 +20,6 @@ async function handleOpenInCryptpad(filename, context) {
     //     onSave: function () {console.log('CryptPad onSave');},
     //     userData: null,
     // });
-}
-
-async function getSessionForFile(fileId) {
-    const response = await fetch(
-        OC.generateUrl(`/apps/openincryptpad/session/${fileId}`),
-        {
-            headers: {
-                requesttoken: OC.requestToken
-            }
-        }
-    );
-    if (response.ok) {
-        const body = await response.json();
-        return body.sessionKey;
-    } else {
-        return null;
-    }
-}
-
-async function updateSessionForFile(fileId, sessionKey) {
-    await fetch(
-        OC.generateUrl(`/apps/openincryptpad/session/${fileId}`),
-        {
-            method: 'PUT',
-            headers: {
-                requesttoken: OC.requestToken,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({sessionKey: sessionKey})
-        }
-    );
 }
 
 const loadCryptPadApi = simpleCache(async function() {
