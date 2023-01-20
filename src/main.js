@@ -2,9 +2,10 @@ import simpleCache from "./simpleCache";
 
 async function handleOpenInCryptpad(filename, context) {
     console.log('Open in CryptPad', filename, context);
-    const fileId = context.fileInfoModel.id;
-    location.href = OC.generateUrl(`/apps/openincryptpad/editor/${fileId}`);
-
+    location.href = OC.generateUrl('/apps/openincryptpad/editor?id={id}&path={path}', {
+        id: context.fileInfoModel.id,
+        path: context.fileInfoModel.getFullPath()
+    });
 
     // let sessionKey = await getSessionForFile(fileId);
 

@@ -1,13 +1,10 @@
 window.addEventListener('DOMContentLoaded', async function() {
     try {
-        const parts = location.href.split('/');
-        const fileId = parts.pop() || parts.pop();  // handle potential trailing slash
+        const { fileId, filePath } = parseUrl();
         const sessionKey = await getSessionForFile(fileId);
 
-        var mystring = "Hello World!";
-        var blob = new Blob([mystring], {
-            type: 'text/markdown'
-        });
+        const blob = await loadFileContent(filePath);
+
         var docUrl = URL.createObjectURL(blob);
 
         CryptPadAPI(window.OpenInCryptPadConfig.cryptPadUrl, 'editor-content', {
@@ -34,6 +31,38 @@ window.addEventListener('DOMContentLoaded', async function() {
         console.error(e);
     }
 });
+
+function parseUrl() {
+    const params = new URLSearchParams(location.search);
+    return {
+        fileId: params.get('id'),
+        filePath: params.get('path')
+    };
+}
+
+async function loadFileContent(filePath) {
+    const fileClient = OC.Files.getClient();
+    try {
+        const [status, contents] = await deferredToPromise(fileClient.getFileContents(filePath));
+        const blob = new Blob([contents], {
+            type: 'text/markdown'
+        });
+
+        return blob;
+    } catch (e) {
+        console.log('ERROR', e);
+        throw e[1];
+    }
+
+}
+
+function deferredToPromise(deferred) {
+    return new Promise((resolve, reject) => {
+        deferred
+            .then((...args) => resolve(args))
+            .fail((...args) => reject(args));
+    });
+}
 
 async function onSave(data) {
     console.log('onSave', data);

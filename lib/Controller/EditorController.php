@@ -31,18 +31,18 @@ class EditorController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
-	public function page(int $fileId): TemplateResponse {
+	public function page(): TemplateResponse {
 		$cryptPadUrl = $this->config->getAppValue('openincryptpad', 'CryptPadUrl');
 		$response = new TemplateResponse(
 			'openincryptpad',
 			'editor', [
 				"cryptPadUrl" => $cryptPadUrl,
 				"apiUrl" => $cryptPadUrl . '/cryptpad-api.js',
-			],
-			'base'
+			]
 		);
         $csp = new ContentSecurityPolicy();
         $csp->addAllowedFrameDomain($cryptPadUrl);
+        $csp->addAllowedConnectDomain('blob:');
         $response->setContentSecurityPolicy($csp);
 		return $response;
 	}
