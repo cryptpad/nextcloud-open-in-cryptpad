@@ -20,13 +20,6 @@ window.addEventListener('DOMContentLoaded', async function() {
             }
         });
 
-        // let sessionKey = await getSessionForFile(fileId);
-
-        // if (sessionKey == null || !CryptPad.isSessionActive(sessionKey)) {
-        //     sessionKey = CryptPad.getSessionKey();
-        //     await updateSessionForFile(fileId, sessionKey);
-        // }
-
     } catch (e) {
         console.error(e);
     }
@@ -81,7 +74,8 @@ async function getSessionForFile(fileId) {
         const body = await response.json();
         return body.sessionKey;
     } else {
-        return null;
+        // return null;
+        return '/2/integration/edit/jg0wwmJ7GsF3R31b-Ur5URGI/';
     }
 }
 

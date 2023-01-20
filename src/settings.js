@@ -3,7 +3,6 @@ import '@nextcloud/password-confirmation/dist/style.css' // Required for dialog 
 
 async function handleSave() {
     const url = document.getElementById('openincryptpad-url').value;
-    console.log("save", url);
 
     await confirmPassword();
 
