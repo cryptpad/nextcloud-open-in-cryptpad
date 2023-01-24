@@ -44,6 +44,7 @@ class CryptPadSessionService {
 		$dbSession = new CryptPadSession();
 		$dbSession->setId($id);
 		$dbSession->setSessionKey($sessionKey);
+		$dbSession->setCreatedAt(new \DateTime());
 		return $this->mapper->insert($dbSession);
 	}
 

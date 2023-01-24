@@ -6,6 +6,7 @@ declare(strict_types=1);
 namespace OCA\OpenInCryptpad\Migration;
 
 use Closure;
+use OCP\DB\Types;
 use OCP\DB\ISchemaWrapper;
 use OCP\Migration\SimpleMigrationStep;
 use OCP\Migration\IOutput;
@@ -24,12 +25,15 @@ class Version000000Date20181013124731 extends SimpleMigrationStep {
 
 		if (!$schema->hasTable('openincryptpad')) {
 			$table = $schema->createTable('openincryptpad');
-			$table->addColumn('id', 'integer', [
+			$table->addColumn('id', Types::INTEGER, [
 				'notnull' => true,
 			]);
-			$table->addColumn('session_key', 'string', [
+			$table->addColumn('session_key', Types::STRING, [
 				'notnull' => true,
 				'length' => 64
+			]);
+			$table->addColumn('created_at', Types::DATETIME, [
+				'notnull' => true
 			]);
 
 			$table->setPrimaryKey(['id']);
