@@ -52,6 +52,7 @@ class CryptPadSessionService {
 		try {
 			$dbSession = $this->mapper->find($id);
 			$dbSession->setSessionKey($sessionKey);
+			$dbSession->setCreatedAt(new \DateTime());
 			return $this->mapper->update($dbSession);
 		} catch (Exception $e) {
 			$this->handleException($e);
