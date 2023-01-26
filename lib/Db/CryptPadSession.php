@@ -14,9 +14,18 @@ use OCP\AppFramework\Db\Entity;
  * @method setFileId(int $fileId): void
  * @method getSession(): string
  * @method setSession(string $title): void
+ * @method getCreatedAt(): \DateTime
+ * @method setCreatedAt(\DateTime createAt): void
  */
 class CryptPadSession extends Entity implements JsonSerializable {
 	protected string $sessionKey = '';
+	protected ?\DateTime $createdAt = null;
+
+    public function __construct() {
+        // add types in constructor
+        $this->addType('sessonKey', 'string');
+        $this->addType('createdAt', 'datetime');
+    }
 
 	public function jsonSerialize(): array {
 		return [

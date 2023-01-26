@@ -74,8 +74,8 @@ async function getSessionForFile(fileId) {
         const body = await response.json();
         return body.sessionKey;
     } else {
-        // return null;
-        return '/2/integration/edit/jg0wwmJ7GsF3R31b-Ur5URGI/';
+        return null;
+        // return '/2/integration/edit/jg0wwmJ7GsF3R31b-Ur5URGI/';
     }
 }
 
