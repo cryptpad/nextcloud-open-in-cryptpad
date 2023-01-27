@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', async function() {
             },
             documentType: 'code', // appname
             events: {
-                onSave: onSave,
+                onSave: (data) => onSave(filePath, data),
                 onNewKey: (newKey) => updateSessionForFile(fileId, newKey)
             }
         });
@@ -46,7 +46,6 @@ async function loadFileContent(filePath) {
         console.log('ERROR', e);
         throw e[1];
     }
-
 }
 
 function deferredToPromise(deferred) {
@@ -57,8 +56,19 @@ function deferredToPromise(deferred) {
     });
 }
 
-async function onSave(data) {
+async function onSave(filePath, data) {
     console.log('onSave', data);
+    const fileClient = OC.Files.getClient();
+    try {
+        await deferredToPromise(fileClient.putFileContents(
+            filePath,
+            data,
+            {overwrite: false}  // Bug in NextCloud? This has to be set to false to make teh upload work.
+        ));
+    } catch (e) {
+        console.log('ERROR', e);
+        throw e[1];
+    }
 }
 
 async function getSessionForFile(fileId) {
