@@ -15,7 +15,7 @@ window.addEventListener('DOMContentLoaded', function() {
             for (const mimeType of ['text/markdown', 'application/x-drawio']) {
                 OCA.Files.fileActions.registerAction({
                     name: 'OpenInCryptpad',
-                    displayName: 'Open in CryptPad',
+                    displayName: t('openincryptpad', 'Open in CryptPad'),
                     order: 0,
                     mime: mimeType,
                     permissions: OC.PERMISSION_UPDATE,
