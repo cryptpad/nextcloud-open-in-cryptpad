@@ -1,0 +1,6 @@
+{ "translations": {
+  "CryptPad Instance" : "Instance CryptPad",
+  "URL of the CryptPad instance to use for collaborative editing:" : "URL de l'instance CryptPad à utiliser pour l'édition collaborative:",
+  "Save" : "Sauvez"
+}, "pluralForm": "nplurals=3; plural=(n == 0 || n == 1) ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;"
+}

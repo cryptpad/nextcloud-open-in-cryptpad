@@ -63,7 +63,7 @@ async function onSave(filePath, data) {
         await deferredToPromise(fileClient.putFileContents(
             filePath,
             data,
-            {overwrite: false}  // Bug in NextCloud? This has to be set to false to make teh upload work.
+            {overwrite: false}  // Bug in NextCloud? This has to be set to false to make the upload work.
         ));
     } catch (e) {
         console.log('ERROR', e);
