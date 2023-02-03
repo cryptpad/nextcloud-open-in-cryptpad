@@ -7,16 +7,18 @@ namespace OCA\OpenInCryptpad\Service;
 
 use Exception;
 
-use OCP\AppFramework\Db\DoesNotExistException;
-use OCP\AppFramework\Db\MultipleObjectsReturnedException;
-
 use OCA\OpenInCryptpad\Db\CryptPadSession;
 use OCA\OpenInCryptpad\Db\CryptPadSessionMapper;
+use OCP\AppFramework\Db\DoesNotExistException;
+use OCP\AppFramework\Db\MultipleObjectsReturnedException;
+use OCP\IDBConnection;
 
 class CryptPadSessionService {
+    private IDBConnection $db;
 	private CryptPadSessionMapper $mapper;
 
-	public function __construct(CryptPadSessionMapper $mapper) {
+	public function __construct(IDBConnection $db, CryptPadSessionMapper $mapper) {
+		$this->db = $db;
 		$this->mapper = $mapper;
 	}
 
@@ -37,6 +39,36 @@ class CryptPadSessionService {
 			return $this->mapper->find($id);
 		} catch (Exception $e) {
 			$this->handleException($e);
+		}
+	}
+
+	public function optimisticUpdate(int $id, ?string $oldSessionKey, string $newSessionKey): CryptPadSession {
+		$this->db->beginTransaction();
+		try {
+			$result = $this->optimisticUpdateImpl($id, $oldSessionKey, $newSessionKey);
+			$this->db->commit();
+			return $result;
+		} catch (Throwable $e) {
+			$this->db->rollBack();
+			throw $e;
+		}
+	}
+
+	public function optimisticUpdateImpl(int $id, ?string $oldSessionKey, string $newSessionKey): CryptPadSession {
+		try {
+			$actualOldKey = $this->find($id)->getSession();
+		} catch (CryptPadSessionNotFound $e) {
+			$actualOldKey = null;
+		}
+
+		if ($actualOldKey == $oldSessionKey) {
+			if ($actualOldKey == null) {
+				return $this->create($id, $newSessionKey);
+			} else {
+				return $this->update($id, $newSessionKey);
+			}
+		} else {
+			return $actualOldKey;
 		}
 	}
 

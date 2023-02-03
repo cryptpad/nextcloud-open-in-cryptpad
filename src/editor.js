@@ -15,8 +15,8 @@ window.addEventListener('DOMContentLoaded', async function() {
             },
             documentType: 'code', // appname
             events: {
-                onSave: (data) => onSave(filePath, data),
-                onNewKey: (newKey) => updateSessionForFile(fileId, newKey)
+                onSave: (data, cb) => onSave(filePath, data, cb),
+                onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb)
             }
         });
 
@@ -56,7 +56,7 @@ function deferredToPromise(deferred) {
     });
 }
 
-async function onSave(filePath, data) {
+async function onSave(filePath, data, cb) {
     console.log('onSave', data);
     const fileClient = OC.Files.getClient();
     try {
@@ -65,8 +65,10 @@ async function onSave(filePath, data) {
             data,
             {overwrite: false}  // Bug in NextCloud? This has to be set to false to make the upload work.
         ));
+        cb();
     } catch (e) {
         console.log('ERROR', e);
+        cb(e[1]);
         throw e[1];
     }
 }
@@ -89,8 +91,8 @@ async function getSessionForFile(fileId) {
     }
 }
 
-async function updateSessionForFile(fileId, sessionKey) {
-    await fetch(
+async function updateSessionForFile(fileId, data, cb) {
+    const response = await fetch(
         OC.generateUrl(`/apps/openincryptpad/session/${fileId}`),
         {
             method: 'PUT',
@@ -98,7 +100,17 @@ async function updateSessionForFile(fileId, sessionKey) {
                 requesttoken: OC.requestToken,
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({sessionKey: sessionKey})
+            body: JSON.stringify({
+                newSessionKey: data.new,
+                oldSessionKey: data.old,
+            })
         }
     );
+    if (response.ok) {
+        const body = await response.json();
+        cb(body.sessionKey);
+        return body.sessionKey;
+    } else {
+        return null;
+    }
 }

@@ -53,16 +53,12 @@ class CryptpadSessionController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
-	public function put(int $id, string $sessionKey): DataResponse {
+	public function put(int $id, ?string $oldSessionKey, string $newSessionKey): DataResponse {
 		if (!$this->hasWritePermission($id)) {
 			return new DataResponse('', Http::STATUS_FORBIDDEN);
 		}
 
-		try {
-			return new DataResponse($this->service->update($id, $sessionKey));
-		} catch (CryptPadSessionNotFound $e) {
-			return new DataResponse($this->service->create($id, $sessionKey));
-		}
+		return new DataResponse($this->service->optimisticUpdate($id, $odSessionKey, $newSessionKey));
 	}
 
 	private function hasWritePermission(int $fileId): bool {
