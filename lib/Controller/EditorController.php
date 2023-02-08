@@ -24,7 +24,7 @@ class EditorController extends Controller {
 								?string $userId) {
 		parent::__construct(Application::APP_ID, $request);
 		$this->config = $config;
-		$this->userId = $UserId;
+		$this->userId = $userId;
 	}
 
 	/**

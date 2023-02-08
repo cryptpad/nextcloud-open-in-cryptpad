@@ -56,7 +56,12 @@ class CryptPadSessionService {
 
 	public function optimisticUpdateImpl(int $id, ?string $oldSessionKey, string $newSessionKey): CryptPadSession {
 		try {
-			$actualOldKey = $this->find($id)->getSession();
+			$dbSession = $this->find($id);
+			if ($dbSession == null) {
+				$actualOldKey = null;
+			} else {
+				$actualOldKey = $dbSession->getSessionKey();
+			}
 		} catch (CryptPadSessionNotFound $e) {
 			$actualOldKey = null;
 		}

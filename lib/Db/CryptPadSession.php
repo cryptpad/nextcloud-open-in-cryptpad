@@ -12,8 +12,8 @@ use OCP\AppFramework\Db\Entity;
 /**
  * @method getFileId(): int
  * @method setFileId(int $fileId): void
- * @method getSession(): string
- * @method setSession(string $title): void
+ * @method getSessionKey(): string
+ * @method setSessionKey(string $sessionKey): void
  * @method getCreatedAt(): \DateTime
  * @method setCreatedAt(\DateTime createAt): void
  */

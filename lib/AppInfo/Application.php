@@ -20,16 +20,12 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function register(IRegistrationContext $context): void {
+	}
+
+	public function boot(IBootContext $context): void {
 		/**
 		 * Always add main script
 		 */
 		Util::addScript(self::APP_ID, 'openincryptpad-main', 'files');
-
-		// TODO this line should not be necessary (and is not owrking anyway)
-		Util::addTranslations(self::APP_ID);
-		logger('openincryptpad')->warning('getScripts 2', Util::getScripts());
-	}
-
-	public function boot(IBootContext $context): void {
 	}
 }

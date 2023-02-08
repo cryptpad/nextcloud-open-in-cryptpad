@@ -58,7 +58,7 @@ class CryptpadSessionController extends Controller {
 			return new DataResponse('', Http::STATUS_FORBIDDEN);
 		}
 
-		return new DataResponse($this->service->optimisticUpdate($id, $odSessionKey, $newSessionKey));
+		return new DataResponse($this->service->optimisticUpdate($id, $oldSessionKey, $newSessionKey));
 	}
 
 	private function hasWritePermission(int $fileId): bool {
