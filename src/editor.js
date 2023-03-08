@@ -1,6 +1,11 @@
+const APP_FOR_MIME_TYPE = {
+    'text/markdown': 'code',
+    'application/x-drawio': 'drawio',
+};
+
 window.addEventListener('DOMContentLoaded', async function() {
     try {
-        const { fileId, filePath } = parseUrl();
+        const { fileId, filePath, mimeType } = parseUrl();
         const sessionKey = await getSessionForFile(fileId);
 
         const blob = await loadFileContent(filePath);
@@ -13,7 +18,7 @@ window.addEventListener('DOMContentLoaded', async function() {
                 key: sessionKey,
                 fileType: 'md'
             },
-            documentType: 'code', // appname
+            documentType: APP_FOR_MIME_TYPE[mimeType],
             events: {
                 onSave: (data, cb) => onSave(filePath, data, cb),
                 onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb)
@@ -29,7 +34,8 @@ function parseUrl() {
     const params = new URLSearchParams(location.search);
     return {
         fileId: params.get('id'),
-        filePath: params.get('path')
+        filePath: params.get('path'),
+        mimeType: params.get('mimeType'),
     };
 }
 

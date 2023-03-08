@@ -1,7 +1,8 @@
-async function handleOpenInCryptpad(filename, context) {
-    location.href = OC.generateUrl('/apps/openincryptpad/editor?id={id}&path={path}', {
+function handleOpenInCryptpad(filename, context, mimeType) {
+    location.href = OC.generateUrl('/apps/openincryptpad/editor?id={id}&path={path}&mimeType={mimeType}', {
         id: context.fileInfoModel.id,
-        path: context.fileInfoModel.getFullPath()
+        path: context.fileInfoModel.getFullPath(),
+        mimeType
     });
 }
 
@@ -20,7 +21,7 @@ window.addEventListener('DOMContentLoaded', function() {
                     mime: mimeType,
                     permissions: OC.PERMISSION_UPDATE,
                     iconClass: 'icon-edit',
-                    actionHandler: handleOpenInCryptpad
+                    actionHandler: (filename, context) => handleOpenInCryptpad(filename, context, mimeType)
                 });
             }
         } catch (e) {
