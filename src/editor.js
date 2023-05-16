@@ -11,7 +11,7 @@ const FILE_TYPE_FOR_MIME_TYPE = {
 window.addEventListener('DOMContentLoaded', async function() {
     try {
         const { fileId, filePath, mimeType } = parseUrl();
-        document.title = fileName(filePath);
+        document.title = fileName(filePath) + ' - Nextcloud';
 
         const sessionKey = await getSessionForFile(fileId);
 
