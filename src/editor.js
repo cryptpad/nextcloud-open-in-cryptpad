@@ -3,12 +3,17 @@ const APP_FOR_MIME_TYPE = {
     'application/x-drawio': 'drawio',
 };
 
+const FILE_TYPE_FOR_MIME_TYPE = {
+    'text/markdown': 'md',
+    'application/x-drawio': 'drawio',
+};
+
 window.addEventListener('DOMContentLoaded', async function() {
     try {
         const { fileId, filePath, mimeType } = parseUrl();
         const sessionKey = await getSessionForFile(fileId);
 
-        const blob = await loadFileContent(filePath);
+        const blob = await loadFileContent(filePath, mimeType);
 
         var docUrl = URL.createObjectURL(blob);
 
@@ -16,7 +21,7 @@ window.addEventListener('DOMContentLoaded', async function() {
             document: {
                 url: docUrl,
                 key: sessionKey,
-                fileType: 'md'
+                fileType: FILE_TYPE_FOR_MIME_TYPE[mimeType]
             },
             documentType: APP_FOR_MIME_TYPE[mimeType],
             events: {
@@ -39,12 +44,12 @@ function parseUrl() {
     };
 }
 
-async function loadFileContent(filePath) {
+async function loadFileContent(filePath, mimeType) {
     const fileClient = OC.Files.getClient();
     try {
         const [status, contents] = await deferredToPromise(fileClient.getFileContents(filePath));
         const blob = new Blob([contents], {
-            type: 'text/markdown'
+            type: mimeType
         });
 
         return blob;
