@@ -11,6 +11,8 @@ const FILE_TYPE_FOR_MIME_TYPE = {
 window.addEventListener('DOMContentLoaded', async function() {
     try {
         const { fileId, filePath, mimeType } = parseUrl();
+        document.title = fileName(filePath);
+
         const sessionKey = await getSessionForFile(fileId);
 
         const blob = await loadFileContent(filePath, mimeType);
@@ -34,6 +36,15 @@ window.addEventListener('DOMContentLoaded', async function() {
         console.error(e);
     }
 });
+
+function fileName(filePath) {
+    if (!filePath) {
+        return;
+    }
+
+    const parts = filePath.split('/');
+    return parts[parts.length-1];
+}
 
 function parseUrl() {
     const params = new URLSearchParams(location.search);
