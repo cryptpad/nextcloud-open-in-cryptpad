@@ -28,7 +28,11 @@ window.addEventListener('DOMContentLoaded', async function() {
             documentType: APP_FOR_MIME_TYPE[mimeType],
             events: {
                 onSave: (data, cb) => onSave(filePath, data, cb),
-                onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb)
+                onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb),
+                onHasUnsavedChanges: (unsavedChanges) => {
+                    const elem = document.querySelector('#unsaved-indicator');
+                    elem.className = unsavedChanges ? 'visible' : '';
+                }
             }
         });
 

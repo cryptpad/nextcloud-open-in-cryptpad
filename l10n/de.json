@@ -1,6 +1,7 @@
 { "translations": {
   "CryptPad Instance" : "CryptPad-Instanz",
   "URL of the CryptPad instance to use for collaborative editing:" : "URL der CryptPad-Instanz, die für das gemeinsame Bearbeiten genutzt wird:",
-  "Save" : "Speichern"
+  "Save" : "Speichern",
+  "Saving..." : "Es wird gespeichert"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
