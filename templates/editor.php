@@ -18,4 +18,6 @@ window.OpenInCryptPadConfig = {
 <div id="unsaved-indicator">
 	<?php p($l->t('Saving...')); ?>
 </div>
+<div id="error-indicator">
+</div>
 <div id="editor-content"></div>

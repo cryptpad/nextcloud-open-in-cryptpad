@@ -20,7 +20,8 @@
     "stylelint:fix": "stylelint css/*.css css/*.scss src/**/*.scss src/**/*.vue --fix"
   },
   "dependencies": {
-    "@nextcloud/password-confirmation": "^4.0.3"
+    "@nextcloud/password-confirmation": "^4.0.3",
+    "@nextcloud/router": "^2.1.1"
   },
   "browserslist": [
     "extends @nextcloud/browserslist-config"

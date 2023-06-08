@@ -1,19 +1,30 @@
 iframe {
-    width: 100%;
-    height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 #editor-content {
-    width: 100%;
-    height: 100%;
+	width: 100%;
+	height: 100%;
 }
 
 #unsaved-indicator {
-    position: absolute;
-    left: 50%;
-    display: none;
+	position: absolute;
+	left: 50%;
+	display: none;
 }
 
 #unsaved-indicator.visible {
-    display: block;
+	display: block;
+}
+
+#error-indicator {
+	color: white;
+	position: absolute;
+	left: 50%;
+	display: none;
+}
+
+#error-indicator.visible {
+	display: block;
 }
