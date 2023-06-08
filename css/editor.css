@@ -17,3 +17,14 @@ iframe {
 #unsaved-indicator.visible {
 	display: block;
 }
+
+#error-indicator {
+	color: white;
+	position: absolute;
+	left: 50%;
+	display: none;
+}
+
+#error-indicator.visible {
+	display: block;
+}

@@ -1,4 +1,4 @@
-import { generateUrl } from '@nextcloud/router'
+import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 
 /* global CryptPadAPI */
 
@@ -11,6 +11,8 @@ const FILE_TYPE_FOR_MIME_TYPE = {
 	'text/markdown': 'md',
 	'application/x-drawio': 'drawio',
 }
+
+let cryptPadSession = null
 
 window.addEventListener('DOMContentLoaded', async function() {
 	try {
@@ -40,10 +42,65 @@ window.addEventListener('DOMContentLoaded', async function() {
 			},
 		})
 
+		checkForPermissionChange(filePath, () => resetCryptPadSession(fileId))
+
 	} catch (e) {
 		console.error(e)
+		document.querySelector('#error-indicator').innerText = t('openincryptpad', 'Could not load file')
+		document.querySelector('#error-indicator').className = 'visible'
 	}
 })
+
+/**
+ *
+ * @param {string} fileId the file ID
+ */
+async function resetCryptPadSession(fileId) {
+	await updateSessionForFile(fileId, { old: cryptPadSession, new: null })
+	document.location.reload()
+}
+
+/**
+ *
+ * @param {string} path the path to check
+ * @param {Function} cb called, when the permissions change
+ */
+async function checkForPermissionChange(path, cb) {
+	let permissions = await getFilePermission(path)
+	while (true) {
+		await delay(10 * 1000)
+		const nextPermissions = await getFilePermission(path)
+		if (permissions !== nextPermissions) {
+			permissions = nextPermissions
+			cb()
+		}
+	}
+}
+
+/**
+ *
+ * @param {number} ms delay in ms
+ */
+function delay(ms) {
+	return new Promise((resolve) => {
+		setTimeout(resolve, ms)
+	})
+}
+
+/**
+ *
+ * @param {string} path the path
+ */
+async function getFilePermission(path) {
+	return [await getShares(path, false), await getShares(path, true)]
+		.flat()
+		.filter((x) => x.can_edit)
+		.map((x) => [x.share_with, x.uid_owner, x.uid_file_owner])
+		.flat()
+		.sort()
+		.filter((item, pos, ary) => !pos || item !== ary[pos - 1]) // remove duplicates
+		.join()
+}
 
 /**
  * @param {string} filePath the file path
@@ -77,7 +134,7 @@ function parseUrl() {
 async function loadFileContent(filePath, mimeType) {
 	const fileClient = OC.Files.getClient()
 	try {
-		const contents = await deferredToPromise(fileClient.getFileContents(filePath))[1]
+		const contents = (await deferredToPromise(fileClient.getFileContents(filePath)))[1]
 		const blob = new Blob([contents], {
 			type: mimeType,
 		})
@@ -139,7 +196,6 @@ async function getSessionForFile(fileId) {
 		return body.sessionKey
 	} else {
 		return null
-		// return '/2/integration/edit/jg0wwmJ7GsF3R31b-Ur5URGI/';
 	}
 }
 
@@ -166,9 +222,44 @@ async function updateSessionForFile(fileId, data, cb) {
 	)
 	if (response.ok) {
 		const body = await response.json()
-		cb(body.sessionKey)
+		if (cb) {
+			cb(body.sessionKey)
+		}
+		cryptPadSession = body.sessionKey
 		return body.sessionKey
 	} else {
 		return null
 	}
+}
+
+/**
+ *
+ * @param {string} path the path
+ * @param {boolean} inherited return inherited shares?
+ */
+async function getShares(path, inherited) {
+	const endpoint = inherited
+		? '/apps/files_sharing/api/v1/shares/inherited'
+		: '/apps/files_sharing/api/v1/shares'
+	const params = new URLSearchParams({
+		format: 'json',
+		reshares: 'true',
+		path,
+	})
+	const response = await fetch(
+		generateOcsUrl(`${endpoint}?${params}`),
+		{
+			method: 'GET',
+			headers: {
+				requesttoken: OC.requestToken,
+			},
+		}
+	)
+	if (response.ok) {
+		const body = await response.json()
+		if (body.ocs.meta.status === 'ok') {
+			return body.ocs.data
+		}
+	}
+	return []
 }
