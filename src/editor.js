@@ -4,7 +4,7 @@ import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 
 const APP_FOR_MIME_TYPE = {
 	'text/markdown': 'code',
-	'application/x-drawio': 'drawio',
+	'application/x-drawio': 'diagram',
 }
 
 const FILE_TYPE_FOR_MIME_TYPE = {
