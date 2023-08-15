@@ -6,20 +6,20 @@
     SPDX-License-Identifier: CC0-1.0
     -->
     <id>openincryptpad</id>
-    <name>Open In Cryptpad</name>
+    <name>Open In CryptPad</name>
     <summary>Open files in CryptPad</summary>
     <description><![CDATA[Open files in CryptPad and collaborate in real time.]]></description>
     <version>0.0.1</version>
     <licence>agpl</licence>
     <author mail="wolfgang.ginolas@xwiki.com" homepage="https://xwiki.com">Wolfgang Ginolas</author>
-    <namespace>OpenInCryptpad</namespace>
+    <namespace>OpenInCryptPad</namespace>
     <category>integration</category>
     <bugs>https://xwiki.com</bugs>
     <dependencies>
-        <nextcloud min-version="25" max-version="25"/>
+        <nextcloud min-version="25" max-version="26"/>
     </dependencies>
     <settings>
-        <admin>OCA\OpenInCryptpad\Settings\Admin</admin>
-        <admin-section>OCA\OpenInCryptpad\Settings\AdminSection</admin-section>
+        <admin>OCA\OpenInCryptPad\Settings\Admin</admin>
+        <admin-section>OCA\OpenInCryptPad\Settings\AdminSection</admin-section>
     </settings>
 </info>

@@ -3,12 +3,12 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\OpenInCryptpad\Service;
+namespace OCA\OpenInCryptPad\Service;
 
 use Exception;
 
-use OCA\OpenInCryptpad\Db\CryptPadSession;
-use OCA\OpenInCryptpad\Db\CryptPadSessionMapper;
+use OCA\OpenInCryptPad\Db\CryptPadSession;
+use OCA\OpenInCryptPad\Db\CryptPadSessionMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\IDBConnection;

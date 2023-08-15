@@ -3,9 +3,9 @@ declare(strict_types=1);
 // SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-namespace OCA\OpenInCryptpad\Controller;
+namespace OCA\OpenInCryptPad\Controller;
 
-use OCA\OpenInCryptpad\AppInfo\Application;
+use OCA\OpenInCryptPad\AppInfo\Application;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\IConfig;
@@ -27,7 +27,7 @@ class SettingsController extends Controller {
 
 	/**
 	 * // @PasswordConfirmationRequired
-	 * @AuthorizedAdminSetting(settings=OCA\OpenInCryptpad\Settings\Admin)
+	 * @AuthorizedAdminSetting(settings=OCA\OpenInCryptPad\Settings\Admin)
 	 */
 	public function setCryptPadUrl(): void {
 		$url = $this->request->getParam('url');

@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 
 use OCA\openincryptpad\Db\CryptPadSession;
 use OCA\openincryptpad\Db\CryptPadSessionMapper;
-use OCA\openincryptpad\Controller\CryptpadSessionController;
+use OCA\openincryptpad\Controller\CryptPadSessionController;
 
 class SessionIntegrationTest extends TestCase {
 	private CryptPadSessionController $controller;
@@ -32,7 +32,7 @@ class SessionIntegrationTest extends TestCase {
 			return $this->createMock(IRequest::class);
 		});
 		fwrite(STDERR, print_r($container, TRUE));
-		$this->controller = $container->get(CryptpadSessionController::class);
+		$this->controller = $container->get(CryptPadSessionController::class);
 		$this->mapper = $container->get(CryptPadSessionMapper::class);
 	}
 

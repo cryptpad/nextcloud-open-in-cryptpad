@@ -6,15 +6,15 @@ declare(strict_types=1);
 /**
  * Create your routes in here. The name is the lowercase name of the controller
  * without the controller part, the stuff after the hash is the method.
- * e.g. page#index -> OCA\OpenInCryptpad\Controller\PageController->index()
+ * e.g. page#index -> OCA\OpenInCryptPad\Controller\PageController->index()
  *
  * The controller class has to be registered in the application.php file since
  * it's instantiated in there
  */
 return [
 	'routes' => [
-		['name' => 'cryptpad_session#get', 'url' => '/session/{id}', 'verb' => 'GET'],
-		['name' => 'cryptpad_session#put', 'url' => '/session/{id}', 'verb' => 'PUT'],
+		['name' => 'cryptPad_session#get', 'url' => '/session/{id}', 'verb' => 'GET'],
+		['name' => 'cryptPad_session#put', 'url' => '/session/{id}', 'verb' => 'PUT'],
 		['name' => 'settings#getCryptPadUrl', 'url' => '/settings/cryptPadUrl', 'verb' => 'GET'],
 		['name' => 'settings#setCryptPadUrl', 'url' => '/settings/cryptPadUrl', 'verb' => 'PUT'],
 		['name' => 'editor#page', 'url' => '/editor', 'verb' => 'GET'],
