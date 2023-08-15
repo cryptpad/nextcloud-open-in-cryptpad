@@ -9,7 +9,10 @@ SPDX-License-Identifier: CC0-1.0
 1. Unpack `openincryptpad.tar.gz` in the **nextcloud/apps/** folder.
 2. Enable the "Open in CryptPad" app in the Nextcloud admin page.
 3. Configure "Open in CryptPad" in the administration settings of Nextcloud.
-4. Add draw.io mimetype to Nextcloud. "Open in CryptPad" depends on Nextcloud detecting draw.io files correctly. For this you have to create the following files:
+4. Add draw.io mimetype to Nextcloud. "Open in CryptPad" depends on Nextcloud
+   detecting draw.io files correctly. For this you have to create the following
+   files: (**Note:** do this before uploading any draw.io files! The mimetype of
+   old files will not be updated by these changes)
     - `nextcloud/config/mimetypealiases.json`
 ``` json
 {
