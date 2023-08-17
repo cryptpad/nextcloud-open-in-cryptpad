@@ -9,9 +9,16 @@ iframe {
 }
 
 #unsaved-indicator {
-	position: absolute;
-	left: 50%;
 	display: none;
+	position: absolute;
+	top: 3px;
+	left: 50%;
+	transform: translate(-50%, 0);
+
+	color: black;
+	background: white;
+	padding: 3px;
+	border-radius: 3px;
 }
 
 #unsaved-indicator.visible {
@@ -19,10 +26,16 @@ iframe {
 }
 
 #error-indicator {
-	color: white;
-	position: absolute;
-	left: 50%;
 	display: none;
+	position: absolute;
+	top: 3px;
+	left: 50%;
+	transform: translate(-50%, 0);
+
+	color: black;
+	background: white;
+	padding: 3px;
+	border-radius: 3px;
 }
 
 #error-indicator.visible {
