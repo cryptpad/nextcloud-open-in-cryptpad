@@ -2,6 +2,8 @@
   "CryptPad Instance" : "CryptPad-Instanz",
   "URLs of the CryptPad instances to use for collaborative editing:" : "URLs der CryptPad-Instanzen, die für das gemeinsame Bearbeiten genutzt werden:",
   "Save" : "Speichern",
-  "Saving..." : "Es wird gespeichert"
+  "Saving..." : "Es wird gespeichert...",
+  "code": "Code",
+  "diagram": "Diagram"
 },"pluralForm" :"nplurals=2; plural=(n != 1);"
 }
