@@ -7,17 +7,14 @@ script('openincryptpad', 'openincryptpad-editor');
 style('openincryptpad', 'editor');
 ?>
 
-<script nonce="<?php p(base64_encode($_["requesttoken"])) ?>">
-window.OpenInCryptPadConfig = {
-	cryptPadUrl: "<?php p($_['cryptPadUrl']) ?>",
-}
+<script nonce="<?php p(base64_encode($_['requesttoken'])) ?>">
+window.OpenInCryptPadInfo = <?php print_unescaped($_['info']) ?>
 </script>
 
-<script nonce="<?php p(base64_encode($_["requesttoken"])) ?>"
+<script nonce="<?php p(base64_encode($_['requesttoken'])) ?>"
 	src="<?php p($_["apiUrl"]) ?>" type="text/javascript"></script>
 <div id="unsaved-indicator">
 	<?php p($l->t('Saving...')); ?>
 </div>
-<div id="error-indicator">
-</div>
+<div id="error-indicator"></div>
 <div id="editor-content"></div>

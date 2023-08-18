@@ -2,21 +2,18 @@ import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 
 /* global CryptPadAPI */
 
-const APP_FOR_MIME_TYPE = {
-	'text/markdown': 'code',
-	'application/x-drawio': 'diagram',
-}
-
-const FILE_TYPE_FOR_MIME_TYPE = {
-	'text/markdown': 'md',
-	'application/x-drawio': 'drawio',
-}
-
 let cryptPadSession = null
 
 window.addEventListener('DOMContentLoaded', async function() {
 	try {
-		const { fileId, filePath, mimeType } = parseUrl()
+		const {
+			fileId,
+			filePath,
+			mimeType,
+			fileType,
+			app,
+			cryptPadUrl,
+		} = window.OpenInCryptPadInfo
 		document.title = fileName(filePath) + ' - Nextcloud'
 
 		const sessionKey = await getSessionForFile(fileId)
@@ -25,13 +22,13 @@ window.addEventListener('DOMContentLoaded', async function() {
 
 		const docUrl = URL.createObjectURL(blob)
 
-		CryptPadAPI(window.OpenInCryptPadConfig.cryptPadUrl, 'editor-content', {
+		CryptPadAPI(cryptPadUrl, 'editor-content', {
 			document: {
 				url: docUrl,
 				key: sessionKey,
-				fileType: FILE_TYPE_FOR_MIME_TYPE[mimeType],
+				fileType,
 			},
-			documentType: APP_FOR_MIME_TYPE[mimeType],
+			documentType: app,
 			events: {
 				onSave: (data, cb) => onSave(filePath, data, cb),
 				onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb),
@@ -112,18 +109,6 @@ function fileName(filePath) {
 
 	const parts = filePath.split('/')
 	return parts[parts.length - 1]
-}
-
-/**
- *
- */
-function parseUrl() {
-	const params = new URLSearchParams(location.search)
-	return {
-		fileId: params.get('id'),
-		filePath: params.get('path'),
-		mimeType: params.get('mimeType'),
-	}
 }
 
 /**

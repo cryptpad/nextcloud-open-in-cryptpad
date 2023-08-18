@@ -10,12 +10,28 @@ style('openincryptpad', 'settings');
 <div class="settings-section">
 	<div class="section">
 		<h2 class="settings-section__title"><?php p($l->t('CryptPad Instance')); ?></h2>
-		<h3><?php p($l->t('URL of the CryptPad instance to use for collaborative editing:')); ?></h3>
-		<div class="cryptpad-url">
-			<input id="openincryptpad-url" type="url" placeholder="https://">
-			<a id="openincryptpad-save" class="button">
-				<?php p($l->t('Save')); ?>
-			</a>
+		<h3><?php p($l->t('URLs of the CryptPad instances to use for collaborative editing:')); ?></h3>
+		<div class="urls">
+			<?php
+				foreach ($_['urls'] as $app => $url) {
+			?>
+			<div class="url">
+				<label for="<?php p("openincryptpad-url-$app"); ?>">
+					<?php p($l->t($app)) ?>
+				</label>
+				<input
+					id="<?php p("openincryptpad-url-$app"); ?>"
+				    class="openincryptpad-url"
+					value="<?php p($url); ?>"
+					type="url"
+					placeholder="https://">
+			</div>
+			<?php
+				}
+			?>
 		</div>
+		<a id="openincryptpad-save" class="button">
+			<?php p($l->t('Save')); ?>
+		</a>
 	</div>
 </div>

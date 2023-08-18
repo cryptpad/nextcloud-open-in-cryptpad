@@ -6,47 +6,30 @@ import '@nextcloud/password-confirmation/dist/style.css' // Required for dialog 
  *
  */
 async function handleSave() {
-	const url = document.getElementById('openincryptpad-url').value
-
 	await confirmPassword()
 
-	await fetch(
-		generateUrl('/apps/openincryptpad/settings/cryptPadUrl'),
-		{
-			method: 'PUT',
-			headers: {
-				requesttoken: OC.requestToken,
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({ url }),
-		}
-	)
-}
+	const prefix = 'openincryptpad-url-'
+	const inputs = document.querySelectorAll('input.openincryptpad-url')
 
-/**
- *
- */
-async function initInput() {
-	const urlInput = document.getElementById('openincryptpad-url')
-	if (urlInput) {
-		const response = await fetch(
-			generateUrl('/apps/openincryptpad/settings/cryptPadUrl'),
+	const promises = Array.from(inputs).map(async (i) => {
+		const app = i.id.substring(prefix.length)
+		await fetch(
+			generateUrl(`/apps/openincryptpad/settings/cryptPadUrl/${app}`),
 			{
+				method: 'PUT',
 				headers: {
 					requesttoken: OC.requestToken,
+					'Content-Type': 'application/json',
 				},
+				body: JSON.stringify({ url: i.value }),
 			}
 		)
-		if (response.ok) {
-			const body = await response.json()
-			urlInput.value = body.url
-		}
-	}
+	})
+
+	await Promise.all(promises)
 }
 
 const saveLink = document.getElementById('openincryptpad-save')
 if (saveLink) {
 	saveLink.onclick = handleSave
 }
-
-initInput()

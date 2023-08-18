@@ -6,24 +6,34 @@ declare(strict_types=1);
 namespace OCA\OpenInCryptPad\Controller;
 
 use OCA\OpenInCryptPad\AppInfo\Application;
+use OCA\OpenInCryptPad\Service\SettingsService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
-use OCP\IConfig;
 use OCP\IRequest;
 
 class EditorController extends Controller {
+	const APP_FOR_MIME_TYPE = [
+		'text/markdown' => 'code',
+		'application/x-drawio' => 'diagram',
+	];
+
+	const FILE_TYPE_FOR_MIME_TYPE = [
+		'text/markdown' => 'md',
+		'application/x-drawio' => 'drawio',
+	];
+
 	private $userId;
-	private IConfig $config;
+	private SettingsService $settingsService;
 
 	use Errors;
 
 	public function __construct(IRequest $request,
-								IConfig $config,
+								SettingsService $settingsService,
 								?string $userId) {
 		parent::__construct(Application::APP_ID, $request);
-		$this->config = $config;
+		$this->settingsService = $settingsService;
 		$this->userId = $userId;
 	}
 
@@ -31,19 +41,29 @@ class EditorController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
-	public function page(): TemplateResponse {
-		$cryptPadUrl = $this->config->getAppValue('openincryptpad', 'CryptPadUrl');
+	public function page($id, $path, $mimeType): TemplateResponse {
+		$app = self::APP_FOR_MIME_TYPE[$mimeType];
+		$fileType = self::FILE_TYPE_FOR_MIME_TYPE[$mimeType];
+		$cryptPadUrl = $this->settingsService->getCryptPadUrl($app);
+
 		$response = new TemplateResponse(
 			'openincryptpad',
 			'editor', [
-				"cryptPadUrl" => $cryptPadUrl,
+				'info' => json_encode([
+					'fileId' => $id,
+					'filePath' => $path,
+					'mimeType' => $mimeType,
+					'fileType' => $fileType,
+					'app' => $app,
+					'cryptPadUrl' => $cryptPadUrl,
+				]),
 				"apiUrl" => $cryptPadUrl . '/cryptpad-api.js',
 			]
 		);
-        $csp = new ContentSecurityPolicy();
-        $csp->addAllowedFrameDomain($cryptPadUrl);
-        $csp->addAllowedConnectDomain('blob:');
-        $response->setContentSecurityPolicy($csp);
+		$csp = new ContentSecurityPolicy();
+		$csp->addAllowedFrameDomain($cryptPadUrl);
+		$csp->addAllowedConnectDomain('blob:');
+		$response->setContentSecurityPolicy($csp);
 		return $response;
 	}
 }

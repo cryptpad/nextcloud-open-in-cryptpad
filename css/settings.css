@@ -1,4 +1,13 @@
-.cryptpad-url input {
+.url label {
+	display: inline-block;
+	width: 200px;
+}
+
+.url input {
 	width: 100%;
 	max-width: 400px;
+}
+
+#openincryptpad-save {
+	display: inline-block;
 }

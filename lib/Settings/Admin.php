@@ -5,6 +5,7 @@ declare(strict_types=1);
 
 namespace OCA\OpenInCryptPad\Settings;
 
+use OCA\OpenInCryptPad\Service\SettingsService;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IConfig;
 use OCP\IL10N;
@@ -12,18 +13,27 @@ use OCP\Settings\ISettings;
 
 class Admin implements ISettings {
 	private IL10N $l;
+	private SettingsService $settingsService;
 
-	public function __construct(IL10N $l) {
+	public function __construct(IL10N $l, SettingsService $settingsService) {
 		$this->l = $l;
+		$this->settingsService = $settingsService;
 	}
 
 	/**
 	 * @return TemplateResponse
 	 */
-	public function getForm() {
+	public function getForm(): TemplateResponse {
+		$urls = [];
+		foreach ($this->settingsService->getAvailableApps() as $app) {
+			$urls[$app] = $this->settingsService->getCryptPadUrl($app);
+		}
+
 		return new TemplateResponse(
 			'openincryptpad',
-			'admin', [
+			'admin',
+			[
+				'urls' => $urls
 			],
 			'blank'
 		);
