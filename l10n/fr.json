@@ -1,6 +1,7 @@
 { "translations": {
   "CryptPad Instance" : "Instance CryptPad",
   "URLs of the CryptPad instances to use for collaborative editing:" : "URL des instances CryptPad à utiliser pour l'édition collaborative:",
+  "Documentation for this application can be found here:" : "La documentation relative à cette application est disponible ici:",
   "Save" : "Enregistrer",
   "Saving..." : "Il est enregistré...",
   "code": "Code",

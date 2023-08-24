@@ -18,7 +18,7 @@ interface. Currently only drawio diagrams are supported.
     <author mail="wolfgang.ginolas@xwiki.com" homepage="https://xwiki.com">Wolfgang Ginolas</author>
     <namespace>OpenInCryptPad</namespace>
     <category>integration</category>
-    <bugs>https://xwiki.com</bugs>
+    <bugs>https://github.com/cryptpad/nextcloud-open-in-cryptpad/issues</bugs>
     <dependencies>
         <nextcloud min-version="25" max-version="26"/>
     </dependencies>
