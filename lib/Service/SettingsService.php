@@ -8,6 +8,21 @@ namespace OCA\OpenInCryptPad\Service;
 use OCP\IConfig;
 
 class SettingsService {
+	const APP_FOR_MIME_TYPE = [
+		'text/markdown' => 'code',
+		'application/x-drawio' => 'diagram',
+	];
+
+	const MIME_TYPE_FOR_APP = [
+		'code' => 'text/markdown',
+		'diagram' => 'application/x-drawio',
+	];
+
+	const FILE_TYPE_FOR_MIME_TYPE = [
+		'text/markdown' => 'md',
+		'application/x-drawio' => 'drawio',
+	];
+
     private IDBConnection $db;
 	private CryptPadSessionMapper $mapper;
 
@@ -24,6 +39,9 @@ class SettingsService {
 	}
 
 	public function getAvailableApps(): array {
-		return ['code', 'diagram'];
+		return [
+			// 'code', Disabled for now
+			'diagram'
+		];
 	}
 }

@@ -26,7 +26,6 @@ class SettingsController extends Controller {
 	}
 
 	/**
-	 * // @PasswordConfirmationRequired
 	 * @AuthorizedAdminSetting(settings=OCA\OpenInCryptPad\Settings\Admin)
 	 */
 	public function setCryptPadUrl($app): void {

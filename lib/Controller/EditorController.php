@@ -14,16 +14,6 @@ use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 
 class EditorController extends Controller {
-	const APP_FOR_MIME_TYPE = [
-		'text/markdown' => 'code',
-		'application/x-drawio' => 'diagram',
-	];
-
-	const FILE_TYPE_FOR_MIME_TYPE = [
-		'text/markdown' => 'md',
-		'application/x-drawio' => 'drawio',
-	];
-
 	private $userId;
 	private SettingsService $settingsService;
 
@@ -42,8 +32,8 @@ class EditorController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function page($id, $path, $mimeType): TemplateResponse {
-		$app = self::APP_FOR_MIME_TYPE[$mimeType];
-		$fileType = self::FILE_TYPE_FOR_MIME_TYPE[$mimeType];
+		$app = SettingsService::APP_FOR_MIME_TYPE[$mimeType];
+		$fileType = SettingsService::FILE_TYPE_FOR_MIME_TYPE[$mimeType];
 		$cryptPadUrl = $this->settingsService->getCryptPadUrl($app);
 
 		$response = new TemplateResponse(

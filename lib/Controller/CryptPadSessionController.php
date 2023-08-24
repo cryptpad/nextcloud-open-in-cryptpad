@@ -63,7 +63,7 @@ class CryptPadSessionController extends Controller {
 
 	private function hasWritePermission(int $fileId): bool {
 		$nodes = $this->rootFolder->getById($fileId);
-		foreach ($nodes as &$node) {
+		foreach ($nodes as $node) {
 			if ($node->isUpdateable()) {
 				return true;
 			}
