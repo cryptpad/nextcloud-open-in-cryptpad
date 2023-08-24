@@ -7,9 +7,13 @@
     -->
     <id>openincryptpad</id>
     <name>Open In CryptPad</name>
-    <summary>Open files in CryptPad</summary>
-    <description><![CDATA[Open files in CryptPad and collaborate in real time.]]></description>
-    <version>0.0.1</version>
+    <summary>Collaborative editing of files using CryptPad</summary>
+    <description><![CDATA[
+"Open in CryptPad" is a Nextcloud application that allows collaborative editing
+of files. For this it uses a CryptPad instance embedded into the Nextcloud web
+interface. Currently only drawio diagrams are supported.
+    ]]></description>
+    <version>1.0.0</version>
     <licence>agpl</licence>
     <author mail="wolfgang.ginolas@xwiki.com" homepage="https://xwiki.com">Wolfgang Ginolas</author>
     <namespace>OpenInCryptPad</namespace>
