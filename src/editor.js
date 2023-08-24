@@ -6,6 +6,12 @@ let cryptPadSession = null
 
 window.addEventListener('DOMContentLoaded', async function() {
 	try {
+
+		if (!window.CryptPadAPI) {
+			showError('The CryptPad instance is not configured correctly. Please contact your admin.')
+			return
+		}
+
 		const {
 			fileId,
 			filePath,
@@ -43,10 +49,18 @@ window.addEventListener('DOMContentLoaded', async function() {
 
 	} catch (e) {
 		console.error(e)
-		document.querySelector('#error-indicator').innerText = t('openincryptpad', 'Could not load file')
-		document.querySelector('#error-indicator').className = 'visible'
+		showError('Error while opening file')
 	}
 })
+
+/**
+ *
+ * @param message the message to show
+ */
+function showError(message) {
+	document.querySelector('#error-indicator').innerText = t('openincryptpad', message)
+	document.querySelector('#error-indicator').className = 'visible'
+}
 
 /**
  *
