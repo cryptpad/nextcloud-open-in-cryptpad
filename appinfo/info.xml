@@ -11,7 +11,7 @@
     <description><![CDATA[
 "Open in CryptPad" is a Nextcloud application that allows collaborative editing
 of files. For this it uses a CryptPad instance embedded into the Nextcloud web
-interface. Currently only drawio diagrams are supported.
+interface. Currently, only drawio diagrams are supported.
     ]]></description>
     <version>0.0.1</version>
     <licence>agpl</licence>
