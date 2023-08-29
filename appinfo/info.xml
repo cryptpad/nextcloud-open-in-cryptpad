@@ -13,7 +13,7 @@
 of files. For this it uses a CryptPad instance embedded into the Nextcloud web
 interface. Currently, only drawio diagrams are supported.
     ]]></description>
-    <version>0.0.1</version>
+    <version>0.0.2</version>
     <licence>agpl</licence>
     <author mail="wolfgang.ginolas@xwiki.com" homepage="https://xwiki.com">Wolfgang Ginolas</author>
     <namespace>OpenInCryptPad</namespace>
