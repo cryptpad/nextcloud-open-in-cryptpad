@@ -9,14 +9,17 @@ SPDX-License-Identifier: CC0-1.0
 of files. For this it uses a CryptPad instance embedded into the Nextcloud web
 interface. Currently only drawio diagrams are supported.
 
-## Install from binary release
+## Prerequisites on the CryptPad side
 
-1. Unpack `openincryptpad.tar.gz` in the **nextcloud/apps/** folder.
-2. Enable the "Open in CryptPad" app in the Nextcloud admin page.
-3. Configure "Open in CryptPad" in the administration settings of Nextcloud.
-4. Add draw.io mimetype to Nextcloud. "Open in CryptPad" depends on Nextcloud
-   detecting draw.io files correctly. For this you have to create the following
-   files: (**Note:** do this before uploading any draw.io files! The mimetype of
+To embed CryptPad into Nextcloud, the "Enable remote embedding" admin setting
+needs to be enabled. You can find this setting on the "Administration" web
+interface in the "General" tab.
+
+## Install from Nextcloud app store
+
+1. Add drawio mimetype to Nextcloud. "Open in CryptPad" depends on Nextcloud
+   detecting drawio files correctly. For this you have to create the following
+   files: (**Note:** do this before uploading any drawio files! The mimetype of
    old files will not be updated by these changes)
     - `nextcloud/config/mimetypealiases.json`
 
@@ -33,12 +36,36 @@ interface. Currently only drawio diagrams are supported.
             "drawio": ["application/x-drawio"]
         }
         ```
+2. Open the "Apps" page in your Nextcloud web interface and install "Open in
+   CryptPad". You can find it in the "Integration" category.
+3. Configure "Open in CryptPad" in the administration settings of Nextcloud.
 
-## Prerequisites on the CryptPad side
+## Install from binary release
 
-To embed CryptPad into Nextcloud, the "Enable remote embedding" admin setting
-needs to be enabled. You can find this setting on the "Administration" web
-interface in the "General" tab.
+1. Unpack `openincryptpad.tar.gz` in the **nextcloud/apps/** folder. You can
+   download the latest version from the [release
+   page](https://github.com/cryptpad/nextcloud-open-in-cryptpad/releases).
+2. Enable the "Open in CryptPad" app in the Nextcloud admin page.
+3. Configure "Open in CryptPad" in the administration settings of Nextcloud.
+4. Add drawio mimetype to Nextcloud. "Open in CryptPad" depends on Nextcloud
+   detecting drawio files correctly. For this you have to create the following
+   files: (**Note:** do this before uploading any drawio files! The mimetype of
+   old files will not be updated by these changes)
+    - `nextcloud/config/mimetypealiases.json`
+
+        ``` json
+        {
+            "application/x-drawio": "image"
+        }
+        ```
+
+    - `nextcloud/config/mimetypemapping.json`
+
+        ``` json
+        {
+            "drawio": ["application/x-drawio"]
+        }
+        ```
 
 
 ## Clone from repo
