@@ -9,9 +9,42 @@
     <name>Open In CryptPad</name>
     <summary>Collaborative editing of files using CryptPad</summary>
     <description><![CDATA[
+# Open In CryptPad
+
 "Open in CryptPad" is a Nextcloud application that allows collaborative editing
 of files. For this it uses a CryptPad instance embedded into the Nextcloud web
 interface. Currently, only drawio diagrams are supported.
+
+## Prerequisites on the CryptPad side
+
+To embed CryptPad into Nextcloud, the "Enable remote embedding" admin setting
+needs to be enabled. You can find this setting on the "Administration" web
+interface in the "General" tab.
+
+## Install from Nextcloud app store
+
+1. Add drawio mimetype to Nextcloud. "Open in CryptPad" depends on Nextcloud
+   detecting drawio files correctly. For this you have to create the following
+   files: (**Note:** do this before uploading any drawio files! The mimetype of
+   old files will not be updated by these changes)
+    - `nextcloud/config/mimetypealiases.json`
+
+        ``` json
+        {
+            "application/x-drawio": "image"
+        }
+        ```
+
+    - `nextcloud/config/mimetypemapping.json`
+
+        ``` json
+        {
+            "drawio": ["application/x-drawio"]
+        }
+        ```
+2. Open the "Apps" page in your Nextcloud web interface and install "Open in
+   CryptPad". You can find it in the "Integration" category.
+3. Configure "Open in CryptPad" in the administration settings of Nextcloud.
     ]]></description>
     <version>0.0.2</version>
     <licence>agpl</licence>

@@ -7,7 +7,7 @@ SPDX-License-Identifier: CC0-1.0
 
 "Open in CryptPad" is a Nextcloud application that allows collaborative editing
 of files. For this it uses a CryptPad instance embedded into the Nextcloud web
-interface. Currently only drawio diagrams are supported.
+interface. Currently, only drawio diagrams are supported.
 
 ## Prerequisites on the CryptPad side
 
