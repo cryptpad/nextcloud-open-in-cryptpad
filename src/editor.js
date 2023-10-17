@@ -1,4 +1,8 @@
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
+import { getFilePickerBuilder } from '@nextcloud/dialogs'
+import { davGetClient, davRootPath } from '@nextcloud/files'
+
+import '@nextcloud/dialogs/style.css'
 
 /* global CryptPadAPI */
 
@@ -42,6 +46,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 					const elem = document.querySelector('#unsaved-indicator')
 					elem.className = unsavedChanges ? 'visible' : ''
 				},
+				onInsertImage: onInsertImage
 			},
 		})
 
@@ -52,6 +57,27 @@ window.addEventListener('DOMContentLoaded', async function() {
 		showError('Error while opening file')
 	}
 })
+
+async function onInsertImage(data, callback) {
+	const filepicker = getFilePickerBuilder('Pick an image')
+		.addMimeTypeFilter('image/*')
+		.addMimeTypeFilter('application/x-drawio')
+		.build()
+
+	const path = await filepicker.pick()
+
+	const client = davGetClient()
+
+	const url = client.getFileDownloadLink(`${davRootPath}${path}`)
+	const blob = await fetchBlob(url)
+	callback({blob})
+}
+
+
+async function fetchBlob(url) {
+	const response = await fetch(url)
+	return await response.blob()
+}
 
 /**
  *
