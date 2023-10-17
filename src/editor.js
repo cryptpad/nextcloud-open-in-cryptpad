@@ -46,7 +46,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 					const elem = document.querySelector('#unsaved-indicator')
 					elem.className = unsavedChanges ? 'visible' : ''
 				},
-				onInsertImage: onInsertImage
+				onInsertImage,
 			},
 		})
 
@@ -58,6 +58,11 @@ window.addEventListener('DOMContentLoaded', async function() {
 	}
 })
 
+/**
+ *
+ * @param {object} data unused for now
+ * @param {Function} callback called with the selected image as blob
+ */
 async function onInsertImage(data, callback) {
 	const filepicker = getFilePickerBuilder(t('openincryptpad', 'Pick an image'))
 		.addMimeTypeFilter('image/*')
@@ -70,10 +75,13 @@ async function onInsertImage(data, callback) {
 
 	const url = client.getFileDownloadLink(`${davRootPath}${path}`)
 	const blob = await fetchBlob(url)
-	callback({blob})
+	callback({ blob })
 }
 
-
+/**
+ *
+ * @param {string} url fetch this url
+ */
 async function fetchBlob(url) {
 	const response = await fetch(url)
 	return await response.blob()
@@ -81,7 +89,7 @@ async function fetchBlob(url) {
 
 /**
  *
- * @param message the message to show
+ * @param {string} message the message to show
  */
 function showError(message) {
 	document.querySelector('#error-indicator').innerText = t('openincryptpad', message)
