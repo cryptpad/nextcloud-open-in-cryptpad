@@ -59,7 +59,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 })
 
 async function onInsertImage(data, callback) {
-	const filepicker = getFilePickerBuilder('Pick an image')
+	const filepicker = getFilePickerBuilder(t('openincryptpad', 'Pick an image'))
 		.addMimeTypeFilter('image/*')
 		.addMimeTypeFilter('application/x-drawio')
 		.build()
