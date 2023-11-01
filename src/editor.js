@@ -1,6 +1,7 @@
 import { generateUrl, generateOcsUrl } from '@nextcloud/router'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import { davGetClient, davRootPath } from '@nextcloud/files'
+import { saveFileContent, deferredToPromise } from './utils.js'
 
 import '@nextcloud/dialogs/style.css'
 
@@ -180,35 +181,14 @@ async function loadFileContent(filePath, mimeType) {
 
 /**
  *
- * @param {any} deferred the deferred
- */
-function deferredToPromise(deferred) {
-	return new Promise((resolve, reject) => {
-		deferred
-			.then((...args) => resolve(args))
-			.fail((...args) => reject(args))
-	})
-}
-
-/**
- *
  * @param {string} filePath the file path
  * @param {Blob} data the data to dave
  * @param {Function} cb callback
  */
-async function onSave(filePath, data, cb) {
-	const fileClient = OC.Files.getClient()
-	try {
-		await deferredToPromise(fileClient.putFileContents(
-			filePath,
-			data,
-			{ overwrite: false } // Bug in NextCloud? This has to be set to false to make the upload work.
-		))
-		cb()
-	} catch (e) {
-		cb(e[1])
-		throw e[1]
-	}
+function onSave(filePath, data, cb) {
+	saveFileContent(filePath, data)
+		.then(() => cb())
+		.catch(cb)
 }
 
 /**
