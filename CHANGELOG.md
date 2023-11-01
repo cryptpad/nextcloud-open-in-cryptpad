@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.1.0] - 2023-11-01
+
+- Add option to create empty draw.io diagram.
+
 ## [0.0.3] - 2023-10-17
 
 - Support inserting images from Nextcloud into diagrams.
