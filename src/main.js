@@ -69,11 +69,14 @@ window.addEventListener('DOMContentLoaded', function() {
 					mime: mimeType,
 					permissions: OC.PERMISSION_UPDATE,
 					iconClass: 'icon-edit',
-					actionHandler: (_filename, context) => openInCryptPad(
-						context.fileInfoModel.id,
-						context.fileInfoModel.getFullPath(),
-						mimeType),
+					actionHandler: (filename, context) => {
+						const fileInfo = context.fileInfo || context.fileList.findFile(filename)
+						const path = (fileInfo.path + `/${filename}`).replace('//', '/')
+						openInCryptPad(fileInfo.id, path, mimeType)
+					},
 				})
+
+				OCA.Files.fileActions.setDefault(mimeType, 'OpenInCryptPad')
 			}
 
 			const addDrawioFile = {
