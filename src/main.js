@@ -17,7 +17,7 @@ function openInCryptPad(fileId, filePath, mimeType) {
 		id: fileId,
 		path: filePath,
 		mimeType,
-		back: location.href
+		back: location.href,
 	})
 }
 

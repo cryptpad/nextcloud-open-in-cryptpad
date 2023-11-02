@@ -60,10 +60,13 @@ window.addEventListener('DOMContentLoaded', async function() {
 	}
 })
 
+/**
+ *
+ */
 function initBackButton() {
 	const params = new URLSearchParams(location.search)
 	const backButton = document.querySelector('#back-button')
-	backButton.setAttribute('href', params.get('back'));
+	backButton.setAttribute('href', params.get('back'))
 }
 
 /**
