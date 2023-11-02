@@ -18,3 +18,4 @@ window.OpenInCryptPadInfo = <?php print_unescaped($_['info']) ?>
 </div>
 <div id="error-indicator"></div>
 <div id="editor-content"></div>
+<a id="back-button">✕</a>

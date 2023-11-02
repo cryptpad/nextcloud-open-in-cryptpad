@@ -52,12 +52,19 @@ window.addEventListener('DOMContentLoaded', async function() {
 		})
 
 		checkForPermissionChange(filePath, () => resetCryptPadSession(fileId))
+		initBackButton()
 
 	} catch (e) {
 		console.error(e)
 		showError('Error while opening file')
 	}
 })
+
+function initBackButton() {
+	const params = new URLSearchParams(location.search)
+	const backButton = document.querySelector('#back-button')
+	backButton.setAttribute('href', params.get('back'));
+}
 
 /**
  *

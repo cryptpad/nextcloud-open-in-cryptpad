@@ -41,3 +41,19 @@ iframe {
 #error-indicator.visible {
 	display: block;
 }
+
+#back-button {
+	position: absolute;
+	top: 7px;
+	right: 7px;
+
+	color: black;
+	background: white;
+	padding: 3px;
+	border-radius: 16px;
+	width: 32px;
+	height: 32px;
+	text-align: center;
+	font-size: 20px;
+	box-shadow: black 0px 0px 3px;
+}

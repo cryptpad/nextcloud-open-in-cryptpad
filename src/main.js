@@ -13,10 +13,11 @@ const EMPTY_DRAWIO = '<mxfile type="embed"><diagram id="bWoO5ACGZIaXrIiKNTKd" na
  * @param {string} mimeType the mime type of the file
  */
 function openInCryptPad(fileId, filePath, mimeType) {
-	location.href = generateUrl('/apps/openincryptpad/editor?id={id}&path={path}&mimeType={mimeType}', {
+	location.href = generateUrl('/apps/openincryptpad/editor?id={id}&path={path}&mimeType={mimeType}&back={back}', {
 		id: fileId,
 		path: filePath,
 		mimeType,
+		back: location.href
 	})
 }
 
