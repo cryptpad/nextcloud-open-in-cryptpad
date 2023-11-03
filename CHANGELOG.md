@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.2.1] - 2023-11-03
+
+- Improve wording for "New draw.io diagram".
+
 ## [0.2.0] - 2023-11-02
 
 - Make "Open in CryptPad" the default action when clicking on a file.
