@@ -85,11 +85,11 @@ window.addEventListener('DOMContentLoaded', function() {
 					// register the new menu entry
 					menu.addMenuEntry({
 						id: 'add-drawio-file',
-						displayName: t('openincryptpad', 'Create new draw.io diagram'),
+						displayName: t('openincryptpad', 'New draw.io diagram'),
 						templateName: t('openincryptpad', 'diagram.drawio'),
 						iconClass: 'icon-add',
 						fileType: 'file',
-						actionLabel: t('openincryptpad', 'Create new draw.io diagram'),
+						actionLabel: t('openincryptpad', 'New draw.io diagram'),
 						actionHandler(name) {
 							createEmptyDrawioFile(name)
 						},
