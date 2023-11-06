@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.2.2] - 2023-11-06
+
+- Fix insert image from Nextcloud.
+
 ## [0.2.1] - 2023-11-03
 
 - Improve wording for "New draw.io diagram".
