@@ -1,6 +1,9 @@
 import { confirmPassword } from '@nextcloud/password-confirmation'
 import { generateUrl } from '@nextcloud/router'
+import { getRequestToken } from '@nextcloud/auth'
 import '@nextcloud/password-confirmation/dist/style.css' // Required for dialog styles
+
+__webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
 
 /**
  *
