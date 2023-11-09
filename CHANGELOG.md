@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.2.3] - 2023-11-09
+
+- Fix Diagram editor for Edge.
+
 ## [0.2.2] - 2023-11-06
 
 - Fix insert image from Nextcloud.
