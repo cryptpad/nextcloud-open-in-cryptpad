@@ -7,9 +7,7 @@ script('openincryptpad', 'openincryptpad-editor');
 style('openincryptpad', 'editor');
 ?>
 
-<script nonce="<?php p(base64_encode($_['requesttoken'])) ?>">
-window.OpenInCryptPadInfo = <?php print_unescaped($_['info']) ?>
-</script>
+<script nonce="<?php p(base64_encode($_['requesttoken'])) ?>"><?php print_unescaped($_['infoScript']) ?></script>
 
 <script nonce="<?php p(base64_encode($_['requesttoken'])) ?>"
 	src="<?php p($_["apiUrl"]) ?>" type="text/javascript"></script>

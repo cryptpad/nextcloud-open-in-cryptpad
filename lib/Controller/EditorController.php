@@ -35,25 +35,38 @@ class EditorController extends Controller {
 		$app = SettingsService::APP_FOR_MIME_TYPE[$mimeType];
 		$fileType = SettingsService::FILE_TYPE_FOR_MIME_TYPE[$mimeType];
 		$cryptPadUrl = $this->settingsService->getCryptPadUrl($app);
+		$apiUrl = $cryptPadUrl . '/cryptpad-api.js';
+		$infoScript = $this->getInfoScript($id, $path, $mimeType, $fileType, $app, $cryptPadUrl);
 
 		$response = new TemplateResponse(
 			'openincryptpad',
 			'editor', [
-				'info' => json_encode([
-					'fileId' => $id,
-					'filePath' => $path,
-					'mimeType' => $mimeType,
-					'fileType' => $fileType,
-					'app' => $app,
-					'cryptPadUrl' => $cryptPadUrl,
-				]),
-				"apiUrl" => $cryptPadUrl . '/cryptpad-api.js',
+				'infoScript' => $infoScript,
+				"apiUrl" => $apiUrl,
 			]
 		);
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain($cryptPadUrl);
 		$csp->addAllowedConnectDomain('blob:');
+		$csp->addAllowedScriptDomain($apiUrl);
+		$csp->addAllowedScriptDomain($this->getCSPHash($infoScript));
 		$response->setContentSecurityPolicy($csp);
 		return $response;
+	}
+
+	function getInfoScript($id, $path, $mimeType, $fileType, $app, $cryptPadUrl): string {
+		return 'window.OpenInCryptPadInfo = ' . json_encode([
+			'fileId' => $id,
+			'filePath' => $path,
+			'mimeType' => $mimeType,
+			'fileType' => $fileType,
+			'app' => $app,
+			'cryptPadUrl' => $cryptPadUrl,
+		]);
+	}
+
+	function getCSPHash($str) {
+		$hash = hash("sha256", $str, true);
+		return '\'sha256-' . base64_encode($hash) . '\'';
 	}
 }
