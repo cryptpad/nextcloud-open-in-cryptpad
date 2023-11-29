@@ -1,9 +1,10 @@
 import { confirmPassword } from '@nextcloud/password-confirmation'
-import { generateUrl } from '@nextcloud/router'
+import { generateUrl, generateFilePath } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
 import '@nextcloud/password-confirmation/dist/style.css' // Required for dialog styles
 
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
+__webpack_public_path__ = generateFilePath('openincryptpad', '', 'js/') // eslint-disable-line
 
 /**
  *

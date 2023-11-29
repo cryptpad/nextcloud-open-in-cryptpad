@@ -1,9 +1,10 @@
-import { generateUrl } from '@nextcloud/router'
+import { generateUrl, generateFilePath } from '@nextcloud/router'
 import { saveFileContent, getFileInfo } from './utils.js'
 import { showError } from '@nextcloud/dialogs'
 import { getRequestToken } from '@nextcloud/auth'
 
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
+__webpack_public_path__ = generateFilePath('openincryptpad', '', 'js/') // eslint-disable-line
 
 /* global _ */
 

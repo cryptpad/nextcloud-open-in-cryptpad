@@ -1,4 +1,4 @@
-import { generateUrl, generateOcsUrl } from '@nextcloud/router'
+import { generateUrl, generateOcsUrl, generateFilePath } from '@nextcloud/router'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import { davGetClient, davRootPath } from '@nextcloud/files'
 import { saveFileContent, deferredToPromise } from './utils.js'
@@ -7,6 +7,7 @@ import { getRequestToken } from '@nextcloud/auth'
 import '@nextcloud/dialogs/style.css'
 
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
+__webpack_public_path__ = generateFilePath('openincryptpad', '', 'js/') // eslint-disable-line
 
 /* global CryptPadAPI */
 
