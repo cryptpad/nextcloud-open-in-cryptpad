@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.2.4] - 2023-11-29
+
+- Fix image import when app is installed in custom_apps.
+
 ## [0.2.3] - 2023-11-09
 
 - Fix Diagram editor for Edge.
