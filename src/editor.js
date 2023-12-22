@@ -1,6 +1,5 @@
 import { generateUrl, generateOcsUrl, generateFilePath } from '@nextcloud/router'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
-import { davGetClient, davRootPath } from '@nextcloud/files'
 import { saveFileContent, deferredToPromise } from './utils.js'
 import { getRequestToken } from '@nextcloud/auth'
 
@@ -81,16 +80,27 @@ function initBackButton() {
 async function onInsertImage(data, callback) {
 	const filepicker = getFilePickerBuilder(t('openincryptpad', 'Pick an image'))
 		.addMimeTypeFilter('image/*')
-		.addMimeTypeFilter('application/x-drawio')
 		.build()
 
 	const path = await filepicker.pick()
 
-	const client = davGetClient()
+	const shares = await getShares(path)
+	let url = findShareUrl(shares)
+	if (!url) {
+		const share = await createShare(path)
+		url =  window.location.protocol + '//' + window.location.host + generateUrl(`/apps/openincryptpad/share/${share.token}`)
+	}
+	callback({ url })
+}
 
-	const url = client.getFileDownloadLink(`${davRootPath}${path}`)
-	const blob = await fetchBlob(url)
-	callback({ blob })
+function findShareUrl(shares) {
+	const share = shares.find((share) => share.share_type === OC.Share.SHARE_TYPE_LINK)
+	if (!share) {
+		return
+	}
+
+    const url =  window.location.protocol + '//' + window.location.host + generateUrl(`/apps/openincryptpad/share/${share.token}`)
+    return url
 }
 
 /**
@@ -289,4 +299,29 @@ async function getShares(path, inherited) {
 		}
 	}
 	return []
+}
+
+async function createShare(path) {
+	const response = await fetch(
+		generateOcsUrl( '/apps/files_sharing/api/v1/shares?format=json'),
+		{
+			method: 'POST',
+			headers: {
+				requesttoken: OC.requestToken,
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				attributes: '[]',
+				path,
+				shareType: OC.Share.SHARE_TYPE_LINK
+			}),
+		}
+	)
+	if (response.ok) {
+		const body = await response.json()
+		if (body.ocs.meta.status === 'ok') {
+			return body.ocs.data
+		}
+	}
+	return {}
 }

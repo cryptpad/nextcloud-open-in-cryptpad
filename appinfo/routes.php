@@ -18,5 +18,6 @@ return [
 		['name' => 'settings#getCryptPadUrl', 'url' => '/settings/cryptPadUrl/{app}', 'verb' => 'GET'],
 		['name' => 'settings#setCryptPadUrl', 'url' => '/settings/cryptPadUrl/{app}', 'verb' => 'PUT'],
 		['name' => 'editor#page', 'url' => '/editor', 'verb' => 'GET'],
+		['name' => 'share#image', 'url' => '/share/{token}', 'verb' => 'GET'],
 	]
 ];
