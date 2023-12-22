@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.3.0] - 2023-12-22
+
+- Send image URLs instead of blobs to CryptPad.
+
 ## [0.2.4] - 2023-11-29
 
 - Fix image import when app is installed in custom_apps.
