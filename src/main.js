@@ -2,6 +2,13 @@ import { generateUrl, generateFilePath } from '@nextcloud/router'
 import { saveFileContent, getFileInfo } from './utils.js'
 import { showError } from '@nextcloud/dialogs'
 import { getRequestToken } from '@nextcloud/auth'
+import {
+	DefaultType,
+	FileAction,
+	addNewFileMenuEntry,
+	registerFileAction,
+	getNavigation,
+} from '@nextcloud/files'
 
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
 __webpack_public_path__ = generateFilePath('openincryptpad', '', 'js/') // eslint-disable-line
@@ -29,11 +36,11 @@ function openInCryptPad(fileId, filePath, mimeType) {
  *
  * @param {string} name name of the new file
  */
-async function createEmptyDrawioFile(name) {
+async function createEmptyDrawioFile(name, folder) {
 	if (!name.endsWith('.drawio')) {
 		name += '.drawio'
 	}
-	const path = (getCurrentDirectory() + `/${name}`).replace('//', '/')
+	const path = `${folder}/${name}`.replace('//', '/')
 
 	try {
 		await saveFileContent(path, new Blob([EMPTY_DRAWIO], { type: 'application/x-drawio' }))
@@ -44,65 +51,51 @@ async function createEmptyDrawioFile(name) {
 	}
 }
 
-/**
- * Return the current directory, fallback to root
- *
- * @return {string}
- */
-const getCurrentDirectory = function() {
-	const currentDirInfo = OCA?.Files?.App?.currentFileList?.dirInfo
-		|| { path: '/', name: '' }
+try {
+	const mimeTypes = ['application/x-drawio']
 
-	// Make sure we don't have double slashes
-	return `${currentDirInfo.path}/${currentDirInfo.name}`.replace(/\/\//gi, '/')
-}
+	for (const mimeType of mimeTypes) {
+		registerFileAction(new FileAction({
+			id: 'add-drawio-file',
+			displayName() {	return t('openincryptpad', 'Open in CryptPad') },
+			iconSvgInline() { return '' },
+			enabled(nodes) {
+				return nodes.length === 1
+					&& nodes[0].mime === mimeType
+					&& (nodes[0].permissions & OC.PERMISSION_UPDATE) !== 0
+			},
+			async exec(node) {
+				openInCryptPad(node.fileid, node.path, node.mime)
+				return true
+			},
+			default: DefaultType.DEFAULT
+		}))
+	}
 
-window.addEventListener('DOMContentLoaded', function() {
-	_.defer(function() {
-		try {
-			if (!OCA.Files) {
-				return
-			}
+	function getUniqueName(name, ext, names) {
+		let newName;
 
-			const mimeTypes = ['application/x-drawio']
+		do {
+			newName = name + '-' + Math.round(Math.random() * 1000000) + '.' + ext;
+		} while (names.includes(newName)) 
 
-			for (const mimeType of mimeTypes) {
-				OCA.Files.fileActions.registerAction({
-					name: 'OpenInCryptPad',
-					displayName: t('openincryptpad', 'Open in CryptPad'),
-					order: 0,
-					mime: mimeType,
-					permissions: OC.PERMISSION_UPDATE,
-					iconClass: 'icon-edit',
-					actionHandler: (filename, context) => {
-						const fileInfo = context.fileInfo || context.fileList.findFile(filename)
-						const path = (fileInfo.path + `/${filename}`).replace('//', '/')
-						openInCryptPad(fileInfo.id, path, mimeType)
-					},
-				})
+		return newName;
+	}
 
-				OCA.Files.fileActions.setDefault(mimeType, 'OpenInCryptPad')
-			}
-
-			const addDrawioFile = {
-				attach(menu) {
-					// register the new menu entry
-					menu.addMenuEntry({
-						id: 'add-drawio-file',
-						displayName: t('openincryptpad', 'New draw.io diagram'),
-						templateName: t('openincryptpad', 'diagram.drawio'),
-						iconClass: 'icon-add',
-						fileType: 'file',
-						actionLabel: t('openincryptpad', 'New draw.io diagram'),
-						actionHandler(name) {
-							createEmptyDrawioFile(name)
-						},
-					})
-				},
-			}
-			OC.Plugins.register('OCA.Files.NewFileMenu', addDrawioFile)
-		} catch (e) {
-			console.error(e)
+	addNewFileMenuEntry({
+		id: 'add-drawio-file',
+		displayName: t('openincryptpad', 'New draw.io diagram'),
+		enabled() {
+			return getNavigation()?.active?.id === 'files'
+		},
+		iconClass: 'icon-add',
+		iconSvgInline: '',
+		async handler(context, content) {
+			const contentNames = content.map((node) => node.basename);
+			const fileName = getUniqueName('diagram', 'drawio', contentNames);
+			createEmptyDrawioFile(fileName, context.path)
 		}
-	})
-})
+	});
+} catch (e) {
+	console.error(e)
+}

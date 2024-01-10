@@ -26,6 +26,6 @@ class Application extends App implements IBootstrap {
 		/**
 		 * Always add main script
 		 */
-		Util::addScript(self::APP_ID, 'openincryptpad-main', 'files');
+		Util::addInitScript(self::APP_ID, 'openincryptpad-main', 'files');
 	}
 }

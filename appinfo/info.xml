@@ -69,7 +69,7 @@ interface in the "General" tab.
     <bugs>https://github.com/cryptpad/nextcloud-open-in-cryptpad/issues</bugs>
     <screenshot>https://raw.githubusercontent.com/cryptpad/nextcloud-open-in-cryptpad/main/screenshot.png</screenshot>
     <dependencies>
-        <nextcloud min-version="25" max-version="28"/>
+        <nextcloud min-version="27" max-version="28"/>
     </dependencies>
     <settings>
         <admin>OCA\OpenInCryptPad\Settings\Admin</admin>
