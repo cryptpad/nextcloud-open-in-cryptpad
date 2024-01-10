@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.3.1] - 2024-01-10
+
+- Support NextCloud 28
+
 ## [0.3.0] - 2023-12-22
 
 - Send image URLs instead of blobs to CryptPad.
