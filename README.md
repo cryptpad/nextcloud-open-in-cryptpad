@@ -82,6 +82,13 @@ interface in the "General" tab.
         }
         ```
 
+### Verify binary release
+
+To verify the binary release you run the following command:
+
+``` shell
+openssl dgst -sha512 -verify openincryptpad.pubkey -signature openincryptpad.tar.gz.signature openincryptpad.tar.gz
+```
 
 ## Clone from repo
 Place this app in **nextcloud/apps/**. Make sure the folder is named `openincryptpad`. E.g.:
