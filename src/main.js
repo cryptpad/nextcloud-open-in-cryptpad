@@ -62,7 +62,7 @@ try {
 			enabled(nodes) {
 				return nodes.length === 1
 					&& nodes[0].mime === mimeType
-					&& (nodes[0].permissions & OC.PERMISSION_UPDATE) !== 0
+					&& nodes[0].attributes.permissions.includes('W')
 			},
 			async exec(node) {
 				openInCryptPad(node.fileid, node.path, node.mime)
