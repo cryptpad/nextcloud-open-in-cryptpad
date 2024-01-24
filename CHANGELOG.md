@@ -2,6 +2,10 @@
 
 ## [Unreleased]
 
+## [0.3.2] - 2024-01-24
+
+- Fix: Can not view read only diagrams
+
 ## [0.3.1] - 2024-01-10
 
 - Support NextCloud 28
