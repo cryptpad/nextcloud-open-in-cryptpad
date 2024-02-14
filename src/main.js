@@ -50,9 +50,8 @@ async function createFolderLink(folderPath, folderId) {
 /**
  *
  * @param {string} name name of the new file
- * @param folder
- * @param folderId
- * @param viewId
+ * @param {string} folder name ot the folder
+ * @param {string} folderId id of the folder
  */
 async function createEmptyDrawioFile(name, folder, folderId) {
 	if (!name.endsWith('.drawio')) {
@@ -70,13 +69,29 @@ async function createEmptyDrawioFile(name, folder, folderId) {
 	}
 }
 
+/**
+ *
+ * @param {string} name prefix of the new name
+ * @param {string} ext extension of the new name
+ * @param {(string)} names all existinf file names
+ */
+function getUniqueName(name, ext, names) {
+	let newName
+
+	do {
+		newName = name + '-' + Math.round(Math.random() * 1000000) + '.' + ext
+	} while (names.includes(newName))
+
+	return newName
+}
+
 try {
 	const mimeTypes = ['application/x-drawio']
 
 	for (const mimeType of mimeTypes) {
 		registerFileAction(new FileAction({
 			id: 'edit-cryptpad-file',
-			displayName() {	return t('openincryptpad', 'Open in CryptPad') },
+			displayName() { return t('openincryptpad', 'Open in CryptPad') },
 			iconSvgInline() { return '' },
 			enabled(nodes) {
 				return nodes.length === 1
@@ -90,22 +105,6 @@ try {
 			},
 			default: DefaultType.DEFAULT,
 		}))
-	}
-
-	/**
-	 *
-	 * @param name
-	 * @param ext
-	 * @param names
-	 */
-	function getUniqueName(name, ext, names) {
-		let newName
-
-		do {
-			newName = name + '-' + Math.round(Math.random() * 1000000) + '.' + ext
-		} while (names.includes(newName))
-
-		return newName
 	}
 
 	addNewFileMenuEntry({

@@ -95,7 +95,7 @@ async function onInsertImage(data, callback) {
 
 /**
  *
- * @param shares
+ * @param {(object)} shares all existing share for this file
  */
 function findShareUrl(shares) {
 	const share = shares.find((share) => share.share_type === OC.Share.SHARE_TYPE_LINK)
@@ -105,15 +105,6 @@ function findShareUrl(shares) {
 
 	const url = window.location.protocol + '//' + window.location.host + generateUrl(`/apps/openincryptpad/share/${share.token}`)
 	return url
-}
-
-/**
- *
- * @param {string} url fetch this url
- */
-async function fetchBlob(url) {
-	const response = await fetch(url)
-	return await response.blob()
 }
 
 /**
@@ -307,7 +298,7 @@ async function getShares(path, inherited) {
 
 /**
  *
- * @param path
+ * @param {string} path the path to the file which should be shared
  */
 async function createShare(path) {
 	const response = await fetch(
