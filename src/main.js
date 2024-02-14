@@ -23,20 +23,31 @@ const EMPTY_DRAWIO = '<mxfile type="embed"><diagram id="bWoO5ACGZIaXrIiKNTKd" na
  * @param {string} filePath path to the file
  * @param {string} mimeType the mime type of the file
  */
-function openInCryptPad(fileId, filePath, mimeType) {
+function openInCryptPad(fileId, filePath, mimeType, backLink) {
 	location.href = generateUrl('/apps/openincryptpad/editor?id={id}&path={path}&mimeType={mimeType}&back={back}', {
 		id: fileId,
 		path: filePath,
 		mimeType,
-		back: location.href,
+		back: backLink,
 	})
+}
+
+async function createFolderLink(folderPath, folderId, viewId) {
+	if (!folderId) {
+		const result = await getFileInfo(folderPath)
+		folderId = result.id
+	}
+	return window.OCP.Files.Router._router.resolve({
+		params: { view: viewId, fileid: folderId },
+		query: { dir: folderPath },
+	}).href
 }
 
 /**
  *
  * @param {string} name name of the new file
  */
-async function createEmptyDrawioFile(name, folder) {
+async function createEmptyDrawioFile(name, folder, folderId, viewId) {
 	if (!name.endsWith('.drawio')) {
 		name += '.drawio'
 	}
@@ -45,7 +56,8 @@ async function createEmptyDrawioFile(name, folder) {
 	try {
 		await saveFileContent(path, new Blob([EMPTY_DRAWIO], { type: 'application/x-drawio' }))
 		const fileInfo = await getFileInfo(path)
-		openInCryptPad(fileInfo.id, path, 'application/x-drawio')
+		const backLink = await createFolderLink(folder, folderId, viewId)
+		openInCryptPad(fileInfo.id, path, 'application/x-drawio', backLink)
 	} catch (c) {
 		showError(t('openincryptpad', 'File could not be created'))
 	}
@@ -56,7 +68,7 @@ try {
 
 	for (const mimeType of mimeTypes) {
 		registerFileAction(new FileAction({
-			id: 'add-drawio-file',
+			id: 'edit-cryptpad-file',
 			displayName() {	return t('openincryptpad', 'Open in CryptPad') },
 			iconSvgInline() { return '' },
 			enabled(nodes) {
@@ -64,8 +76,9 @@ try {
 					&& nodes[0].mime === mimeType
 					&& nodes[0].attributes.permissions.includes('W')
 			},
-			async exec(node) {
-				openInCryptPad(node.fileid, node.path, node.mime)
+			async exec(node, view, dir) {
+				const backLink = await createFolderLink(dir, null, view.id)
+				openInCryptPad(node.fileid, node.path, node.mime, backLink)
 				return true
 			},
 			default: DefaultType.DEFAULT
@@ -92,8 +105,8 @@ try {
 		iconSvgInline: '',
 		async handler(context, content) {
 			const contentNames = content.map((node) => node.basename);
-			const fileName = getUniqueName('diagram', 'drawio', contentNames);
-			createEmptyDrawioFile(fileName, context.path)
+			const fileName = getUniqueName('diagram', 'drawio', contentNames)
+			createEmptyDrawioFile(fileName, context.path, context.fileid, 'files')
 		}
 	});
 } catch (e) {
