@@ -13,8 +13,6 @@ import {
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
 __webpack_public_path__ = generateFilePath('openincryptpad', '', 'js/') // eslint-disable-line
 
-/* global _ */
-
 const EMPTY_DRAWIO = '<mxfile type="embed"><diagram id="bWoO5ACGZIaXrIiKNTKd" name="Page-1"><mxGraphModel dx="1259" dy="718" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel></diagram></mxfile>'
 
 /**
@@ -22,6 +20,7 @@ const EMPTY_DRAWIO = '<mxfile type="embed"><diagram id="bWoO5ACGZIaXrIiKNTKd" na
  * @param {string} fileId Nextcloud ID of the file
  * @param {string} filePath path to the file
  * @param {string} mimeType the mime type of the file
+ * @param {string} backLink the URL back to Nextcloud
  */
 function openInCryptPad(fileId, filePath, mimeType, backLink) {
 	location.href = generateUrl('/apps/openincryptpad/editor?id={id}&path={path}&mimeType={mimeType}&back={back}', {
@@ -32,13 +31,18 @@ function openInCryptPad(fileId, filePath, mimeType, backLink) {
 	})
 }
 
-async function createFolderLink(folderPath, folderId, viewId) {
+/**
+ *
+ * @param {string} folderPath the path to the folder
+ * @param {string} folderId the ID of the folder
+ */
+async function createFolderLink(folderPath, folderId) {
 	if (!folderId) {
 		const result = await getFileInfo(folderPath)
 		folderId = result.id
 	}
 	return window.OCP.Files.Router._router.resolve({
-		params: { view: viewId, fileid: folderId },
+		params: { view: 'files', fileid: folderId },
 		query: { dir: folderPath },
 	}).href
 }
@@ -46,8 +50,11 @@ async function createFolderLink(folderPath, folderId, viewId) {
 /**
  *
  * @param {string} name name of the new file
+ * @param folder
+ * @param folderId
+ * @param viewId
  */
-async function createEmptyDrawioFile(name, folder, folderId, viewId) {
+async function createEmptyDrawioFile(name, folder, folderId) {
 	if (!name.endsWith('.drawio')) {
 		name += '.drawio'
 	}
@@ -56,7 +63,7 @@ async function createEmptyDrawioFile(name, folder, folderId, viewId) {
 	try {
 		await saveFileContent(path, new Blob([EMPTY_DRAWIO], { type: 'application/x-drawio' }))
 		const fileInfo = await getFileInfo(path)
-		const backLink = await createFolderLink(folder, folderId, viewId)
+		const backLink = await createFolderLink(folder, folderId)
 		openInCryptPad(fileInfo.id, path, 'application/x-drawio', backLink)
 	} catch (c) {
 		showError(t('openincryptpad', 'File could not be created'))
@@ -77,38 +84,44 @@ try {
 					&& nodes[0].attributes.permissions.includes('W')
 			},
 			async exec(node, view, dir) {
-				const backLink = await createFolderLink(dir, null, view.id)
+				const backLink = await createFolderLink(dir, null)
 				openInCryptPad(node.fileid, node.path, node.mime, backLink)
 				return true
 			},
-			default: DefaultType.DEFAULT
+			default: DefaultType.DEFAULT,
 		}))
 	}
 
+	/**
+	 *
+	 * @param name
+	 * @param ext
+	 * @param names
+	 */
 	function getUniqueName(name, ext, names) {
-		let newName;
+		let newName
 
 		do {
-			newName = name + '-' + Math.round(Math.random() * 1000000) + '.' + ext;
-		} while (names.includes(newName)) 
+			newName = name + '-' + Math.round(Math.random() * 1000000) + '.' + ext
+		} while (names.includes(newName))
 
-		return newName;
+		return newName
 	}
 
 	addNewFileMenuEntry({
 		id: 'add-drawio-file',
-		displayName: t('openincryptpad', 'New draw.io diagram'),
+		displayName: t('openincryptpad', 'New diagrams.net diagram'),
 		enabled() {
 			return getNavigation()?.active?.id === 'files'
 		},
 		iconClass: 'icon-add',
 		iconSvgInline: '',
 		async handler(context, content) {
-			const contentNames = content.map((node) => node.basename);
+			const contentNames = content.map((node) => node.basename)
 			const fileName = getUniqueName('diagram', 'drawio', contentNames)
-			createEmptyDrawioFile(fileName, context.path, context.fileid, 'files')
-		}
-	});
+			createEmptyDrawioFile(fileName, context.path, context.fileid)
+		},
+	})
 } catch (e) {
 	console.error(e)
 }

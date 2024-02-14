@@ -88,19 +88,23 @@ async function onInsertImage(data, callback) {
 	let url = findShareUrl(shares)
 	if (!url) {
 		const share = await createShare(path)
-		url =  window.location.protocol + '//' + window.location.host + generateUrl(`/apps/openincryptpad/share/${share.token}`)
+		url = window.location.protocol + '//' + window.location.host + generateUrl(`/apps/openincryptpad/share/${share.token}`)
 	}
 	callback({ url })
 }
 
+/**
+ *
+ * @param shares
+ */
 function findShareUrl(shares) {
 	const share = shares.find((share) => share.share_type === OC.Share.SHARE_TYPE_LINK)
 	if (!share) {
 		return
 	}
 
-    const url =  window.location.protocol + '//' + window.location.host + generateUrl(`/apps/openincryptpad/share/${share.token}`)
-    return url
+	const url = window.location.protocol + '//' + window.location.host + generateUrl(`/apps/openincryptpad/share/${share.token}`)
+	return url
 }
 
 /**
@@ -301,9 +305,13 @@ async function getShares(path, inherited) {
 	return []
 }
 
+/**
+ *
+ * @param path
+ */
 async function createShare(path) {
 	const response = await fetch(
-		generateOcsUrl( '/apps/files_sharing/api/v1/shares?format=json'),
+		generateOcsUrl('/apps/files_sharing/api/v1/shares?format=json'),
 		{
 			method: 'POST',
 			headers: {
@@ -313,7 +321,7 @@ async function createShare(path) {
 			body: JSON.stringify({
 				attributes: '[]',
 				path,
-				shareType: OC.Share.SHARE_TYPE_LINK
+				shareType: OC.Share.SHARE_TYPE_LINK,
 			}),
 		}
 	)

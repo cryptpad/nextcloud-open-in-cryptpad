@@ -28,7 +28,7 @@
 
 ## [0.2.1] - 2023-11-03
 
-- Improve wording for "New draw.io diagram".
+- Improve wording for "New diagrams.net diagram".
 
 ## [0.2.0] - 2023-11-02
 
@@ -37,7 +37,7 @@
 
 ## [0.1.0] - 2023-11-01
 
-- Add option to create empty draw.io diagram.
+- Add option to create empty diagrams.net diagram.
 
 ## [0.0.3] - 2023-10-17
 
