@@ -18,7 +18,7 @@ style('openincryptpad', 'settings');
 		<div class="urls">
 			<?php
 				foreach ($_['urls'] as $app => $url) {
-			?>
+					?>
 			<div class="url">
 				<label for="<?php p("openincryptpad-url-$app"); ?>">
 					<?php p($l->t($app)) ?>
@@ -32,7 +32,7 @@ style('openincryptpad', 'settings');
 			</div>
 			<?php
 				}
-			?>
+?>
 		</div>
 		<a id="openincryptpad-save" class="button">
 			<?php p($l->t('Save')); ?>

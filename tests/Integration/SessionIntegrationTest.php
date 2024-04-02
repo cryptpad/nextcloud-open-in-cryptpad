@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 // SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
@@ -9,7 +10,6 @@ use OCP\AppFramework\App;
 use OCP\IRequest;
 use PHPUnit\Framework\TestCase;
 
-use OCA\openincryptpad\Db\CryptPadSession;
 use OCA\openincryptpad\Db\CryptPadSessionMapper;
 use OCA\openincryptpad\Controller\CryptPadSessionController;
 
@@ -31,7 +31,7 @@ class SessionIntegrationTest extends TestCase {
 		$container->registerService(IRequest::class, function () {
 			return $this->createMock(IRequest::class);
 		});
-		fwrite(STDERR, print_r($container, TRUE));
+		fwrite(STDERR, print_r($container, true));
 		$this->controller = $container->get(CryptPadSessionController::class);
 		$this->mapper = $container->get(CryptPadSessionMapper::class);
 	}

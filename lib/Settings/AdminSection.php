@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 // SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
@@ -10,11 +11,11 @@ use OCP\IURLGenerator;
 use OCP\Settings\IIconSection;
 
 class AdminSection implements IIconSection {
-    private IL10N $l;
+	private IL10N $l;
 	private IURLGenerator $urlGenerator;
 
 	public function __construct(IL10N $l, IURLGenerator $urlGenerator) {
-        $this->l = $l;
+		$this->l = $l;
 		$this->urlGenerator = $urlGenerator;
 	}
 
@@ -24,7 +25,7 @@ class AdminSection implements IIconSection {
 
 
 	public function getName() {
-        return $this->l->t('CryptPad');
+		return $this->l->t('CryptPad');
 	}
 
 	public function getPriority() {

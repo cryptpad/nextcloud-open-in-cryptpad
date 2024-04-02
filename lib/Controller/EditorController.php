@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 // SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
@@ -9,7 +10,6 @@ use OCA\OpenInCryptPad\AppInfo\Application;
 use OCA\OpenInCryptPad\Service\SettingsService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\ContentSecurityPolicy;
-use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\IRequest;
 
@@ -54,7 +54,7 @@ class EditorController extends Controller {
 		return $response;
 	}
 
-	function getInfoScript($id, $path, $mimeType, $fileType, $app, $cryptPadUrl): string {
+	public function getInfoScript($id, $path, $mimeType, $fileType, $app, $cryptPadUrl): string {
 		return 'window.OpenInCryptPadInfo = ' . json_encode([
 			'fileId' => $id,
 			'filePath' => $path,
@@ -65,7 +65,7 @@ class EditorController extends Controller {
 		]);
 	}
 
-	function getCSPHash($str) {
+	public function getCSPHash($str) {
 		$hash = hash("sha256", $str, true);
 		return '\'sha256-' . base64_encode($hash) . '\'';
 	}

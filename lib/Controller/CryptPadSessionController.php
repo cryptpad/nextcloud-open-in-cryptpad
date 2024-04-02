@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 // SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
@@ -6,7 +7,6 @@ declare(strict_types=1);
 namespace OCA\OpenInCryptPad\Controller;
 
 use OCA\OpenInCryptPad\AppInfo\Application;
-use OCA\OpenInCryptPad\Service\CryptPadSessionNotFound;
 use OCA\OpenInCryptPad\Service\CryptPadSessionService;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http;
@@ -14,7 +14,6 @@ use OCP\AppFramework\Http\DataResponse;
 use OCP\Files\IRootFolder;
 use OCP\IRequest;
 use Psr\Log\LoggerInterface;
-use function OCP\Log\logger;
 
 class CryptPadSessionController extends Controller {
 	private CryptPadSessionService $service;

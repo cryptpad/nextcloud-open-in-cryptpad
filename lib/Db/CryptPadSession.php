@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 // SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
@@ -21,11 +22,11 @@ class CryptPadSession extends Entity implements JsonSerializable {
 	protected string $sessionKey = '';
 	protected ?\DateTime $createdAt = null;
 
-    public function __construct() {
-        // add types in constructor
-        $this->addType('sessonKey', 'string');
-        $this->addType('createdAt', 'datetime');
-    }
+	public function __construct() {
+		// add types in constructor
+		$this->addType('sessonKey', 'string');
+		$this->addType('createdAt', 'datetime');
+	}
 
 	public function jsonSerialize(): array {
 		return [

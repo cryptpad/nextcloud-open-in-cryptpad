@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 // SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
@@ -14,7 +15,7 @@ use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\IDBConnection;
 
 class CryptPadSessionService {
-    private IDBConnection $db;
+	private IDBConnection $db;
 	private CryptPadSessionMapper $mapper;
 
 	public function __construct(IDBConnection $db, CryptPadSessionMapper $mapper) {
