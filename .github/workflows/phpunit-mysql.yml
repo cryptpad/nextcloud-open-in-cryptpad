@@ -22,7 +22,7 @@ jobs:
     strategy:
       matrix:
         php-versions: ['7.4', '8.0', '8.1']
-        server-versions: ['master']
+        server-versions: ['v28.0.4', 'v27.1.8']
 
     services:
       mysql:

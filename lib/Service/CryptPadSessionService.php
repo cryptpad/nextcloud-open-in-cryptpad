@@ -69,7 +69,7 @@ class CryptPadSessionService {
 
 		if ($actualOldKey == $oldSessionKey) {
 			if ($newSessionKey == null) {
-				return this->delete($id);
+				return $this->delete($id);
 			} else {
 				if ($actualOldKey == null) {
 					return $this->create($id, $newSessionKey);
