@@ -1,6 +1,7 @@
-<!--
-SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
-SPDX-License-Identifier: CC0-1.0
+<!---
+SPDX-FileCopyrightText: 2023 XWiki CryptPad Team <contact@cryptpad.org> and contributors
+
+SPDX-License-Identifier: AGPL-3.0-or-later
 -->
 
 # Open In CryptPad
