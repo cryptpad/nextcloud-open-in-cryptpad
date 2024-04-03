@@ -65,6 +65,7 @@ class CryptPadSessionService {
 			}
 		} catch (CryptPadSessionNotFound $e) {
 			$actualOldKey = null;
+			$dbSession = null;
 		}
 
 		if ($actualOldKey == $oldSessionKey) {
@@ -78,7 +79,7 @@ class CryptPadSessionService {
 				}
 			}
 		} else {
-			return $actualOldKey;
+			return $dbSession;
 		}
 	}
 
