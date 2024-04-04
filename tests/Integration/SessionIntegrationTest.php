@@ -34,11 +34,11 @@ class SessionIntegrationTest extends TestCase {
 		});
 
 		// Always allow permission checks
-		$permissionService = $this->createStub(FilePermissionService::class);
-		$permissionService->method('hasWritePermission')->willReturn(true);
-		$container->registerService(FilePermissionService::class, function () use ($permissionService) {
-			return $permissionService;
-		});
+		// $permissionService = $this->createStub(FilePermissionService::class);
+		// $permissionService->method('hasWritePermission')->willReturn(true);
+		// $container->registerService(FilePermissionService::class, function () use ($permissionService) {
+		// 	return $permissionService;
+		// });
 
 		$this->controller = $container->get(CryptPadSessionController::class);
 		$this->mapper = $container->get(CryptPadSessionMapper::class);
