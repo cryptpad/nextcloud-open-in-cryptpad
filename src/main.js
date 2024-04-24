@@ -86,11 +86,17 @@ function getUniqueName(name, ext, names) {
 }
 
 try {
-	const mimeTypes = ['application/x-drawio']
+	let mimeTypes = [];
+    try {
+        mimeTypes = OCP.InitialState.loadState('openincryptpad','enabledapps').split(',').filter(Boolean);
+    } catch (e) {
+        mimeTypes = ['application/x-drawio'];
+    }
 
+    let i = 0;
 	for (const mimeType of mimeTypes) {
 		registerFileAction(new FileAction({
-			id: 'edit-cryptpad-file',
+			id: 'edit-cryptpad-file-'+(i++),
 			displayName() { return t('openincryptpad', 'Open in CryptPad') },
 			iconSvgInline() { return '' },
 			enabled(nodes) {
@@ -107,6 +113,7 @@ try {
 		}))
 	}
 
+    // TODO: add new entries for the other apps
 	addNewFileMenuEntry({
 		id: 'add-drawio-file',
 		displayName: t('openincryptpad', 'New diagrams.net diagram'),

@@ -23,6 +23,10 @@ class Application extends App implements IBootstrap {
 	}
 
 	public function boot(IBootContext $context): void {
+        /**
+         * Add initial state wiht enabled apps
+         */
+        $context->getAppContainer()->get(CryptPadHook::class)->register();
 		/**
 		 * Always add main script
 		 */

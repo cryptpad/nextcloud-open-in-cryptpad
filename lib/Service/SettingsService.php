@@ -11,16 +11,19 @@ class SettingsService {
 	const APP_FOR_MIME_TYPE = [
 		'text/markdown' => 'code',
 		'application/x-drawio' => 'diagram',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'sheet'
 	];
 
 	const MIME_TYPE_FOR_APP = [
 		'code' => 'text/markdown',
 		'diagram' => 'application/x-drawio',
+        'sheet' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 	];
 
 	const FILE_TYPE_FOR_MIME_TYPE = [
 		'text/markdown' => 'md',
 		'application/x-drawio' => 'drawio',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' => 'xlsx'
 	];
 
     private IDBConnection $db;
@@ -38,10 +41,23 @@ class SettingsService {
 		return $this->config->getAppValue('openincryptpad', "CryptPadUrl:$app");
 	}
 
+    // TODO: make this list configurable
 	public function getAvailableApps(): array {
 		return [
-			// 'code', Disabled for now
+            'sheet',
+            'code',
 			'diagram'
 		];
 	}
+
+    public function getAvailableTypes(): string {
+        $list = $this->getAvailableApps();
+        $str = "";
+        foreach($list as $app) {
+            $str .= SettingsService::MIME_TYPE_FOR_APP[$app];
+            $str .= ',';
+        }
+        return $str;
+    }
+
 }
