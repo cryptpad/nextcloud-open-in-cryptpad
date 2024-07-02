@@ -1,9 +1,13 @@
+// SPDX-FileCopyrightText: 2023 XWiki CryptPad Team <contact@cryptpad.org> and contributors
+//
+// SPDX-License-Identifier: AGPL-3.0-or-later
+
 import { generateUrl, generateOcsUrl, generateFilePath } from '@nextcloud/router'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
 import { saveFileContent, deferredToPromise } from './utils.js'
 import { getRequestToken } from '@nextcloud/auth'
 
-import '@nextcloud/dialogs/style.css'
+import '@nextcloud/dialogs/style.css'  // eslint-disable-line
 
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
 __webpack_public_path__ = generateFilePath('openincryptpad', '', 'js/') // eslint-disable-line
@@ -90,7 +94,7 @@ async function onInsertImage(data, callback) {
 		const share = await createShare(path)
 		url = window.location.protocol + '//' + window.location.host + generateUrl(`/apps/openincryptpad/share/${share.token}`)
 	}
-	callback({ url })
+	callback({ url }) // eslint-disable-line n/no-callback-literal
 }
 
 /**

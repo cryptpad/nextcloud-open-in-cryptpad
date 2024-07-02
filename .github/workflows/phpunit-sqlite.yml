@@ -7,7 +7,7 @@ on:
   pull_request:
   push:
     branches:
-      - master
+      - main
       - stable*
 
 env:
@@ -21,8 +21,8 @@ jobs:
 
     strategy:
       matrix:
-        php-versions: ['8.0']
-        server-versions: ['master']
+        php-versions: ['8.2']
+        server-versions: ['v28.0.4', 'v27.1.8']
 
     steps:
       - name: Set app env
@@ -60,7 +60,7 @@ jobs:
         run: |
           mkdir data
           ./occ maintenance:install --verbose --database=sqlite --database-name=nextcloud --database-host=127.0.0.1 --database-port=$DB_PORT --database-user=root --database-pass=rootpassword --admin-user admin --admin-pass password
-          ./occ app:enable ${{ env.APP_NAME }}
+          ./occ app:enable openincryptpad
 
       - name: Check PHPUnit config file existence
         id: check_phpunit

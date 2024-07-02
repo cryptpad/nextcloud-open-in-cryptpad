@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 // SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
 // SPDX-License-Identifier: AGPL-3.0-or-later
@@ -6,21 +7,16 @@ declare(strict_types=1);
 namespace OCA\OpenInCryptPad\Controller;
 
 use OCA\OpenInCryptPad\AppInfo\Application;
-use OCA\OpenInCryptPad\Service\SettingsService;
 use OCP\AppFramework\ApiController;
 use OCP\AppFramework\Http;
 use OCP\AppFramework\Http\DataResponse;
 use OCP\AppFramework\Http\FileDisplayResponse;
-use OCP\AppFramework\PublicShareController;
 use OCP\Constants;
 use OCP\Files\Folder;
 use OCP\Files\NotFoundException;
-use OCP\IPreview;
 use OCP\IRequest;
-use OCP\ISession;
 use OCP\Share\Exceptions\ShareNotFound;
 use OCP\Share\IManager as ShareManager;
-use OCP\Share\IShare;
 
 class ShareController extends ApiController {
 	private ShareManager $shareManager;
