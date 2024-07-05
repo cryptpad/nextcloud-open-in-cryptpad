@@ -85,24 +85,34 @@ function getUniqueName(name, ext, names) {
 	return newName
 }
 
-try {
-	let mimeTypes = [];
-    try {
-        mimeTypes = OCP.InitialState.loadState('openincryptpad','enabledapps').split(',').filter(Boolean);
-    } catch (e) {
-        mimeTypes = ['application/x-drawio'];
-    }
+/**
+ *
+ * @param {number} permissions the permissions as bit set
+ */
+function hasWritePermission(permissions) {
+	const UPDATE = 2
 
-    let i = 0;
+	return (permissions & UPDATE) === UPDATE
+}
+
+try {
+	let mimeTypes = []
+	try {
+		mimeTypes = OCP.InitialState.loadState('openincryptpad', 'enabledapps').split(',').filter(Boolean)
+	} catch (e) {
+		mimeTypes = ['application/x-drawio']
+	}
+
+	let i = 0
 	for (const mimeType of mimeTypes) {
 		registerFileAction(new FileAction({
-			id: 'edit-cryptpad-file-'+(i++),
+			id: 'edit-cryptpad-file-' + (i++),
 			displayName() { return t('openincryptpad', 'Open in CryptPad') },
 			iconSvgInline() { return '' },
 			enabled(nodes) {
 				return nodes.length === 1
 					&& nodes[0].mime === mimeType
-					&& nodes[0].attributes.permissions.includes('W')
+					&& hasWritePermission(nodes[0].permissions)
 			},
 			async exec(node, view, dir) {
 				const backLink = await createFolderLink(dir, null)
@@ -113,7 +123,7 @@ try {
 		}))
 	}
 
-    // TODO: add new entries for the other apps
+	// TODO: add new entries for the other apps
 	addNewFileMenuEntry({
 		id: 'add-drawio-file',
 		displayName: t('openincryptpad', 'New diagrams.net diagram'),

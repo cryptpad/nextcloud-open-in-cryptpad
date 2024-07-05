@@ -36,8 +36,8 @@ window.addEventListener('DOMContentLoaded', async function() {
         const blob = await loadFileContent(filePath, mimeType)
 		const docUrl = URL.createObjectURL(blob)
         */
-        const fileClient = OC.Files.getClient()
-        const docUrl = fileClient._buildUrl(filePath);
+		const fileClient = OC.Files.getClient()
+		const docUrl = fileClient._buildUrl(filePath)
 
 		CryptPadAPI(cryptPadUrl, 'editor-content', {
 			document: {

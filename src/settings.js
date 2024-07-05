@@ -10,27 +10,31 @@ __webpack_public_path__ = generateFilePath('openincryptpad', '', 'js/') // eslin
  *
  */
 async function handleSave() {
-	await confirmPassword()
+	try {
+    	await confirmPassword()
 
-	const prefix = 'openincryptpad-url-'
-	const inputs = document.querySelectorAll('input.openincryptpad-url')
+    	const prefix = 'openincryptpad-url-'
+    	const inputs = document.querySelectorAll('input.openincryptpad-url')
 
-	const promises = Array.from(inputs).map(async (i) => {
-		const app = i.id.substring(prefix.length)
-		await fetch(
-			generateUrl(`/apps/openincryptpad/settings/cryptPadUrl/${app}`),
-			{
-				method: 'PUT',
-				headers: {
-					requesttoken: OC.requestToken,
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ url: i.value }),
-			}
-		)
-	})
+    	const promises = Array.from(inputs).map(async (i) => {
+    		const app = i.id.substring(prefix.length)
+    		await fetch(
+    			generateUrl(`/apps/openincryptpad/settings/cryptPadUrl/${app}`),
+    			{
+    				method: 'PUT',
+    				headers: {
+    					requesttoken: OC.requestToken,
+    					'Content-Type': 'application/json',
+    				},
+    				body: JSON.stringify({ url: i.value }),
+    			}
+    		)
+    	})
 
-	await Promise.all(promises)
+    	await Promise.all(promises)
+	} catch (e) {
+		console.error('Error while saving CryptPad settings', e)
+	}
 }
 
 const saveLink = document.getElementById('openincryptpad-save')
