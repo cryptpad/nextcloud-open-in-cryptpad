@@ -99,42 +99,68 @@ function hasWritePermission(permissions) {
 	return (permissions & UPDATE) === UPDATE
 }
 
-try {
-	const mimeTypes = ['application/x-drawio']
+/**
+ *
+ */
+async function main() {
+	try {
+		const cryptPadIcon = await loadIcon('app-dark.svg')
+		const mimeTypes = ['application/x-drawio']
 
-	for (const mimeType of mimeTypes) {
-		registerFileAction(new FileAction({
-			id: 'edit-cryptpad-file',
-			displayName() { return t('openincryptpad', 'Open in CryptPad') },
-			iconSvgInline() { return '' },
-			enabled(nodes) {
-				return nodes.length === 1
-					&& nodes[0].mime === mimeType
-                    && hasWritePermission(nodes[0].permissions)
+		for (const mimeType of mimeTypes) {
+			registerFileAction(new FileAction({
+				id: 'edit-cryptpad-file',
+				displayName() { return t('openincryptpad', 'Open in CryptPad') },
+				iconSvgInline() { return cryptPadIcon },
+				enabled(nodes) {
+					return nodes.length === 1 && nodes[0].mime === mimeType && hasWritePermission(nodes[0].permissions)
+				},
+				async exec(node, view, dir) {
+					const backLink = await createFolderLink(dir, null)
+					openInCryptPad(node.fileid, node.path, node.mime, backLink)
+					return true
+				},
+				default: DefaultType.DEFAULT,
+			}))
+		}
+
+		addNewFileMenuEntry({
+			id: 'add-drawio-file',
+			displayName: t('openincryptpad', 'New diagrams.net diagram'),
+			enabled() {
+				return getNavigation()?.active?.id === 'files'
 			},
-			async exec(node, view, dir) {
-				const backLink = await createFolderLink(dir, null)
-				openInCryptPad(node.fileid, node.path, node.mime, backLink)
-				return true
+			iconClass: 'icon-add',
+			iconSvgInline: cryptPadIcon,
+			async handler(context, content) {
+				const contentNames = content.map((node) => node.basename)
+				const fileName = getUniqueName('diagram', 'drawio', contentNames)
+				createEmptyDrawioFile(fileName, context.path, context.fileid)
 			},
-			default: DefaultType.DEFAULT,
-		}))
+		})
+	} catch (e) {
+		console.error(e)
 	}
-
-	addNewFileMenuEntry({
-		id: 'add-drawio-file',
-		displayName: t('openincryptpad', 'New diagrams.net diagram'),
-		enabled() {
-			return getNavigation()?.active?.id === 'files'
-		},
-		iconClass: 'icon-add',
-		iconSvgInline: '',
-		async handler(context, content) {
-			const contentNames = content.map((node) => node.basename)
-			const fileName = getUniqueName('diagram', 'drawio', contentNames)
-			createEmptyDrawioFile(fileName, context.path, context.fileid)
-		},
-	})
-} catch (e) {
-	console.error(e)
 }
+
+/**
+ *
+ * @param {string} name name of the icon
+ */
+async function loadIcon(name) {
+	const response = await fetch(
+		`/apps/openincryptpad/img/${name}`,
+		{
+			method: 'GET',
+			headers: {
+				requesttoken: OC.requestToken,
+			},
+		}
+	)
+	if (response.ok) {
+		return await response.text()
+	}
+	return ''
+}
+
+main()
