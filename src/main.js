@@ -89,6 +89,16 @@ function getUniqueName(name, ext, names) {
 	return newName
 }
 
+/**
+ *
+ * @param {number} permissions the permissions as bit set
+ */
+function hasWritePermission(permissions) {
+	const UPDATE = 2
+
+	return (permissions & UPDATE) === UPDATE
+}
+
 try {
 	const mimeTypes = ['application/x-drawio']
 
@@ -100,7 +110,7 @@ try {
 			enabled(nodes) {
 				return nodes.length === 1
 					&& nodes[0].mime === mimeType
-					&& nodes[0].attributes.permissions.includes('W')
+                    && hasWritePermission(nodes[0].permissions)
 			},
 			async exec(node, view, dir) {
 				const backLink = await createFolderLink(dir, null)
