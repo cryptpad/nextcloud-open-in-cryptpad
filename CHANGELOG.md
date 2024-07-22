@@ -7,6 +7,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## [Unreleased]
 
+## [0.3.4] - 2024-07-22
+
+- Fix: Support Nextcloud version 28.0.7.
+- Add icons for "New diagrams.net diagram" and "Open in CryptPad" menu entries.
+
 ## [0.3.3] - 2024-02-14
 
 - Fix: Cannot leave diagram, when opened from file info.
@@ -60,4 +65,3 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 ## [0.0.1] - 2023-08-24
 
 First public release.
-

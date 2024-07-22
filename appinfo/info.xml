@@ -27,7 +27,7 @@ public via a secret link to the image.**
 When using this app, the file permissions are completely handled by
 Nextcloud. The right's management of CryptPad is not used for Nextcloud
 files edited in CryptPad.
-	
+
 ## Installation
 
 ### Prerequisites on the CryptPad side
@@ -61,7 +61,7 @@ interface in the "General" tab.
    CryptPad". You can find it in the "Integration" category.
 3. Configure "Open in CryptPad" in the administration settings of Nextcloud.
     ]]></description>
-    <version>0.3.3</version>
+    <version>0.3.4</version>
     <licence>agpl</licence>
     <author mail="wolfgang.ginolas@xwiki.com" homepage="https://xwiki.com">Wolfgang Ginolas</author>
     <namespace>OpenInCryptPad</namespace>
@@ -69,7 +69,7 @@ interface in the "General" tab.
     <bugs>https://github.com/cryptpad/nextcloud-open-in-cryptpad/issues</bugs>
     <screenshot>https://raw.githubusercontent.com/cryptpad/nextcloud-open-in-cryptpad/main/screenshot.png</screenshot>
     <dependencies>
-        <nextcloud min-version="27" max-version="28"/>
+        <nextcloud min-version="28" max-version="30"/>
     </dependencies>
     <settings>
         <admin>OCA\OpenInCryptPad\Settings\Admin</admin>
