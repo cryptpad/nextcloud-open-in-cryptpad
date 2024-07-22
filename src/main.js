@@ -104,7 +104,10 @@ function hasWritePermission(permissions) {
  */
 async function main() {
 	try {
-		const cryptPadIcon = await loadIcon('app-dark.svg')
+		const [cryptPadIcon, diagramIcon] = await Promise.all([
+			loadIcon('app-dark.svg'),
+			loadIcon('diagram.svg'),
+		])
 		const mimeTypes = ['application/x-drawio']
 
 		for (const mimeType of mimeTypes) {
@@ -131,7 +134,7 @@ async function main() {
 				return getNavigation()?.active?.id === 'files'
 			},
 			iconClass: 'icon-add',
-			iconSvgInline: cryptPadIcon,
+			iconSvgInline: diagramIcon,
 			async handler(context, content) {
 				const contentNames = content.map((node) => node.basename)
 				const fileName = getUniqueName('diagram', 'drawio', contentNames)
