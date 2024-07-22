@@ -56,6 +56,8 @@ window.addEventListener('DOMContentLoaded', async function() {
 				},
 				onInsertImage,
 			},
+			width: '100%',
+			height: '100%',
 		})
 
 		checkForPermissionChange(filePath, () => resetCryptPadSession(fileId))
