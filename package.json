@@ -1,7 +1,7 @@
 {
   "name": "openincryptpad",
   "description": "Open files in CryptPad",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "author": "Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>",
   "contributors": [],
   "bugs": {

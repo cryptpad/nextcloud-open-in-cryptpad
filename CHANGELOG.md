@@ -7,6 +7,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## [Unreleased]
 
+## [0.3.5] - 2024-07-23
+
+- Fix: iframe size for older versions of CryptPad.
+
 ## [0.3.4] - 2024-07-22
 
 - Fix: Support Nextcloud version 28.0.7.
