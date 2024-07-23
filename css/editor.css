@@ -2,6 +2,11 @@
 
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+#cryptpad-editor {
+	width: 100%;
+	height: 100%;
+}
+
 iframe {
 	width: 100%;
 	height: 100%;
