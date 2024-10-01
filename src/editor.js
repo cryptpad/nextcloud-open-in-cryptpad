@@ -227,7 +227,7 @@ async function getSessionForFile(fileId) {
 			headers: {
 				requesttoken: OC.requestToken,
 			},
-		}
+		},
 	)
 	if (response.ok) {
 		const body = await response.json()
@@ -256,7 +256,7 @@ async function updateSessionForFile(fileId, data, cb) {
 				newSessionKey: data.new,
 				oldSessionKey: data.old,
 			}),
-		}
+		},
 	)
 	if (response.ok) {
 		const body = await response.json()
@@ -291,7 +291,7 @@ async function getShares(path, inherited) {
 			headers: {
 				requesttoken: OC.requestToken,
 			},
-		}
+		},
 	)
 	if (response.ok) {
 		const body = await response.json()
@@ -320,7 +320,7 @@ async function createShare(path) {
 				path,
 				shareType: OC.Share.SHARE_TYPE_LINK,
 			}),
-		}
+		},
 	)
 	if (response.ok) {
 		const body = await response.json()

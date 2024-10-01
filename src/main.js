@@ -158,7 +158,7 @@ async function loadIcon(name) {
 			headers: {
 				requesttoken: OC.requestToken,
 			},
-		}
+		},
 	)
 	if (response.ok) {
 		return await response.text()

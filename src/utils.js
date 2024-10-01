@@ -13,7 +13,7 @@ export async function saveFileContent(path, data) {
 		await deferredToPromise(fileClient.putFileContents(
 			path,
 			data,
-			{ overwrite: false } // Bug in NextCloud? This has to be set to false to make the upload work.
+			{ overwrite: false }, // Bug in NextCloud? This has to be set to false to make the upload work.
 		))
 	} catch (e) {
 		throw e[1]
