@@ -86,17 +86,18 @@ function initBackButton() {
 async function onInsertImage(data, callback) {
 	const filepicker = getFilePickerBuilder(t('openincryptpad', 'Pick an image'))
 		.addMimeTypeFilter('image/*')
+		.addButton({
+			label: 'Choose',
+		})
 		.build()
 
 	const path = await filepicker.pick()
 
-	const shares = await getShares(path)
-	let url = findShareUrl(shares)
-	if (!url) {
-		const share = await createShare(path)
-		url = window.location.protocol + '//' + window.location.host + generateUrl(`/apps/openincryptpad/share/${share.token}`)
-	}
-	callback({ url }) // eslint-disable-line n/no-callback-literal
+	const shares = await getShares(path, false)
+	const shareUrl = findShareUrl(shares)
+	const blob = await uploadImg(shareUrl)
+
+	callback({ blob }) // eslint-disable-line n/no-callback-literal
 }
 
 /**
@@ -304,29 +305,18 @@ async function getShares(path, inherited) {
 
 /**
  *
- * @param {string} path the path to the file which should be shared
+ * @param { string } shareLink the share link to the image
  */
-async function createShare(path) {
-	const response = await fetch(
-		generateOcsUrl('/apps/files_sharing/api/v1/shares?format=json'),
-		{
-			method: 'POST',
-			headers: {
-				requesttoken: OC.requestToken,
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				attributes: '[]',
-				path,
-				shareType: OC.Share.SHARE_TYPE_LINK,
-			}),
-		},
-	)
-	if (response.ok) {
-		const body = await response.json()
-		if (body.ocs.meta.status === 'ok') {
-			return body.ocs.data
-		}
-	}
-	return {}
+async function uploadImg(shareLink) {
+	const myRequest = new Request(shareLink)
+	let blob
+	/* eslint-disable no-unused-vars */
+	const response = await fetch(myRequest)
+		.then((response) => {
+			blob = response.blob()
+		})
+	/* eslint-enable no-unused-vars */
+
+	return blob
+
 }
