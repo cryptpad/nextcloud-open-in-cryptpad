@@ -88,6 +88,7 @@ async function onInsertImage(data, callback) {
 		.addMimeTypeFilter('image/*')
 		.addButton({
 			label: 'Choose',
+			callback: () => null,
 		})
 		.build()
 
@@ -95,7 +96,7 @@ async function onInsertImage(data, callback) {
 
 	const shares = await getShares(path, false)
 	const shareUrl = findShareUrl(shares)
-	const blob = await uploadImg(shareUrl)
+	const blob = await getImage(shareUrl)
 
 	callback({ blob }) // eslint-disable-line n/no-callback-literal
 }
@@ -307,14 +308,11 @@ async function getShares(path, inherited) {
  *
  * @param { string } shareLink the share link to the image
  */
-async function uploadImg(shareLink) {
+async function getImage(shareLink) {
 	const myRequest = new Request(shareLink)
-	let blob
 	/* eslint-disable no-unused-vars */
 	const response = await fetch(myRequest)
-		.then((response) => {
-			blob = response.blob()
-		})
+	const blob = await response.blob()
 	/* eslint-enable no-unused-vars */
 
 	return blob
