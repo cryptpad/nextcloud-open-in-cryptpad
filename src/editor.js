@@ -304,10 +304,10 @@ async function getShares(path, inherited) {
 
 /**
  *
- * @param { string } shareLink the share link to the image
+ * @param { string } imageUrl the link to the image
  */
-async function getImage(shareLink) {
-	const myRequest = new Request(shareLink)
+async function getImage(imageUrl) {
+	const myRequest = new Request(imageUrl)
 	/* eslint-disable no-unused-vars */
 	const response = await fetch(myRequest)
 	const blob = await response.blob()
