@@ -99,19 +99,6 @@ async function onInsertImage(data, callback) {
 	callback({ blob }) // eslint-disable-line n/no-callback-literal
 }
 
-/**
- *
- * @param {(object)} shares all existing share for this file
- */
-function findShareUrl(shares) {
-	const share = shares.find((share) => share.share_type === OC.Share.SHARE_TYPE_LINK)
-	if (!share) {
-		return
-	}
-
-	const url = window.location.protocol + '//' + window.location.host + generateUrl(`/apps/openincryptpad/share/${share.token}`)
-	return url
-}
 
 /**
  *
