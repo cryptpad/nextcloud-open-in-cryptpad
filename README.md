@@ -13,16 +13,14 @@ interface. Currently, only drawio diagrams are supported.
 ## Importing images from Nextcloud into diagrams
 
 With this app, you can import images from Nextcloud into
-diagrams. These images are not embedded, but linked to their
-source in Nextcloud. **To achieve this, imported images are made
-public via a secret link to the image.**
+diagrams. A copy of the image will be stored inside the `.drawio` file.
 
 ## Rights management
 
 When using this app, the file permissions are completely handled by
 Nextcloud. The right's management of CryptPad is not used for Nextcloud
 files edited in CryptPad.
-	
+
 ## Installation
 
 ### Prerequisites on the CryptPad side
