@@ -99,7 +99,6 @@ async function onInsertImage(data, callback) {
 	callback({ blob }) // eslint-disable-line n/no-callback-literal
 }
 
-
 /**
  *
  * @param {string} message the message to show
