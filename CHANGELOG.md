@@ -7,6 +7,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## [Unreleased]
 
+## [0.3.6] - 2024-10-21
+
+- Embed imported images into the diagram.
+
 ## [0.3.5] - 2024-07-23
 
 - Fix: iframe size for older versions of CryptPad.
