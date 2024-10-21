@@ -23,11 +23,14 @@ files edited in CryptPad.
 
 ## Installation
 
+You can install this app in one of the following ways: either from the NextCloud app store, from a binary release, or by cloning this repository. Once installed, you can check CryptPad is configured correctly by checking that the url listed under Administration > CryptPad is the same as the url of your local CryptPad instance.
+
 ### Prerequisites on the CryptPad side
 
 To embed CryptPad into Nextcloud, the "Enable remote embedding" admin setting
 needs to be enabled. You can find this setting on the "Administration" web
-interface in the "General" tab.
+interface in the "Security" tab.
+
 
 ### Install from Nextcloud app store
 
@@ -81,7 +84,7 @@ interface in the "General" tab.
         }
         ```
 
-### Verify binary release
+#### Verify binary release
 
 To verify the binary release you run the following command:
 
@@ -89,7 +92,7 @@ To verify the binary release you run the following command:
 openssl dgst -sha512 -verify openincryptpad.pubkey -signature openincryptpad.tar.gz.signature openincryptpad.tar.gz
 ```
 
-## Clone from repo
+### Clone from repo
 Place this app in **nextcloud/apps/**. Make sure the folder is named `openincryptpad`. E.g.:
 
 ``` sh
@@ -99,7 +102,12 @@ git clone https://github.com/cryptpad/nextcloud-open-in-cryptpad.git openincrypt
 
 ## Building the app
 
-The app can be built by using the provided Makefile by running:
+Prior to building, install the requisite dependencies by running:
+
+    npm ci
+
+
+The app can then be built using the provided Makefile by running:
 
     make
 
@@ -121,6 +129,16 @@ The make command will install or update Composer dependencies if a composer.json
 }
 ```
 
+## Running the Nextcloud server
+
+Before running Nextcloud, ensure you have an up-to-date version of PHP installed in the `nextcloud` repository, and run the following commands:
+
+    git switch v29.0.7 --detach
+    git submodule update --init
+
+Then, to run the server:
+
+    php -S localhost:8080
 
 ## Publish to App Store
 
