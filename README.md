@@ -131,8 +131,10 @@ The make command will install or update Composer dependencies if a composer.json
 
 ## Running the Nextcloud server
 
-Before running Nextcloud, ensure you have an up-to-date version of PHP installed in the `nextcloud` repository, and run the following commands:
+Before running Nextcloud, ensure you have an up-to-date version of PHP installed and run the following commands:
 
+    git clone https://github.com/nextcloud/server.git nextcloud
+    cd nextcloud/
     git switch v29.0.7 --detach
     git submodule update --init
 
