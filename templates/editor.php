@@ -7,9 +7,9 @@ script('openincryptpad', 'openincryptpad-editor');
 style('openincryptpad', 'editor');
 ?>
 
-<script nonce="<?php p(base64_encode($_['requesttoken'])) ?>"><?php print_unescaped($_['infoScript']) ?></script>
+<script nonce="<?php p($_['cspNonce']) ?>"><?php print_unescaped($_['infoScript']) ?></script>
 
-<script nonce="<?php p(base64_encode($_['requesttoken'])) ?>"
+<script nonce="<?php p($_['cspNonce']) ?>"
 	src="<?php p($_["apiUrl"]) ?>" type="text/javascript"></script>
 <div id="unsaved-indicator">
 	<?php p($l->t('Saving...')); ?>
