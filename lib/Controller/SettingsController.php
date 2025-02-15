@@ -36,6 +36,9 @@ class SettingsController extends Controller {
 
 	public function getCryptPadUrl($app): DataResponse {
 		$url = $this->settingsService->getCryptPadUrl($app);
+		if (!$url) {
+		  $url = $this->settingsService->getCryptPadUrl("default");
+		}
 		return new DataResponse(['url' => $url]);
 	}
 }

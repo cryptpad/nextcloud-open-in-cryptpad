@@ -75,6 +75,28 @@ async function createEmptyDrawioFile(name, folder, folderId) {
 
 /**
  *
+ * @param {string} name name of the new file
+ * @param {string} folder name ot the folder
+ * @param {string} folderId id of the folder
+ */
+async function createEmptyTextFile(name, folder, folderId, extension, mimeType) {
+        if (!name.endsWith(extension)) {
+                name += extension
+        }
+        const path = `${folder}/${name}`.replace('//', '/')
+
+        try {
+                await saveFileContent(path, new Blob([""], { type: mimeType }))
+                const fileInfo = await getFileInfo(path)
+                const backLink = await createFolderLink(folder, folderId)
+                openInCryptPad(fileInfo.id, path, mimeType, backLink)
+        } catch (c) {
+                showError(t('openincryptpad', 'File could not be created'))
+        }
+}
+
+/**
+ *
  * @param {string} name prefix of the new name
  * @param {string} ext extension of the new name
  * @param {(string)} names all existinf file names
@@ -104,15 +126,27 @@ function hasWritePermission(permissions) {
  */
 async function main() {
 	try {
-		const [cryptPadIcon, diagramIcon] = await Promise.all([
+		const [cryptPadIcon, diagramIcon, codeIcon, mdIcon, txtIcon, htmlIcon] = await Promise.all([
 			loadIcon('app-dark.svg'),
 			loadIcon('diagram.svg'),
+			loadIcon('diagram.svg'),
+			loadIcon('diagram.svg'),
+			loadIcon('diagram.svg'),
+			loadIcon('diagram.svg'),
 		])
-		const mimeTypes = ['application/x-drawio']
+		const mimeTypes = ['application/x-drawio',
+                                   'text/plain',
+                                   'text/markdown',
+                                   'text/code',
+                                   'text/html',
+				   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+				   'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+				   'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+				  ]
 
 		for (const mimeType of mimeTypes) {
 			registerFileAction(new FileAction({
-				id: 'edit-cryptpad-file',
+				id: 'edit-cryptpad-file-' + mimeType,
 				displayName() { return t('openincryptpad', 'Open in CryptPad') },
 				iconSvgInline() { return cryptPadIcon },
 				enabled(nodes) {
@@ -128,8 +162,8 @@ async function main() {
 		}
 
 		addNewFileMenuEntry({
-			id: 'add-drawio-file',
-			displayName: t('openincryptpad', 'New diagrams.net diagram'),
+			id: 'add-cryptpad-drawio-file',
+			displayName: t('openincryptpad', 'New CryptPad diagram'),
 			enabled() {
 				return getNavigation()?.active?.id === 'files'
 			},
@@ -141,6 +175,67 @@ async function main() {
 				createEmptyDrawioFile(fileName, context.path, context.fileid)
 			},
 		})
+                addNewFileMenuEntry({
+                        id: 'add-cryptpad-code-file',
+                        displayName: t('openincryptpad', 'New CryptPad code file'),
+                        enabled() {
+                                return getNavigation()?.active?.id === 'files'
+                        },
+                        iconClass: 'icon-add',
+                        iconSvgInline: codeIcon,
+                        async handler(context, content) {
+                                const contentNames = content.map((node) => node.basename)
+                                const fileName = getUniqueName('code', 'code', contentNames)
+                                createEmptyTextFile(fileName, context.path, context.fileid, ".code", "text/code")
+                        },
+                })
+
+                addNewFileMenuEntry({
+                        id: 'add-cryptpad-txt-file',
+                        displayName: t('openincryptpad', 'New CryptPad text file'),
+                        enabled() {
+                                return getNavigation()?.active?.id === 'files'
+                        },
+                        iconClass: 'icon-add',
+                        iconSvgInline: txtIcon,
+                        async handler(context, content) {
+                                const contentNames = content.map((node) => node.basename)
+                                const fileName = getUniqueName('code', 'txt', contentNames)
+                                createEmptyTextFile(fileName, context.path, context.fileid, ".txt", "text/plain")
+                        },
+                })
+
+                addNewFileMenuEntry({
+                        id: 'add-cryptpad-md-file',
+                        displayName: t('openincryptpad', 'New CryptPad markdown file'),
+                        enabled() {
+                                return getNavigation()?.active?.id === 'files'
+                        },
+                        iconClass: 'icon-add',
+                        iconSvgInline: mdIcon,
+                        async handler(context, content) {
+                                const contentNames = content.map((node) => node.basename)
+                                const fileName = getUniqueName('code', 'md', contentNames)
+                                createEmptyTextFile(fileName, context.path, context.fileid, ".md", "text/markdown")
+                        },
+                })
+
+                addNewFileMenuEntry({
+                        id: 'add-cryptpad-html-file',
+                        displayName: t('openincryptpad', 'New CryptPad HTML file'),
+                        enabled() {
+                                return getNavigation()?.active?.id === 'files'
+                        },
+                        iconClass: 'icon-add',
+                        iconSvgInline: htmlIcon,
+                        async handler(context, content) {
+                                const contentNames = content.map((node) => node.basename)
+                                const fileName = getUniqueName('pad', 'html', contentNames)
+                                createEmptyTextFile(fileName, context.path, context.fileid, ".html", "text/html")
+                        },
+                })
+
+
 	} catch (e) {
 		console.error(e)
 	}

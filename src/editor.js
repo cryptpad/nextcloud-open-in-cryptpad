@@ -44,8 +44,16 @@ window.addEventListener('DOMContentLoaded', async function() {
 			document: {
 				url: docUrl,
 				key: sessionKey,
+				title: document.title,
 				fileType,
+				permissions: {
+					edit: "true",
+					chat: "false",
+					download: "true",
+					print: "true",
+				}
 			},
+                        documentKey: sessionKey,
 			documentType: app,
 			events: {
 				onSave: (data, cb) => onSave(filePath, data, cb),
@@ -58,6 +66,16 @@ window.addEventListener('DOMContentLoaded', async function() {
 			},
 			width: '100%',
 			height: '100%',
+			editorConfig: {
+			        customization: {},
+			        mode: "edit",
+			        lang: "en",
+			        user: {
+					"id": "0",
+					"firstname": "firstname",
+					"name": "name",
+				}
+			}
 		})
 
 		checkForPermissionChange(filePath, () => resetCryptPadSession(fileId))
@@ -179,12 +197,9 @@ function fileName(filePath) {
 async function loadFileContent(filePath, mimeType) {
 	const fileClient = OC.Files.getClient()
 	try {
-		const contents = (await deferredToPromise(fileClient.getFileContents(filePath)))[1]
-		const blob = new Blob([contents], {
-			type: mimeType,
-		})
-
-		return blob
+                const fileClient = OC.Files.getClient()
+                const blob = await getBinaryFile(fileClient._buildUrl(filePath))
+		return blob;
 	} catch (e) {
 		throw e[1]
 	}
@@ -301,4 +316,18 @@ async function getImage(imageUrl) {
 
 	return blob
 
+}
+
+/**
+ *
+ * @param { string } url the link to the content
+ */
+async function getBinaryFile(url) {
+        const myRequest = new Request(url)
+        /* eslint-disable no-unused-vars */
+        const response = await fetch(myRequest)
+        const blob = await response.blob()
+        /* eslint-enable no-unused-vars */
+
+        return blob
 }
