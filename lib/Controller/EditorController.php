@@ -31,12 +31,12 @@ class EditorController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
-	public function page($id, $path, $mimeType): TemplateResponse {
+	public function page($id, $path, $mimeType, $mode): TemplateResponse {
 		$app = SettingsService::APP_FOR_MIME_TYPE[$mimeType];
 		$fileType = SettingsService::FILE_TYPE_FOR_MIME_TYPE[$mimeType];
 		$cryptPadUrl = $this->settingsService->getCryptPadUrl($app);
 		$apiUrl = $cryptPadUrl . '/cryptpad-api.js';
-		$infoScript = $this->getInfoScript($id, $path, $mimeType, $fileType, $app, $cryptPadUrl);
+		$infoScript = $this->getInfoScript($id, $path, $mimeType, $fileType, $app, $mode, $cryptPadUrl);
 
 		$response = new TemplateResponse(
 			'openincryptpad',
@@ -54,13 +54,14 @@ class EditorController extends Controller {
 		return $response;
 	}
 
-	public function getInfoScript($id, $path, $mimeType, $fileType, $app, $cryptPadUrl): string {
+	public function getInfoScript($id, $path, $mimeType, $fileType, $app, $mode, $cryptPadUrl): string {
 		return 'window.OpenInCryptPadInfo = ' . json_encode([
 			'fileId' => $id,
 			'filePath' => $path,
 			'mimeType' => $mimeType,
 			'fileType' => $fileType,
 			'app' => $app,
+                        'mode' => $mode,
 			'cryptPadUrl' => $cryptPadUrl,
 		]);
 	}

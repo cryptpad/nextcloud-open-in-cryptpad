@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
 import { generateUrl, generateFilePath } from '@nextcloud/router'
-import { saveFileContent, getFileInfo } from './utils.js'
+import { saveFileContent, getFileInfo, saveToLocalStorage } from './utils.js'
 import { showError } from '@nextcloud/dialogs'
 import { getRequestToken } from '@nextcloud/auth'
 import {
@@ -26,12 +26,13 @@ const EMPTY_DRAWIO = '<mxfile type="embed"><diagram id="bWoO5ACGZIaXrIiKNTKd" na
  * @param {string} mimeType the mime type of the file
  * @param {string} backLink the URL back to Nextcloud
  */
-function openInCryptPad(fileId, filePath, mimeType, backLink) {
-	location.href = generateUrl('/apps/openincryptpad/editor?id={id}&path={path}&mimeType={mimeType}&back={back}', {
+function openInCryptPad(fileId, filePath, mimeType, backLink, mode) {
+	location.href = generateUrl('/apps/openincryptpad/editor?id={id}&path={path}&mimeType={mimeType}&back={back}&mode={mode}', {
 		id: fileId,
 		path: filePath,
 		mimeType,
 		back: backLink,
+                mode: mode,
 	})
 }
 
@@ -121,6 +122,14 @@ function hasWritePermission(permissions) {
 	return (permissions & UPDATE) === UPDATE
 }
 
+async function downloadNode(file) {
+	// Decryption happens in the proxy.
+	const response = await fetch(file.encodedSource)
+	const decryptedFileContent = await response.arrayBuffer()
+	const blob = new Blob([decryptedFileContent], { type: file.mime })
+	return blob
+}
+
 /**
  *
  */
@@ -154,11 +163,32 @@ async function main() {
 				},
 				async exec(node, view, dir) {
 					const backLink = await createFolderLink(dir, null)
-					openInCryptPad(node.fileid, node.path, node.mime, backLink)
+					openInCryptPad(node.fileid, node.path, node.mime, backLink, "edit")
 					return true
 				},
 				default: DefaultType.DEFAULT,
 			}))
+			registerFileAction(new FileAction({
+                                id: 'view-cryptpad-file-' + mimeType,
+                                displayName() { return t('viewincryptpad', 'View in CryptPad') },
+                                iconSvgInline() { return cryptPadIcon },
+                                enabled(nodes) {
+                                        return nodes.length === 1 && nodes[0].mime === mimeType 
+                                },
+                                async exec(node, view, dir) {
+                                        console.log("In view cryptpad ", node, view, dir);
+                                        const blob = await downloadNode(node);
+					console.log("Downloaded encrypted file", blob);
+                                        saveToLocalStorage(blob);
+                                        const backLink = location.href;
+                                        console.log("step 2");
+                                        openInCryptPad(node.fileid, "localstorage", node.mime, backLink, "view")
+                                        console.log("step 3");
+                                        return true
+                                },
+                                default: DefaultType.DEFAULT,
+                        }))
+
 		}
 
 		addNewFileMenuEntry({

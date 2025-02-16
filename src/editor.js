@@ -4,7 +4,7 @@
 
 import { generateUrl, generateOcsUrl, generateFilePath } from '@nextcloud/router'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
-import { saveFileContent, deferredToPromise } from './utils.js'
+import { saveFileContent, deferredToPromise, getFromLocalStorage } from './utils.js'
 import { getRequestToken } from '@nextcloud/auth'
 
 import '@nextcloud/dialogs/style.css'  // eslint-disable-line
@@ -30,15 +30,24 @@ window.addEventListener('DOMContentLoaded', async function() {
 			mimeType,
 			fileType,
 			app,
+                        mode,
 			cryptPadUrl,
 		} = window.OpenInCryptPadInfo
 		document.title = fileName(filePath) + ' - Nextcloud'
 
 		const sessionKey = await getSessionForFile(fileId)
 
-		const blob = await loadFileContent(filePath, mimeType)
+		let docUrl = filePath;
+		if (filePath === "localstorage") {
+                        const blob = await getFromLocalStorage()
+                        docUrl = URL.createObjectURL(blob)
 
-		const docUrl = URL.createObjectURL(blob)
+                } else {
+			const blob = await loadFileContent(filePath, mimeType)
+			docUrl = URL.createObjectURL(blob)
+		}
+
+                const isEdit = (mode === "edit");
 
 		CryptPadAPI(cryptPadUrl, 'editor-content', {
 			document: {
@@ -47,7 +56,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 				title: document.title,
 				fileType,
 				permissions: {
-					edit: "true",
+					edit: isEdit,
 					chat: "false",
 					download: "true",
 					print: "true",
@@ -68,7 +77,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 			height: '100%',
 			editorConfig: {
 			        customization: {},
-			        mode: "edit",
+			        mode: mode,
 			        lang: "en",
 			        user: {
 					"id": "0",
