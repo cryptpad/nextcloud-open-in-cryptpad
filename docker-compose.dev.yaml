@@ -6,7 +6,7 @@ services:
         args:
           NC_VERSION: v31.0.0rc4
       ports:
-        - 8080:8080
+        - 8010:8080
       volumes:
         - nc31-config:/nextcloud/config
         - nc31-data:/nextcloud/data
@@ -19,7 +19,7 @@ services:
       args:
         NC_VERSION: v30.0.6
     ports:
-      - 8080:8080
+      - 8009:8080
     volumes:
       - nc30-config:/nextcloud/config
       - nc30-data:/nextcloud/data
@@ -32,7 +32,7 @@ services:
         args:
           NC_VERSION: v29.0.12
       ports:
-        - 8080:8080
+        - 8008:8080
       volumes:
         - nc29-config:/nextcloud/config
         - nc29-data:/nextcloud/data
