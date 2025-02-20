@@ -31,6 +31,7 @@ RUN git fetch && git checkout ${NC_VERSION}
 RUN git submodule update --init
 RUN echo '{"application/x-drawio": "image"}' > mimetypealiases.json
 RUN echo '{"drawio": ["application/x-drawio"]}' > mimetypemapping.json
+RUN echo 'output_buffering = 0' >> php.ini
 EXPOSE 8080
 CMD cp mimetype*.json config \
     && php -S 0.0.0.0:8080

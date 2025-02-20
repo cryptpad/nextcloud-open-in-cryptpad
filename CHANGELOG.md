@@ -7,6 +7,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## [Unreleased]
 
+## [0.3.7] - 2025-02-17
+
+- Fix: Now working with Nextcloud versions 30 and 31
+
 ## [0.3.6] - 2024-10-21
 
 - Embed imported images into the diagram.
