@@ -3,8 +3,8 @@ OC.L10N.register(
   {
 	"Open in CryptPad": "Mit CryptPad bearbeiten",
 	"Error while opening file": "Fehler beim öffnen der Datei",
-	"The CryptPad instance is not configured correctly. Please contact your admin.": "Die CryptPad-Instanz ist nicht korrekt konfiguriert. Bitte kontaktieren Sie Ihren Admin.",
-	"Pick an image": "Bitte wählen Sie ein Bild",
+	"The CryptPad instance is not configured correctly. Please contact your admin.": "Die CryptPad-Instanz ist nicht korrekt konfiguriert. Bitte kontaktiere deinen Admin.",
+	"Pick an image": "Bitte wähle ein Bild",
 	"New diagrams.net diagram": "Neues diagrams.net Diagramm",
 	"diagram.drawio": "diagramm.drawio",
 	"File could not be created": "Die Datei konnte nicht angelegt werden",
