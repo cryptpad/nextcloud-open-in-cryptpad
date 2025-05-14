@@ -4,7 +4,7 @@ RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
     apt update \
     && apt install -y \
        git
-RUN git clone https://github.com/nextcloud/server.git nextcloud
+RUN git clone --depth=1 https://github.com/nextcloud/server.git nextcloud
 
 
 
@@ -27,7 +27,8 @@ RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
 
 COPY --from=nextcloud-git /nextcloud /nextcloud
 WORKDIR /nextcloud
-RUN git fetch && git checkout ${NC_VERSION}
+RUN git fetch --depth=1 https://github.com/nextcloud/server.git ${NC_VERSION}
+RUN git checkout FETCH_HEAD
 RUN git submodule update --init
 RUN echo '{"application/x-drawio": "image"}' > mimetypealiases.json
 RUN echo '{"drawio": ["application/x-drawio"]}' > mimetypemapping.json
