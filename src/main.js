@@ -26,12 +26,14 @@ const EMPTY_DRAWIO = '<mxfile type="embed"><diagram id="bWoO5ACGZIaXrIiKNTKd" na
  * @param {string} mimeType the mime type of the file
  * @param {string} backLink the URL back to Nextcloud
  */
-function openInCryptPad(fileId, filePath, mimeType, backLink) {
-	location.href = generateUrl('/apps/openincryptpad/editor?id={id}&path={path}&mimeType={mimeType}&back={back}', {
+function openInCryptPad(fileId, filePath, mimeType, backLink, isShared, fileName) {
+	location.href = generateUrl('/apps/openincryptpad/editor?id={id}&path={path}&mimeType={mimeType}&back={back}&isShared={isShared}&fileName={fileName}', {
 		id: fileId,
 		path: filePath,
 		mimeType,
 		back: backLink,
+		isShared, 
+		fileName
 	})
 }
 
@@ -67,7 +69,7 @@ async function createEmptyDrawioFile(name, folder, folderId) {
 		await saveFileContent(path, new Blob([EMPTY_DRAWIO], { type: 'application/x-drawio' }))
 		const fileInfo = await getFileInfo(path)
 		const backLink = await createFolderLink(folder, folderId)
-		openInCryptPad(fileInfo.id, path, 'application/x-drawio', backLink)
+		openInCryptPad(fileInfo.id, path, 'application/x-drawio', backLink, false, "New file")
 	} catch (c) {
 		showError(t('openincryptpad', 'File could not be created'))
 	}
@@ -99,6 +101,46 @@ function hasWritePermission(permissions) {
 	return (permissions & UPDATE) === UPDATE
 }
 
+const mimeTypes = ['application/x-drawio']
+const cryptPadIconn = `
+<svg  viewBox="0 0 24 24" width="20" height="20">
+</svg>
+`;
+// when opening a share link it automatically opens it in cryptpad, but 
+// we should let the user decide whether to do that or download it
+var firstTime = true
+for (const mimeType of mimeTypes) {
+	registerFileAction(new FileAction({
+		id: 'edit-cryptpad-file',
+		displayName() { return t('openincryptpad', 'Open in CryptPad') },
+		iconSvgInline() { return cryptPadIconn },
+		enabled(nodes) {
+			return true
+		},
+		async exec(node, view, dir) {
+			if (window.location.pathname.includes('/index.php/s/')) {
+				if (firstTime) {
+					firstTime = false
+					return true
+				}
+				const backLink = '' // TODO? currently doesn't work in shared
+				// since we don't have access to the filepath in the drive, we use
+				// the link for downloading the file
+				const currentUrl = new URL(window.location.href)
+				const shareToken = currentUrl.pathname.split('/').pop()
+				const downloadUrl = `${currentUrl.origin}/index.php/s/${shareToken}/download`
+				console.log()
+				openInCryptPad(node.fileid, downloadUrl, node.mime, backLink, 'true', node.displayname)
+				return true
+			}
+			const backLink = await createFolderLink(dir, null)
+			openInCryptPad(node.fileid, node.path, node.mime, backLink, 'false', node.displayname)
+			return true
+		},
+		default: DefaultType.DEFAULT,
+	}))
+}
+
 /**
  *
  */
@@ -108,25 +150,7 @@ async function main() {
 			loadIcon('app-dark.svg'),
 			loadIcon('diagram.svg'),
 		])
-		const mimeTypes = ['application/x-drawio']
-
-		for (const mimeType of mimeTypes) {
-			registerFileAction(new FileAction({
-				id: 'edit-cryptpad-file',
-				displayName() { return t('openincryptpad', 'Open in CryptPad') },
-				iconSvgInline() { return cryptPadIcon },
-				enabled(nodes) {
-					return nodes.length === 1 && nodes[0].mime === mimeType && hasWritePermission(nodes[0].permissions)
-				},
-				async exec(node, view, dir) {
-					const backLink = await createFolderLink(dir, null)
-					openInCryptPad(node.fileid, node.path, node.mime, backLink)
-					return true
-				},
-				default: DefaultType.DEFAULT,
-			}))
-		}
-
+		
 		addNewFileMenuEntry({
 			id: 'add-drawio-file',
 			displayName: t('openincryptpad', 'New diagrams.net diagram'),

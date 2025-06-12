@@ -31,12 +31,24 @@ window.addEventListener('DOMContentLoaded', async function() {
 			fileType,
 			app,
 			cryptPadUrl,
+			isShared, 
+			fileName
 		} = window.OpenInCryptPadInfo
-		document.title = fileName(filePath) + ' - Nextcloud'
+
+		var blob
+		var viewMode = ''
+		document.title = fileName + ' - Nextcloud'
+		// if opening file from a share link, we don't get access to the file path, but we can download it
+		if (isShared) {
+			viewMode = 'view'
+			blob = await loadFileContentShared(filePath, mimeType)
+		}
+		else {
+			blob = await loadFileContent(filePath, mimeType)
+		}
 
 		const sessionKey = await getSessionForFile(fileId)
 
-		const blob = await loadFileContent(filePath, mimeType)
 
 		const docUrl = URL.createObjectURL(blob)
 
@@ -47,8 +59,9 @@ window.addEventListener('DOMContentLoaded', async function() {
 				fileType,
 			},
 			documentType: app,
+			mode: viewMode,
 			events: {
-				onSave: (data, cb) => onSave(filePath, data, cb),
+				onSave: (data, cb) => onSave(filePath, data, cb, isShared),
 				onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb),
 				onHasUnsavedChanges: (unsavedChanges) => {
 					const elem = document.querySelector('#unsaved-indicator')
@@ -60,7 +73,9 @@ window.addEventListener('DOMContentLoaded', async function() {
 			height: '100%',
 		})
 
-		checkForPermissionChange(filePath, () => resetCryptPadSession(fileId))
+		if (!isShared) {
+			checkForPermissionChange(filePath, () => resetCryptPadSession(fileId))
+		}
 		initBackButton()
 
 	} catch (e) {
@@ -190,16 +205,37 @@ async function loadFileContent(filePath, mimeType) {
 	}
 }
 
+async function loadFileContentShared(downloadPath, mimeType) {
+	// use downloadPath to construct URL
+	const fileClient = OC.Files.getClient()
+	try {
+		const response = await fetch(downloadPath)
+		if (!response.ok) {
+			throw new Error(`Failed to fetch file: ${response.statusText}`)
+		}
+		const blob = await response.blob()
+
+		return blob
+	} catch (e) {
+		console.log("MASSIVE ERROR")
+		console.log(e)
+		throw e[1]
+	}
+}
+
 /**
  *
  * @param {string} filePath the file path
  * @param {Blob} data the data to dave
  * @param {Function} cb callback
  */
-function onSave(filePath, data, cb) {
-	saveFileContent(filePath, data)
-		.then(() => cb())
-		.catch(cb)
+function onSave(filePath, data, cb, isShared) {
+	if (!isShared) {
+		saveFileContent(filePath, data)
+			.then(() => cb())
+			.catch(cb)
+	}
+	// if it's through a share link, we shouldn't save (read only)
 }
 
 /**
