@@ -6,6 +6,6 @@ const webpack = require('webpack')
 
 webpackConfig.entry.settings = path.resolve(path.join('src', 'settings.js'))
 webpackConfig.entry.editor = path.resolve(path.join('src', 'editor.js'))
-webpackConfig.entry['openincryptpad-public'] = path.resolve(path.join('src', 'public.js'))
+webpackConfig.entry['public'] = path.resolve(path.join('src', 'public.js'))
 
 module.exports = webpackConfig

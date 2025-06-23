@@ -112,7 +112,7 @@ for (const mimeType of mimeTypes) {
 		displayName() { return t('openincryptpad', 'Open in CryptPad') },
 		iconSvgInline() { return cryptPadIconn },
 		enabled(nodes) {
-			return true
+			return nodes.length === 1 && nodes[0].mime === mimeType
 		},
 		async exec(node, view, dir) {
 			if (window.location.pathname.includes('/index.php/s/')) {
@@ -126,10 +126,12 @@ for (const mimeType of mimeTypes) {
 				const currentUrl = new URL(window.location.href)
 				const shareToken = currentUrl.pathname.split('/').pop()
 				const downloadUrl = `${currentUrl.origin}/index.php/s/${shareToken}/download`
+				console.log(node.fileid)
 				openInCryptPad(node.fileid, downloadUrl, node.mime, backLink, 'true', node.displayname)
 				return true
 			}
 			const backLink = await createFolderLink(dir, null)
+			console.log(node.fileid)
 			openInCryptPad(node.fileid, node.path, node.mime, backLink, 'false', node.displayname)
 			return true
 		},
