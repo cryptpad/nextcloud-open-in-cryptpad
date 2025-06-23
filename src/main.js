@@ -102,10 +102,7 @@ function hasWritePermission(permissions) {
 }
 
 const mimeTypes = ['application/x-drawio']
-const cryptPadIconn = `
-<svg  viewBox="0 0 24 24" width="20" height="20">
-</svg>
-`;
+const cryptPadIconn = `<svg  viewBox="0 0 24 24" width="20" height="20"></svg>`;
 // when opening a share link it automatically opens it in cryptpad, but 
 // we should let the user decide whether to do that or download it
 var firstTime = true
@@ -129,7 +126,6 @@ for (const mimeType of mimeTypes) {
 				const currentUrl = new URL(window.location.href)
 				const shareToken = currentUrl.pathname.split('/').pop()
 				const downloadUrl = `${currentUrl.origin}/index.php/s/${shareToken}/download`
-				console.log()
 				openInCryptPad(node.fileid, downloadUrl, node.mime, backLink, 'true', node.displayname)
 				return true
 			}

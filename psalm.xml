@@ -19,6 +19,40 @@
 	</projectFiles>
 	<extraFiles>
 		<directory name="vendor" />
+
+		<directory name="nextcloud-server/apps/admin_audit"/>
+        <directory name="nextcloud-server/apps/cloud_federation_api"/>
+        <directory name="nextcloud-server/apps/comments"/>
+        <directory name="nextcloud-server/apps/contactsinteraction"/>
+        <directory name="nextcloud-server/apps/dashboard"/>
+        <directory name="nextcloud-server/apps/dav"/>
+        <directory name="nextcloud-server/apps/encryption"/>
+        <directory name="nextcloud-server/apps/federatedfilesharing"/>
+        <directory name="nextcloud-server/apps/federation"/>
+        <directory name="nextcloud-server/apps/files"/>
+        <directory name="nextcloud-server/apps/files_external"/>
+        <directory name="nextcloud-server/apps/files_sharing"/>
+        <directory name="nextcloud-server/apps/files_trashbin"/>
+        <directory name="nextcloud-server/apps/files_versions"/>
+        <directory name="nextcloud-server/apps/lookup_server_connector"/>
+        <directory name="nextcloud-server/apps/oauth2"/>
+        <directory name="nextcloud-server/apps/provisioning_api"/>
+        <directory name="nextcloud-server/apps/settings"/>
+        <directory name="nextcloud-server/apps/sharebymail"/>
+        <directory name="nextcloud-server/apps/systemtags"/>
+        <directory name="nextcloud-server/apps/testing"/>
+        <directory name="nextcloud-server/apps/theming"/>
+        <directory name="nextcloud-server/apps/twofactor_backupcodes"/>
+        <directory name="nextcloud-server/apps/updatenotification"/>
+        <directory name="nextcloud-server/apps/user_ldap"/>
+        <directory name="nextcloud-server/apps/user_status"/>
+        <directory name="nextcloud-server/apps/weather_status"/>
+        <directory name="nextcloud-server/apps/webhook_listeners"/>
+        <directory name="nextcloud-server/apps/workflowengine"/>
+        <directory name="nextcloud-server/core"/>
+        <directory name="nextcloud-server/lib"/>
+        <directory name="nextcloud-server/ocs"/>
+        <directory name="nextcloud-server/ocs-provider"/>
 		<ignoreFiles>
 			<directory name="vendor/phpunit/php-code-coverage" />
 			<directory name="vendor/psalm" />
