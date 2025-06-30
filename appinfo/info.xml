@@ -61,7 +61,7 @@ interface in the "General" tab.
     ]]></description>
     <version>0.3.7</version>
     <licence>agpl</licence>
-    <author mail="wolfgang.ginolas@xwiki.com" homepage="https://xwiki.com">Wolfgang Ginolas</author>
+    <author mail="contact@cryptpad.org" homepage="https://cryptpad.org">XWiki CryptPad Team and contributors</author>
     <namespace>OpenInCryptPad</namespace>
     <category>integration</category>
     <bugs>https://github.com/cryptpad/nextcloud-open-in-cryptpad/issues</bugs>
