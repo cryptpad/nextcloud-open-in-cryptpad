@@ -154,6 +154,8 @@ Then, to run the server:
 
 ## Publish to App Store
 
+NOTE: Make sure you placed the code into a folder named `openincryptpad`, as described above.
+
 First get an account for the [App Store](http://apps.nextcloud.com/) then run:
 
     make && make appstore
