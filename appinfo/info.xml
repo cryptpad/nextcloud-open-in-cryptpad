@@ -2,7 +2,7 @@
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
     <!--
-    SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
+    SPDX-FileCopyrightText: XWiki CryptPad Team <contact@cryptpad.org> and contributors
     SPDX-License-Identifier: CC0-1.0
     -->
     <id>openincryptpad</id>

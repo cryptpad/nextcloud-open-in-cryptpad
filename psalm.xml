@@ -8,7 +8,7 @@
 		errorBaseline="tests/psalm-baseline.xml"
 >
 	<!--
-	SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
+	SPDX-FileCopyrightText: XWiki CryptPad Team <contact@cryptpad.org> and contributors
 	SPDX-License-Identifier: CC0-1.0
 	-->
 	<projectFiles>
