@@ -115,23 +115,8 @@ for (const mimeType of mimeTypes) {
 			return nodes.length === 1 && nodes[0].mime === mimeType
 		},
 		async exec(node, view, dir) {
-			if (window.location.pathname.includes('/index.php/s/')) {
-				if (firstTime) {
-					firstTime = false
-					return true
-				}
-				const backLink = '' // TODO? currently doesn't work in shared
-				// since we don't have access to the filepath in the drive, we use
-				// the link for downloading the file
-				const currentUrl = new URL(window.location.href)
-				const shareToken = currentUrl.pathname.split('/').pop()
-				const downloadUrl = `${currentUrl.origin}/index.php/s/${shareToken}/download`
-				console.log(node.fileid)
-				openInCryptPad(node.fileid, downloadUrl, node.mime, backLink, 'true', node.displayname)
-				return true
-			}
 			const backLink = await createFolderLink(dir, null)
-			console.log(node.fileid)
+			// console.log(node.fileid)
 			openInCryptPad(node.fileid, node.path, node.mime, backLink, 'false', node.displayname)
 			return true
 		},

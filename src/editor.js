@@ -47,6 +47,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 			blob = await loadFileContent(filePath, mimeType)
 		}
 
+
 		const sessionKey = await getSessionForFile(fileId)
 
 
