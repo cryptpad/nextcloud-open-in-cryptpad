@@ -39,8 +39,11 @@ window.addEventListener('DOMContentLoaded', async function() {
 		var viewMode = ''
 		document.title = fileName + ' - Nextcloud'
 		// if opening file from a share link, we don't get access to the file path, but we can download it
-		if (isShared) {
+		if (isShared.startsWith('true')) {
 			viewMode = 'view'
+		}
+
+		if (isShared.includes('External')) {
 			blob = await loadFileContentShared(filePath, mimeType)
 		}
 		else {
@@ -74,7 +77,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 			height: '100%',
 		})
 
-		if (!isShared) {
+		if (isShared != 'trueExternal') {
 			checkForPermissionChange(filePath, () => resetCryptPadSession(fileId))
 		}
 		initBackButton()
@@ -195,6 +198,9 @@ function fileName(filePath) {
 async function loadFileContent(filePath, mimeType) {
 	const fileClient = OC.Files.getClient()
 	try {
+		console.log("FILEPATH"
+		)
+		console.log(filePath)
 		const contents = (await deferredToPromise(fileClient.getFileContents(filePath)))[1]
 		const blob = new Blob([contents], {
 			type: mimeType,
@@ -231,7 +237,7 @@ async function loadFileContentShared(downloadPath, mimeType) {
  * @param {Function} cb callback
  */
 function onSave(filePath, data, cb, isShared) {
-	if (!isShared) {
+	if (isShared == 'false') {
 		saveFileContent(filePath, data)
 			.then(() => cb())
 			.catch(cb)

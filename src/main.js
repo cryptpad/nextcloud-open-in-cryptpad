@@ -95,6 +95,7 @@ function getUniqueName(name, ext, names) {
  *
  * @param {number} permissions the permissions as bit set
  */
+// doesn't work correctly
 function hasWritePermission(permissions) {
 	const UPDATE = 2
 
@@ -103,9 +104,7 @@ function hasWritePermission(permissions) {
 
 const mimeTypes = ['application/x-drawio']
 const cryptPadIconn = `<svg  viewBox="0 0 24 24" width="20" height="20"></svg>`;
-// when opening a share link it automatically opens it in cryptpad, but 
-// we should let the user decide whether to do that or download it
-var firstTime = true
+
 for (const mimeType of mimeTypes) {
 	registerFileAction(new FileAction({
 		id: 'edit-cryptpad-file',
@@ -116,8 +115,12 @@ for (const mimeType of mimeTypes) {
 		},
 		async exec(node, view, dir) {
 			const backLink = await createFolderLink(dir, null)
-			// console.log(node.fileid)
-			openInCryptPad(node.fileid, node.path, node.mime, backLink, 'false', node.displayname)
+			var isViewOnly = 'false'
+			console.log("PERMISSIONS", node.permissions)
+			if (node.permissions == 11 || node.permissions == 9) {
+				isViewOnly = 'true'
+			}
+			openInCryptPad(node.fileid, node.path, node.mime, backLink, isViewOnly, node.displayname)
 			return true
 		},
 		default: DefaultType.DEFAULT,

@@ -62,7 +62,7 @@ class EditorController extends Controller {
 			'fileType' => $fileType,
 			'app' => $app,
 			'cryptPadUrl' => $cryptPadUrl,
-			'isShared' => filter_var($isShared, FILTER_VALIDATE_BOOLEAN),
+			'isShared' => $isShared,
 			'fileName' => $fileName
 		]);
 	}

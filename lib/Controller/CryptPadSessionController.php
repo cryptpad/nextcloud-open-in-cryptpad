@@ -39,9 +39,9 @@ class CryptPadSessionController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function get(int $id): DataResponse {
-		if (!$this->permissionService->hasWritePermission($id)) {
-			return new DataResponse('', Http::STATUS_FORBIDDEN);
-		}
+		// if (!$this->permissionService->hasWritePermission($id)) {
+		// 	return new DataResponse('', Http::STATUS_FORBIDDEN);
+		// }
 
 		return $this->handleNotFound(function () use ($id) {
 			return $this->service->find($id);
@@ -53,9 +53,9 @@ class CryptPadSessionController extends Controller {
 	 * @NoCSRFRequired
 	 */
 	public function put(int $id, ?string $oldSessionKey, string $newSessionKey): DataResponse {
-		if (!$this->permissionService->hasWritePermission($id)) {
-			return new DataResponse('', Http::STATUS_FORBIDDEN);
-		}
+		// if (!$this->permissionService->hasWritePermission($id)) {
+		// 	return new DataResponse('', Http::STATUS_FORBIDDEN);
+		// }
 
 		return new DataResponse($this->service->optimisticUpdate($id, $oldSessionKey, $newSessionKey));
 	}
