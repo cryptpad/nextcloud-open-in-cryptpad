@@ -102,6 +102,16 @@ git clone https://github.com/cryptpad/nextcloud-open-in-cryptpad.git openincrypt
 
 ## Building the app
 
+### Requirements
+
+On a Ubuntu like distribution you will need these packages:
+
+``` sh
+sudo apt install php-cli composer php-xml
+```
+
+### Run the build
+
 Prior to building, install the requisite dependencies by running:
 
     npm ci
@@ -143,6 +153,8 @@ Then, to run the server:
     php -S localhost:8080
 
 ## Publish to App Store
+
+NOTE: Make sure you placed the code into a folder named `openincryptpad`, as described above.
 
 First get an account for the [App Store](http://apps.nextcloud.com/) then run:
 

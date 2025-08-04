@@ -2,7 +2,7 @@
 <info xmlns:xsi= "http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="https://apps.nextcloud.com/schema/apps/info.xsd">
     <!--
-    SPDX-FileCopyrightText: Wolfgang Ginolas <wolfgang.ginolas@xwiki.com>
+    SPDX-FileCopyrightText: XWiki CryptPad Team <contact@cryptpad.org> and contributors
     SPDX-License-Identifier: CC0-1.0
     -->
     <id>openincryptpad</id>
@@ -61,7 +61,7 @@ interface in the "General" tab.
     ]]></description>
     <version>0.3.8</version>
     <licence>agpl</licence>
-    <author mail="wolfgang.ginolas@xwiki.com" homepage="https://xwiki.com">Wolfgang Ginolas</author>
+    <author mail="contact@cryptpad.org" homepage="https://cryptpad.org">XWiki CryptPad Team and contributors</author>
     <namespace>OpenInCryptPad</namespace>
     <category>integration</category>
     <bugs>https://github.com/cryptpad/nextcloud-open-in-cryptpad/issues</bugs>
