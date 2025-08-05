@@ -49,12 +49,12 @@ window.addEventListener('DOMContentLoaded', async function() {
 			blob = await loadFileContent(filePath, mimeType)
 		}
 
-		let viewOnlyMode = false;
+		let viewOnlyMode = false
 		let sessionKey
 		try {
 			sessionKey = await getSessionForFile(fileId)
 		} catch (e) {
-			viewOnlyMode = true;
+			viewOnlyMode = true
 		}
 
 		const docUrl = URL.createObjectURL(blob)
@@ -62,7 +62,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 		const events = viewOnlyMode
 			? {
 				onSave: (data, cb) => null,
- 				onNewKey: (data, cb) => cb(data.new),  // Just accept and ignore any session key CryptPad wants to use
+				onNewKey: (data, cb) => cb(data.new), // Just accept and ignore any session key CryptPad wants to use
 				onHasUnsavedChanges: (unsavedChanges) => null,
 				onInsertImage,
 			}
@@ -262,10 +262,10 @@ async function getSessionForFile(fileId) {
 	if (response.ok) {
 		const body = await response.json()
 		return body.sessionKey
-	} else if (response.status == 404) {
+	} else if (response.status === 404) {
 		return null
 	} else {
-		throw "no write permission"
+		throw new Error('no write permission')
 	}
 }
 
