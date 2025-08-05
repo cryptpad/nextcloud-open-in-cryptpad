@@ -7,7 +7,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## [Unreleased]
 
-## [0.3.8] - 2025-08-04
+## [0.4.0] - 2025-08-04
 
 - Fix: internal and external shares
 - Fix: "Open in Cryptpad" not showing

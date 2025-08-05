@@ -31,12 +31,12 @@ window.addEventListener('DOMContentLoaded', async function() {
 			fileType,
 			app,
 			cryptPadUrl,
-			isShared, 
-			fileName
+			isShared,
+			fileName,
 		} = window.OpenInCryptPadInfo
 
-		var blob
-		var viewMode = ''
+		let blob
+		let viewMode = ''
 		document.title = fileName + ' - Nextcloud'
 		// if opening file from a share link, we don't get access to the file path, but we can download it
 		if (isShared.startsWith('true')) {
@@ -45,14 +45,11 @@ window.addEventListener('DOMContentLoaded', async function() {
 
 		if (isShared.includes('External')) {
 			blob = await loadFileContentShared(filePath, mimeType)
-		}
-		else {
+		} else {
 			blob = await loadFileContent(filePath, mimeType)
 		}
 
-
 		const sessionKey = await getSessionForFile(fileId)
-
 
 		const docUrl = URL.createObjectURL(blob)
 
@@ -77,7 +74,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 			height: '100%',
 		})
 
-		if (isShared != 'trueExternal') {
+		if (isShared !== 'trueExternal') {
 			checkForPermissionChange(filePath, () => resetCryptPadSession(fileId))
 		}
 		initBackButton()
@@ -179,18 +176,6 @@ async function getFilePermission(path) {
 }
 
 /**
- * @param {string} filePath the file path
- */
-function fileName(filePath) {
-	if (!filePath) {
-		return
-	}
-
-	const parts = filePath.split('/')
-	return parts[parts.length - 1]
-}
-
-/**
  *
  * @param {string} filePath the file path
  * @param {string} mimeType the mime type
@@ -198,9 +183,6 @@ function fileName(filePath) {
 async function loadFileContent(filePath, mimeType) {
 	const fileClient = OC.Files.getClient()
 	try {
-		console.log("FILEPATH"
-		)
-		console.log(filePath)
 		const contents = (await deferredToPromise(fileClient.getFileContents(filePath)))[1]
 		const blob = new Blob([contents], {
 			type: mimeType,
@@ -212,9 +194,12 @@ async function loadFileContent(filePath, mimeType) {
 	}
 }
 
+/**
+ *
+ * @param {string} downloadPath the download path for the file
+ * @param {string} mimeType the mime type
+ */
 async function loadFileContentShared(downloadPath, mimeType) {
-	// use downloadPath to construct URL
-	const fileClient = OC.Files.getClient()
 	try {
 		const response = await fetch(downloadPath)
 		if (!response.ok) {
@@ -224,7 +209,7 @@ async function loadFileContentShared(downloadPath, mimeType) {
 
 		return blob
 	} catch (e) {
-		console.log("MASSIVE ERROR")
+		console.log('MASSIVE ERROR')
 		console.log(e)
 		throw e[1]
 	}
@@ -235,9 +220,10 @@ async function loadFileContentShared(downloadPath, mimeType) {
  * @param {string} filePath the file path
  * @param {Blob} data the data to dave
  * @param {Function} cb callback
+ * @param {string} isShared if file is shared
  */
 function onSave(filePath, data, cb, isShared) {
-	if (isShared == 'false') {
+	if (isShared === 'false') {
 		saveFileContent(filePath, data)
 			.then(() => cb())
 			.catch(cb)
