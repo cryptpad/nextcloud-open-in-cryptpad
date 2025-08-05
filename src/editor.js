@@ -49,9 +49,32 @@ window.addEventListener('DOMContentLoaded', async function() {
 			blob = await loadFileContent(filePath, mimeType)
 		}
 
-		const sessionKey = await getSessionForFile(fileId)
+		let viewOnlyMode = false;
+		let sessionKey
+		try {
+			sessionKey = await getSessionForFile(fileId)
+		} catch (e) {
+			viewOnlyMode = true;
+		}
 
 		const docUrl = URL.createObjectURL(blob)
+
+		const events = viewOnlyMode
+			? {
+				onSave: (data, cb) => null,
+ 				onNewKey: (data, cb) => cb(data.new),  // Just accept and ignore any session key CryptPad wants to use
+				onHasUnsavedChanges: (unsavedChanges) => null,
+				onInsertImage,
+			}
+			: {
+				onSave: (data, cb) => onSave(filePath, data, cb, isShared),
+				onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb),
+				onHasUnsavedChanges: (unsavedChanges) => {
+					const elem = document.querySelector('#unsaved-indicator')
+					elem.className = unsavedChanges ? 'visible' : ''
+				},
+				onInsertImage,
+			}
 
 		CryptPadAPI(cryptPadUrl, 'editor-content', {
 			document: {
@@ -61,15 +84,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 			},
 			documentType: app,
 			mode: viewMode,
-			events: {
-				onSave: (data, cb) => onSave(filePath, data, cb, isShared),
-				onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb),
-				onHasUnsavedChanges: (unsavedChanges) => {
-					const elem = document.querySelector('#unsaved-indicator')
-					elem.className = unsavedChanges ? 'visible' : ''
-				},
-				onInsertImage,
-			},
+			events,
 			width: '100%',
 			height: '100%',
 		})
@@ -247,8 +262,10 @@ async function getSessionForFile(fileId) {
 	if (response.ok) {
 		const body = await response.json()
 		return body.sessionKey
-	} else {
+	} else if (response.status == 404) {
 		return null
+	} else {
+		throw "no write permission"
 	}
 }
 
