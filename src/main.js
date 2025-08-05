@@ -135,7 +135,7 @@ async function main() {
 		])
 		*/
 
-		const diagramIcon = await Promise(loadIcon('diagram.svg'))
+		const diagramIcon = await loadIcon('diagram.svg')
 
 		addNewFileMenuEntry({
 			id: 'add-drawio-file',
