@@ -25,13 +25,17 @@ const EMPTY_DRAWIO = '<mxfile type="embed"><diagram id="bWoO5ACGZIaXrIiKNTKd" na
  * @param {string} filePath path to the file
  * @param {string} mimeType the mime type of the file
  * @param {string} backLink the URL back to Nextcloud
+ * @param {string} isShared what kind of share
+ * @param {string} fileName the file name
  */
-function openInCryptPad(fileId, filePath, mimeType, backLink) {
-	location.href = generateUrl('/apps/openincryptpad/editor?id={id}&path={path}&mimeType={mimeType}&back={back}', {
+function openInCryptPad(fileId, filePath, mimeType, backLink, isShared, fileName) {
+	location.href = generateUrl('/apps/openincryptpad/editor?id={id}&path={path}&mimeType={mimeType}&back={back}&isShared={isShared}&fileName={fileName}', {
 		id: fileId,
 		path: filePath,
 		mimeType,
 		back: backLink,
+		isShared,
+		fileName,
 	})
 }
 
@@ -67,7 +71,7 @@ async function createEmptyDrawioFile(name, folder, folderId) {
 		await saveFileContent(path, new Blob([EMPTY_DRAWIO], { type: 'application/x-drawio' }))
 		const fileInfo = await getFileInfo(path)
 		const backLink = await createFolderLink(folder, folderId)
-		openInCryptPad(fileInfo.id, path, 'application/x-drawio', backLink)
+		openInCryptPad(fileInfo.id, path, 'application/x-drawio', backLink, false, 'New file')
 	} catch (c) {
 		showError(t('openincryptpad', 'File could not be created'))
 	}
@@ -93,10 +97,30 @@ function getUniqueName(name, ext, names) {
  *
  * @param {number} permissions the permissions as bit set
  */
-function hasWritePermission(permissions) {
-	const UPDATE = 2
 
-	return (permissions & UPDATE) === UPDATE
+const mimeTypes = ['application/x-drawio']
+const cryptPadIconn = '<svg  viewBox="0 0 24 24" width="20" height="20"></svg>'
+
+for (const mimeType of mimeTypes) {
+	registerFileAction(new FileAction({
+		id: 'edit-cryptpad-file',
+		displayName() { return t('openincryptpad', 'Open in CryptPad') },
+		iconSvgInline() { return cryptPadIconn },
+		enabled(nodes) {
+			return nodes.length === 1 && nodes[0].mime === mimeType
+		},
+		async exec(node, view, dir) {
+			const backLink = await createFolderLink(dir, null)
+			let isViewOnly = 'false'
+			// console.log("PERMISSIONS", node.permissions)
+			if (node.permissions === 11 || node.permissions === 9) {
+				isViewOnly = 'true'
+			}
+			openInCryptPad(node.fileid, node.path, node.mime, backLink, isViewOnly, node.displayname)
+			return true
+		},
+		default: DefaultType.DEFAULT,
+	}))
 }
 
 /**
@@ -104,28 +128,14 @@ function hasWritePermission(permissions) {
  */
 async function main() {
 	try {
+		/*
 		const [cryptPadIcon, diagramIcon] = await Promise.all([
 			loadIcon('app-dark.svg'),
 			loadIcon('diagram.svg'),
 		])
-		const mimeTypes = ['application/x-drawio']
+		*/
 
-		for (const mimeType of mimeTypes) {
-			registerFileAction(new FileAction({
-				id: 'edit-cryptpad-file',
-				displayName() { return t('openincryptpad', 'Open in CryptPad') },
-				iconSvgInline() { return cryptPadIcon },
-				enabled(nodes) {
-					return nodes.length === 1 && nodes[0].mime === mimeType && hasWritePermission(nodes[0].permissions)
-				},
-				async exec(node, view, dir) {
-					const backLink = await createFolderLink(dir, null)
-					openInCryptPad(node.fileid, node.path, node.mime, backLink)
-					return true
-				},
-				default: DefaultType.DEFAULT,
-			}))
-		}
+		const diagramIcon = await loadIcon('diagram.svg')
 
 		addNewFileMenuEntry({
 			id: 'add-drawio-file',

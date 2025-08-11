@@ -7,6 +7,12 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## [Unreleased]
 
+## [0.4.0] - 2025-08-04
+
+- Fix: internal and external shares
+- Fix: "Open in Cryptpad" not showing
+- Fix: german translations.
+
 ## [0.3.7] - 2025-02-17
 
 - Fix: Now working with Nextcloud versions 30 and 31

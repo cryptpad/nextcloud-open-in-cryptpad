@@ -31,14 +31,50 @@ window.addEventListener('DOMContentLoaded', async function() {
 			fileType,
 			app,
 			cryptPadUrl,
+			isShared,
+			fileName,
 		} = window.OpenInCryptPadInfo
-		document.title = fileName(filePath) + ' - Nextcloud'
 
-		const sessionKey = await getSessionForFile(fileId)
+		let blob
+		let viewMode = ''
+		document.title = fileName + ' - Nextcloud'
+		// if opening file from a share link, we don't get access to the file path, but we can download it
+		if (isShared.startsWith('true')) {
+			viewMode = 'view'
+		}
 
-		const blob = await loadFileContent(filePath, mimeType)
+		if (isShared.includes('External')) {
+			blob = await loadFileContentShared(filePath, mimeType)
+		} else {
+			blob = await loadFileContent(filePath, mimeType)
+		}
+
+		let viewOnlyMode = false
+		let sessionKey
+		try {
+			sessionKey = await getSessionForFile(fileId)
+		} catch (e) {
+			viewOnlyMode = true
+		}
 
 		const docUrl = URL.createObjectURL(blob)
+
+		const events = viewOnlyMode
+			? {
+				onSave: (data, cb) => null,
+				onNewKey: (data, cb) => cb(data.new), // Just accept and ignore any session key CryptPad wants to use
+				onHasUnsavedChanges: (unsavedChanges) => null,
+				onInsertImage,
+			}
+			: {
+				onSave: (data, cb) => onSave(filePath, data, cb, isShared),
+				onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb),
+				onHasUnsavedChanges: (unsavedChanges) => {
+					const elem = document.querySelector('#unsaved-indicator')
+					elem.className = unsavedChanges ? 'visible' : ''
+				},
+				onInsertImage,
+			}
 
 		CryptPadAPI(cryptPadUrl, 'editor-content', {
 			document: {
@@ -47,20 +83,15 @@ window.addEventListener('DOMContentLoaded', async function() {
 				fileType,
 			},
 			documentType: app,
-			events: {
-				onSave: (data, cb) => onSave(filePath, data, cb),
-				onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb),
-				onHasUnsavedChanges: (unsavedChanges) => {
-					const elem = document.querySelector('#unsaved-indicator')
-					elem.className = unsavedChanges ? 'visible' : ''
-				},
-				onInsertImage,
-			},
+			mode: viewMode,
+			events,
 			width: '100%',
 			height: '100%',
 		})
 
-		checkForPermissionChange(filePath, () => resetCryptPadSession(fileId))
+		if (isShared !== 'trueExternal') {
+			checkForPermissionChange(filePath, () => resetCryptPadSession(fileId))
+		}
 		initBackButton()
 
 	} catch (e) {
@@ -160,18 +191,6 @@ async function getFilePermission(path) {
 }
 
 /**
- * @param {string} filePath the file path
- */
-function fileName(filePath) {
-	if (!filePath) {
-		return
-	}
-
-	const parts = filePath.split('/')
-	return parts[parts.length - 1]
-}
-
-/**
  *
  * @param {string} filePath the file path
  * @param {string} mimeType the mime type
@@ -192,14 +211,39 @@ async function loadFileContent(filePath, mimeType) {
 
 /**
  *
+ * @param {string} downloadPath the download path for the file
+ * @param {string} mimeType the mime type
+ */
+async function loadFileContentShared(downloadPath, mimeType) {
+	try {
+		const response = await fetch(downloadPath)
+		if (!response.ok) {
+			throw new Error(`Failed to fetch file: ${response.statusText}`)
+		}
+		const blob = await response.blob()
+
+		return blob
+	} catch (e) {
+		console.log('MASSIVE ERROR')
+		console.log(e)
+		throw e[1]
+	}
+}
+
+/**
+ *
  * @param {string} filePath the file path
  * @param {Blob} data the data to dave
  * @param {Function} cb callback
+ * @param {string} isShared if file is shared
  */
-function onSave(filePath, data, cb) {
-	saveFileContent(filePath, data)
-		.then(() => cb())
-		.catch(cb)
+function onSave(filePath, data, cb, isShared) {
+	if (isShared === 'false') {
+		saveFileContent(filePath, data)
+			.then(() => cb())
+			.catch(cb)
+	}
+	// if it's through a share link, we shouldn't save (read only)
 }
 
 /**
@@ -218,8 +262,10 @@ async function getSessionForFile(fileId) {
 	if (response.ok) {
 		const body = await response.json()
 		return body.sessionKey
-	} else {
+	} else if (response.status === 404) {
 		return null
+	} else {
+		throw new Error('no write permission')
 	}
 }
 
