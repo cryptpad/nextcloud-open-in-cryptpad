@@ -4,7 +4,7 @@ services:
         context: .
         dockerfile: Dockerfile.dev
         args:
-          NC_VERSION: v31.0.0rc4
+          NC_VERSION: v31.0.7
       ports:
         - 8010:8080
       volumes:
