@@ -7,8 +7,8 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 # Open In CryptPad
 
 "Open in CryptPad" is a Nextcloud application that allows collaborative editing
-of files. For this it uses a CryptPad instance embedded into the Nextcloud web
-interface. Currently, only drawio diagrams are supported.
+and viewing of files. For this it uses a CryptPad instance embedded into the
+Nextcloud web interface. Currently, only drawio diagrams are supported.
 
 ## Importing images from Nextcloud into diagrams
 
@@ -23,7 +23,11 @@ files edited in CryptPad.
 
 ## Installation
 
-You can install this app in one of the following ways: either from the NextCloud app store, from a binary release, or by cloning this repository. Once installed, you can check CryptPad is configured correctly by checking that the url listed under Administration > CryptPad is the same as the url of your local CryptPad instance.
+You can install this app in one of the following ways: either from the NextCloud
+app store, from a binary release, or by cloning this repository. Once installed,
+you can check CryptPad is configured correctly by checking that the url listed
+under Administration > CryptPad is the same as the url of your local CryptPad
+instance.
 
 ### Prerequisites on the CryptPad side
 
