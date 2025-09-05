@@ -13,6 +13,9 @@ import {
 	registerFileAction,
 	getNavigation,
 } from '@nextcloud/files'
+import cryptPadIcon from '../img/app-dark.svg'
+import diagramIcon from '../img/diagram.svg'
+
 
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
 __webpack_public_path__ = generateFilePath('openincryptpad', '', 'js/') // eslint-disable-line
@@ -99,13 +102,12 @@ function getUniqueName(name, ext, names) {
  */
 
 const mimeTypes = ['application/x-drawio']
-const cryptPadIconn = '<svg  viewBox="0 0 24 24" width="20" height="20"></svg>'
 
 for (const mimeType of mimeTypes) {
 	registerFileAction(new FileAction({
 		id: 'edit-cryptpad-file',
 		displayName() { return t('openincryptpad', 'Open in CryptPad') },
-		iconSvgInline() { return cryptPadIconn },
+		iconSvgInline() { return cryptPadIcon },
 		enabled(nodes) {
 			return nodes.length === 1 && nodes[0].mime === mimeType
 		},
@@ -128,15 +130,6 @@ for (const mimeType of mimeTypes) {
  */
 async function main() {
 	try {
-		/*
-		const [cryptPadIcon, diagramIcon] = await Promise.all([
-			loadIcon('app-dark.svg'),
-			loadIcon('diagram.svg'),
-		])
-		*/
-
-		const diagramIcon = await loadIcon('diagram.svg')
-
 		addNewFileMenuEntry({
 			id: 'add-drawio-file',
 			displayName: t('openincryptpad', 'New diagrams.net diagram'),
@@ -154,26 +147,6 @@ async function main() {
 	} catch (e) {
 		console.error(e)
 	}
-}
-
-/**
- *
- * @param {string} name name of the icon
- */
-async function loadIcon(name) {
-	const response = await fetch(
-		`/apps/openincryptpad/img/${name}`,
-		{
-			method: 'GET',
-			headers: {
-				requesttoken: OC.requestToken,
-			},
-		},
-	)
-	if (response.ok) {
-		return await response.text()
-	}
-	return ''
 }
 
 main()
