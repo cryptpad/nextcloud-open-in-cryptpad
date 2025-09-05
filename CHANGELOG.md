@@ -9,7 +9,7 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## [0.4.1] - 2025-09-05
 
-- Fix: [No icon in file menu entry](internal and external shares)
+- Fix: [No icon in file menu entry](https://github.com/cryptpad/nextcloud-open-in-cryptpad/issues/45)
 
 ## [0.4.0] - 2025-08-04
 
