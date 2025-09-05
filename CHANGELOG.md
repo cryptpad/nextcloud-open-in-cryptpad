@@ -7,6 +7,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## [Unreleased]
 
+## [0.4.1] - 2025-09-05
+
+- Fix: [No icon in file menu entry](internal and external shares)
+
 ## [0.4.0] - 2025-08-04
 
 - Fix: internal and external shares
