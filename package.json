@@ -1,7 +1,7 @@
 {
   "name": "openincryptpad",
   "description": "Open files in CryptPad",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "author": "XWiki CryptPad Team <contact@cryptpad.org> and contributors",
   "contributors": [],
   "bugs": {

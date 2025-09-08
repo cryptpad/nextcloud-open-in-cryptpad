@@ -7,6 +7,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## [Unreleased]
 
+## [0.4.2] - 2025-09-08
+
+- Fix: [Incorrect window title for new file](https://github.com/cryptpad/nextcloud-open-in-cryptpad/issues/46)
+
 ## [0.4.1] - 2025-09-05
 
 - Fix: [No icon in file menu entry](https://github.com/cryptpad/nextcloud-open-in-cryptpad/issues/45)

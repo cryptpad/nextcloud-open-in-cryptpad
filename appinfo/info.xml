@@ -59,7 +59,7 @@ interface in the "General" tab.
    CryptPad". You can find it in the "Integration" category.
 3. Configure "Open in CryptPad" in the administration settings of Nextcloud.
     ]]></description>
-    <version>0.4.1</version>
+    <version>0.4.2</version>
     <licence>agpl</licence>
     <author mail="contact@cryptpad.org" homepage="https://cryptpad.org">XWiki CryptPad Team and contributors</author>
     <namespace>OpenInCryptPad</namespace>
