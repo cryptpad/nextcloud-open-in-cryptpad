@@ -74,7 +74,7 @@ async function createEmptyDrawioFile(name, folder, folderId) {
 		await saveFileContent(path, new Blob([EMPTY_DRAWIO], { type: 'application/x-drawio' }))
 		const fileInfo = await getFileInfo(path)
 		const backLink = await createFolderLink(folder, folderId)
-		openInCryptPad(fileInfo.id, path, 'application/x-drawio', backLink, false, 'New file')
+		openInCryptPad(fileInfo.id, path, 'application/x-drawio', backLink, false, name)
 	} catch (c) {
 		showError(t('openincryptpad', 'File could not be created'))
 	}
