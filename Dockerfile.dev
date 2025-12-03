@@ -1,13 +1,3 @@
-FROM ubuntu:24.04 AS nextcloud-git
-RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
-    --mount=target=/var/cache/apt,type=cache,sharing=locked \
-    apt update \
-    && apt install -y \
-       git
-RUN git clone --depth=1 https://github.com/nextcloud/server.git nextcloud
-
-
-
 FROM ubuntu:24.04
 ARG NC_VERSION
 
@@ -15,7 +5,6 @@ RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
     --mount=target=/var/cache/apt,type=cache,sharing=locked \
     apt update \
     && apt install -y \
-       git \
        php \
        php-zip \
        php-dom \
@@ -23,16 +12,17 @@ RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
        php-mbstring \
        php-gd \
        php-curl \
-       php-sqlite3
+       php-sqlite3 \
+       wget \
+       unzip
 
-COPY --from=nextcloud-git /nextcloud /nextcloud
+RUN wget https://download.nextcloud.com/server/releases/latest-${NC_VERSION}.zip
+RUN unzip latest-*.zip
 WORKDIR /nextcloud
-RUN git fetch --depth=1 https://github.com/nextcloud/server.git ${NC_VERSION}
-RUN git checkout FETCH_HEAD
-RUN git submodule update --init
+RUN chmod a+x occ
 RUN echo '{"application/x-drawio": "image"}' > mimetypealiases.json
 RUN echo '{"drawio": ["application/x-drawio"]}' > mimetypemapping.json
 RUN echo 'output_buffering = 0' >> php.ini
+COPY start-nc.sh /nextcloud/start-nc.sh
 EXPOSE 8080
-CMD cp mimetype*.json config \
-    && php -S 0.0.0.0:8080
+CMD /nextcloud/start-nc.sh

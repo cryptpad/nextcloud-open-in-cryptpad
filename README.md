@@ -145,16 +145,28 @@ The make command will install or update Composer dependencies if a composer.json
 
 ## Running the Nextcloud server
 
-Before running Nextcloud, ensure you have an up-to-date version of PHP installed and run the following commands:
+`docker-compose.dev.yaml` starts all NextCloud versions we support with `openincryptpad` enabled. You can start it like this:
 
-    git clone https://github.com/nextcloud/server.git nextcloud
-    cd nextcloud/
-    git switch v29.0.7 --detach
-    git submodule update --init
+``` sh
+make  # openincryptpad needs to be built before NextCloud is stared
+docker compose -f docker-compose.dev.yaml up --build
+```
 
-Then, to run the server:
+You can access the different NextCloud versions via:
 
-    php -S localhost:8080
+- http://localhost:8032 - NC32
+- http://localhost:8031 - NC31
+- http://localhost:8030 - NC30
+
+There will be an `admin` user with the password `Test1234`. Do not forget to set the URL tp your CryptPad instance in the admin settings.
+
+If you need to reset all your data, you can do it like this:
+
+``` sh
+docker compose -f docker-compose.dev.yaml up --build
+docker volume rm openincryptpad_nc30-config openincryptpad_nc30-data openincryptpad_nc31-config openincryptpad_nc31-data
+```
+
 
 ## Publish to App Store
 
