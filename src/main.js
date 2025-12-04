@@ -16,7 +16,6 @@ import {
 import cryptPadIcon from '../img/app-dark.svg'
 import diagramIcon from '../img/diagram.svg'
 
-
 __webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
 __webpack_public_path__ = generateFilePath('openincryptpad', '', 'js/') // eslint-disable-line
 
@@ -37,7 +36,7 @@ function openInCryptPad(fileId, filePath, mimeType, backLink, isShared, fileName
 		path: filePath,
 		mimeType,
 		back: backLink,
-		isShared,
+		isShared: !isShared || isShared === 'false' ? 'false' : 'true',
 		fileName,
 	})
 }
