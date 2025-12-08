@@ -7,6 +7,11 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## [Unreleased]
 
+## [0.4.3] - 2025-12-08
+
+- Add support for Nextcloud 32
+- Remove support for Nextcloud 29
+
 ## [0.4.2] - 2025-09-08
 
 - Fix: [Incorrect window title for new file](https://github.com/cryptpad/nextcloud-open-in-cryptpad/issues/46)
