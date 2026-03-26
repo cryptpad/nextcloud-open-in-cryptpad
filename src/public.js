@@ -1,7 +1,6 @@
 import { generateUrl } from '@nextcloud/router'
 import {
 	DefaultType,
-	FileAction,
 	registerFileAction,
 } from '@nextcloud/files'
 
@@ -29,7 +28,7 @@ const cryptPadIconn = '<svg  viewBox="0 0 24 24" width="20" height="20"></svg>'
 const mimeTypes = ['application/x-drawio']
 let firstTime = true
 for (const mimeType of mimeTypes) {
-	registerFileAction(new FileAction({
+	registerFileAction({
 		id: 'edit-cryptpad-file',
 		displayName() { return t('openincryptpad', 'Open in CryptPad') },
 		iconSvgInline() { return cryptPadIconn },
@@ -53,5 +52,5 @@ for (const mimeType of mimeTypes) {
 			return true
 		},
 		default: DefaultType.DEFAULT,
-	}))
+	})
 }
