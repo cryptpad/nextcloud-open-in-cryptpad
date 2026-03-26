@@ -43,7 +43,7 @@ source_build_directory=$(CURDIR)/build/artifacts/source
 source_package_name=$(source_build_directory)/$(app_name)
 appstore_build_directory=$(CURDIR)/build/artifacts/appstore
 appstore_package_name=$(appstore_build_directory)/$(app_name)
-npm=$(shell which npm 2> /dev/null)
+pnpm=$(shell which pnpm 2> /dev/null)
 composer=$(shell which composer 2> /dev/null)
 
 all: build
@@ -57,10 +57,10 @@ ifneq (,$(wildcard $(CURDIR)/composer.json))
 	make composer
 endif
 ifneq (,$(wildcard $(CURDIR)/package.json))
-	make npm
+	make pnpm
 endif
 ifneq (,$(wildcard $(CURDIR)/js/package.json))
-	make npm
+	make pnpm
 endif
 
 # Installs and updates the composer dependencies. If composer is not installed
@@ -77,13 +77,13 @@ else
 	composer install --prefer-dist
 endif
 
-# Installs npm dependencies
-.PHONY: npm
-npm:
+# Installs pnpm dependencies
+.PHONY: pnpm
+pnpm:
 ifeq (,$(wildcard $(CURDIR)/package.json))
-	cd js && $(npm) run build
+	cd js && $(pnpm) run build
 else
-	npm run build
+	pnpm run build
 endif
 
 # Removes the appstore build
@@ -92,7 +92,7 @@ clean:
 	rm -rf ./build
 
 # Same as clean but also removes dependencies installed by composer, bower and
-# npm
+# pnpm
 .PHONY: distclean
 distclean: clean
 	rm -rf vendor
