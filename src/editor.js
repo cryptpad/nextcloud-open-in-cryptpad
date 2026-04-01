@@ -18,7 +18,6 @@ let cryptPadSession = null
 
 window.addEventListener('DOMContentLoaded', async function() {
 	try {
-
 		if (!window.CryptPadAPI) {
 			showError('The CryptPad instance is not configured correctly. Please contact your admin.')
 			return

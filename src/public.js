@@ -32,15 +32,17 @@ for (const mimeType of mimeTypes) {
 		id: 'edit-cryptpad-file',
 		displayName() { return t('openincryptpad', 'Open in CryptPad') },
 		iconSvgInline() { return cryptPadIconn },
-		enabled(nodes) {
-			return nodes.length === 1 && nodes[0].mime === mimeType
+		enabled(context) {
+            const node = context.nodes[0]
+			return node.mime === mimeType
 		},
-		async exec(node, view, dir) {
+		async exec(context) {
+			const backLink = window.location.href
+            const node = context.nodes[0]
 			if (firstTime) {
 				firstTime = false
 				return true
 			}
-			const backLink = '' // TODO? currently doesn't work in external share
 
 			let isViewOnly = 'falseExternal'
 			// console.log("PERMISSIONS", node.permissions)

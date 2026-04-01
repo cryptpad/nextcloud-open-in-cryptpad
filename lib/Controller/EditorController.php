@@ -28,6 +28,7 @@ class EditorController extends Controller {
 	}
 
 	/**
+	 * @PublicPage
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
@@ -37,13 +38,16 @@ class EditorController extends Controller {
 		$cryptPadUrl = $this->settingsService->getCryptPadUrl($app);
 		$apiUrl = $cryptPadUrl . '/cryptpad-api.js';
 		$infoScript = $this->getInfoScript($id, $path, $mimeType, $fileType, $app, $cryptPadUrl, $isShared, $fileName);
+        $external = str_ends_with($isShared, "External");
 
 		$response = new TemplateResponse(
 			'openincryptpad',
-			'editor', [
+			'editor',
+            [
 				'infoScript' => $infoScript,
 				"apiUrl" => $apiUrl,
-			]
+			],
+            $external ? TemplateResponse::RENDER_AS_PUBLIC : TemplateResponse::RENDER_AS_USER,
 		);
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain($cryptPadUrl);
