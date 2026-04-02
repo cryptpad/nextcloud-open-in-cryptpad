@@ -11,7 +11,7 @@ import {
 	addNewFileMenuEntry,
 	registerFileAction,
 	getNavigation,
-    NewMenuEntryCategory
+	NewMenuEntryCategory,
 } from '@nextcloud/files'
 import cryptPadIcon from '../img/app-dark.svg'
 import diagramIcon from '../img/diagram.svg'
@@ -108,13 +108,12 @@ for (const mimeType of mimeTypes) {
 		displayName() { return t('openincryptpad', 'Open in CryptPad') },
 		iconSvgInline() { return cryptPadIcon },
 		enabled(context) {
-            const node = context.nodes[0];
-            console.log('XXX registerFileAction enabled', node, node.mime === mimeType)
+			const node = context.nodes[0]
 			return node.mime === mimeType
 		},
 		async exec(context) {
-			const backLink = await createFolderLink(context.folder.dirname, null)
-            const node = context.nodes[0]
+			const backLink = await createFolderLink(context.folder.path, null)
+			const node = context.nodes[0]
 			let isViewOnly = 'false'
 			// console.log("PERMISSIONS", node.permissions)
 			if (node.permissions === 11 || node.permissions === 9) {
@@ -134,10 +133,9 @@ async function main() {
 	try {
 		addNewFileMenuEntry({
 			id: 'add-drawio-file',
-            category: NewMenuEntryCategory.CreateNew,
+			category: NewMenuEntryCategory.CreateNew,
 			displayName: t('openincryptpad', 'New diagrams.net diagram'),
 			enabled() {
-                console.log('XXX enabled?', getNavigation()?.active?.id === 'files')
 				return getNavigation()?.active?.id === 'files'
 			},
 			iconClass: 'icon-add',

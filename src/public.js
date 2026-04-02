@@ -33,12 +33,12 @@ for (const mimeType of mimeTypes) {
 		displayName() { return t('openincryptpad', 'Open in CryptPad') },
 		iconSvgInline() { return cryptPadIconn },
 		enabled(context) {
-            const node = context.nodes[0]
+			const node = context.nodes[0]
 			return node.mime === mimeType
 		},
 		async exec(context) {
 			const backLink = window.location.href
-            const node = context.nodes[0]
+			const node = context.nodes[0]
 			if (firstTime) {
 				firstTime = false
 				return true

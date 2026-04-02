@@ -29,6 +29,7 @@ class EditorController extends Controller {
 
 	/**
 	 * @PublicPage
+	 * @UseSession
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */

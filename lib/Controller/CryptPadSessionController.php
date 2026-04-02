@@ -35,6 +35,8 @@ class CryptPadSessionController extends Controller {
 	}
 
 	/**
+	 * @PublicPage
+	 * @UseSession
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
@@ -49,6 +51,8 @@ class CryptPadSessionController extends Controller {
 	}
 
 	/**
+	 * @PublicPage
+	 * @UseSession
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
