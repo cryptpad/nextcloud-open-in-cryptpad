@@ -1,4 +1,17 @@
 services:
+  nc34:
+      build:
+        context: .
+        dockerfile: Dockerfile.dev
+        args:
+          NC_VERSION: 34
+      ports:
+        - 8034:8080
+      volumes:
+        - nc34-config:/nextcloud/config
+        - nc34-data:/nextcloud/data
+        - ./:/nextcloud/apps/openincryptpad:ro
+
   nc33:
     build:
       context: .
@@ -25,23 +38,10 @@ services:
         - nc32-data:/nextcloud/data
         - ./:/nextcloud/apps/openincryptpad:ro
 
-  nc31:
-      build:
-        context: .
-        dockerfile: Dockerfile.dev
-        args:
-          NC_VERSION: 31
-      ports:
-        - 8031:8080
-      volumes:
-        - nc31-config:/nextcloud/config
-        - nc31-data:/nextcloud/data
-        - ./:/nextcloud/apps/openincryptpad:ro
-
 volumes:
+  nc34-config:
+  nc34-data:
   nc33-config:
   nc33-data:
   nc32-config:
   nc32-data:
-  nc31-config:
-  nc31-data:
