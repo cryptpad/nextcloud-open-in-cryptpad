@@ -2,18 +2,19 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { getClient } from '@nextcloud/files/dav'
+import { getClient, defaultRootPath } from '@nextcloud/files/dav'
 
 /**
  *
  * @param {string} path the file path
- * @param {Blob} data the data to dave
+ * @param {Blob} data the data to save
  */
 export async function saveFileContent(path, data) {
 	const fileClient = getClient()
+  const body = data instanceof Blob ? await data.arrayBuffer() : data
 	await fileClient.putFileContents(
-		path,
-		data,
+		`${defaultRootPath}${path}`,
+		body,
 		{ overwrite: false }, // Bug in NextCloud? This has to be set to false to make the upload work.
 	)
 }
@@ -24,6 +25,6 @@ export async function saveFileContent(path, data) {
  */
 export async function getFileInfo(path) {
 	const fileClient = getClient()
-	const result = await fileClient.stat(path)
+	const result = await fileClient.stat(`${defaultRootPath}${path}`)
 	return result
 }

@@ -4,7 +4,8 @@
 
 import { generateUrl, generateOcsUrl, generateFilePath } from '@nextcloud/router'
 import { getFilePickerBuilder } from '@nextcloud/dialogs'
-import { saveFileContent, deferredToPromise } from './utils.js'
+import { getClient, defaultRootPath } from '@nextcloud/files/dav'
+import { saveFileContent } from './utils.js'
 import { getRequestToken } from '@nextcloud/auth'
 
 import '@nextcloud/dialogs/style.css'  // eslint-disable-line
@@ -123,8 +124,8 @@ async function onInsertImage(data, callback) {
 		.build()
 
 	const path = await filepicker.pick()
-	const fileClient = OC.Files.getClient()
-	const blob = await getImage(fileClient._buildUrl(path))
+	const fileClient = getClient()
+	const blob = await getImage(fileClient.getFileDownloadLink(`${defaultRootPath}${path}`))
 
 	callback({ blob }) // eslint-disable-line n/no-callback-literal
 }
@@ -195,17 +196,13 @@ async function getFilePermission(path) {
  * @param {string} mimeType the mime type
  */
 async function loadFileContent(filePath, mimeType) {
-	const fileClient = OC.Files.getClient()
-	try {
-		const contents = (await deferredToPromise(fileClient.getFileContents(filePath)))[1]
-		const blob = new Blob([contents], {
-			type: mimeType,
-		})
+	const fileClient = getClient()
+	const contents = await fileClient.getFileContents(`${defaultRootPath}${filePath}`)
+	const blob = new Blob([contents], {
+		type: mimeType,
+	})
 
-		return blob
-	} catch (e) {
-		throw e[1]
-	}
+	return blob
 }
 
 /**
