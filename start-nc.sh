@@ -17,4 +17,5 @@ fi
 
 ./occ app:enable openincryptpad
 
-php -S 0.0.0.0:8080
+tail -f /nextcloud/data/nextcloud.log &
+php -S 0.0.0.0:8080 

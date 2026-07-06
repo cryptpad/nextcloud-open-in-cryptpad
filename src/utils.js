@@ -2,7 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { getClient, defaultRootPath } from '@nextcloud/files/dav'
+import { getClient, defaultRootPath, getDefaultPropfind, resultToNode } from '@nextcloud/files/dav'
 
 /**
  *
@@ -25,6 +25,11 @@ export async function saveFileContent(path, data) {
  */
 export async function getFileInfo(path) {
 	const fileClient = getClient()
-	const result = await fileClient.stat(`${defaultRootPath}${path}`)
-	return result
+	const result = await fileClient.stat(`${defaultRootPath}${path}`, {
+		details: true,
+		data: getDefaultPropfind(),
+	})
+	const node = resultToNode(result.data);
+	console.log('XXX stat', JSON.stringify(node));
+	return node
 }
