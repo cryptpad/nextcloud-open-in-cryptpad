@@ -15,7 +15,6 @@ export async function saveFileContent(path, data) {
 	await fileClient.putFileContents(
 		`${defaultRootPath}${path}`,
 		body,
-		{ overwrite: false }, // Bug in NextCloud? This has to be set to false to make the upload work.
 	)
 }
 
