@@ -7,6 +7,16 @@ is_nc_installed() {
     return $?
 }
 
+create_update_user() {
+    USERNAME=$1
+    PASSWORD=Test1234
+    if ./occ user:info "$USERNAME" > /dev/null 2>&1; then
+        printf '%s\n%s\n' "$PASSWORD" "$PASSWORD" | ./occ user:resetpassword "$USERNAME"
+    else
+        printf '%s\n%s\n' "$PASSWORD" "$PASSWORD" | ./occ user:add "$USERNAME"
+    fi
+}
+
 cp mimetype*.json config
 
 # sleep 10
@@ -16,6 +26,10 @@ if ! is_nc_installed; then
 fi
 
 ./occ app:enable openincryptpad
+
+./occ app:disable password_policy
+create_update_user user1
+create_update_user user2
 
 tail -f /nextcloud/data/nextcloud.log &
 php -S 0.0.0.0:8080 
