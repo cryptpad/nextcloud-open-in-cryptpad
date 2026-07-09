@@ -158,6 +158,7 @@ async function checkForPermissionChange(path, cb) {
 	while (true) {
 		await delay(10 * 1000)
 		const nextPermissions = await getFilePermission(path)
+		console.log('XXX checkForPermissionChange', permissions, nextPermissions)
 		if (permissions !== nextPermissions) {
 			permissions = nextPermissions
 			cb()
@@ -182,12 +183,25 @@ function delay(ms) {
 async function getFilePermission(path) {
 	return [await getShares(path, false), await getShares(path, true)]
 		.flat()
-		.filter((x) => x.can_edit)
+		.filter((x) => canEdit(x))
 		.map((x) => [x.share_with, x.uid_owner, x.uid_file_owner])
 		.flat()
 		.sort()
 		.filter((item, pos, ary) => !pos || item !== ary[pos - 1]) // remove duplicates
 		.join()
+}
+
+/**
+ *
+ * @param {object} a share
+ * @returns true, if the user this file is shared with, can edit it
+ */
+function canEdit(share) {
+	const PERM = {
+		READ: 1, UPDATE: 2, CREATE: 4, DELETE: 8, SHARE: 16, ALL: 31,
+	};
+
+	return (share.permissions & PERM.UPDATE) === PERM.UPDATE;
 }
 
 /**
