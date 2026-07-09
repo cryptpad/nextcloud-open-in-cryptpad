@@ -251,7 +251,7 @@ function onSave(filePath, data, cb, isShared) {
 	if (isShared === 'false') {
 		saveFileContent(filePath, data)
 			.then(() => cb())
-			.catch(cb)
+			.catch(() => document.location.reload())  // We can now save? Maybe we are not allowed to? => Reload
 	}
 	// if it's through a share link, we shouldn't save (read only)
 }

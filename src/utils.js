@@ -29,6 +29,5 @@ export async function getFileInfo(path) {
 		data: getDefaultPropfind(),
 	})
 	const node = resultToNode(result.data);
-	console.log('XXX stat', JSON.stringify(node));
 	return node
 }
