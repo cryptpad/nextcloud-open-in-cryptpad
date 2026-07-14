@@ -14,8 +14,7 @@ declare(strict_types=1);
  */
 return [
 	'routes' => [
-		['name' => 'cryptPad_session#get', 'url' => '/session/{id}', 'verb' => 'GET'],
-		['name' => 'cryptPad_session#put', 'url' => '/session/{id}', 'verb' => 'PUT'],
+		['name' => 'cryptPad_session#get', 'url' => '/session/{fileId}', 'verb' => 'GET'],
 		['name' => 'settings#getCryptPadUrl', 'url' => '/settings/cryptPadUrl/{app}', 'verb' => 'GET'],
 		['name' => 'settings#setCryptPadUrl', 'url' => '/settings/cryptPadUrl/{app}', 'verb' => 'PUT'],
 		['name' => 'editor#page', 'url' => '/editor', 'verb' => 'GET'],

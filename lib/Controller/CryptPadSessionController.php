@@ -7,6 +7,7 @@ declare(strict_types=1);
 namespace OCA\OpenInCryptPad\Controller;
 
 use OCA\OpenInCryptPad\AppInfo\Application;
+use OCA\OpenInCryptPad\Db\CryptPadSession;
 use OCA\OpenInCryptPad\Service\FilePermissionService;
 use OCA\OpenInCryptPad\Service\CryptPadSessionService;
 use OCP\AppFramework\Controller;
@@ -17,7 +18,8 @@ use Psr\Log\LoggerInterface;
 
 class CryptPadSessionController extends Controller {
 	private CryptPadSessionService $service;
-	protected IRootFolder $rootFolder;
+	private FilePermissionService $permissionService;
+	private LoggerInterface $logger;
 	private ?string $userId;
 
 	use Errors;
@@ -40,27 +42,21 @@ class CryptPadSessionController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
-	public function get(int $id): DataResponse {
-		if (!$this->permissionService->hasWritePermission($id)) {
+	public function get(int $fileId): DataResponse {
+		if (!$this->permissionService->hasWritePermission($fileId)) {
 			return new DataResponse('', Http::STATUS_FORBIDDEN);
 		}
 
-		return $this->handleNotFound(function () use ($id) {
-			return $this->service->find($id);
+		return $this->handleNotFound(function () use ($fileId) {
+			$key = $this->randomBase64UrlSafe();
+			$session = new CryptPadSession();
+			$session->setSessionKey("/2/integration/edit/$key/");
+			return $session;
 		});
 	}
 
-	/**
-	 * @PublicPage
-	 * @UseSession
-	 * @NoAdminRequired
-	 * @NoCSRFRequired
-	 */
-	public function put(int $id, ?string $oldSessionKey, string $newSessionKey): DataResponse {
-		if (!$this->permissionService->hasWritePermission($id)) {
-			return new DataResponse('', Http::STATUS_FORBIDDEN);
-		}
-
-		return new DataResponse($this->service->optimisticUpdate($id, $oldSessionKey, $newSessionKey));
+	function randomBase64UrlSafe(int $length = 64): string
+	{
+		return rtrim(strtr(base64_encode(random_bytes($length)), '+/', '-_'), '=');
 	}
 }

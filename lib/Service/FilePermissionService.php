@@ -8,7 +8,6 @@ namespace OCA\OpenInCryptPad\Service;
 
 use OCP\Files\IRootFolder;
 use OCP\Share\IManager;
-use OCP\Share\IShare;
 
 class FilePermissionService {
 	private IRootFolder $rootFolder;
