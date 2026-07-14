@@ -50,7 +50,7 @@ class CryptPadSessionController extends Controller {
 		return $this->handleNotFound(function () use ($fileId) {
 			$key = $this->randomBase64UrlSafe();
 			$session = new CryptPadSession();
-			$session->setSessionKey("/2/integration/edit/$key/");
+			$session->setSessionKey($key);
 			return $session;
 		});
 	}
