@@ -90,7 +90,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 		})
 
 		if (isShared !== 'trueExternal') {
-			checkForPermissionChange(filePath, () => resetCryptPadSession(fileId))
+			checkForSessionChange(fileId, sessionKey, () => resetCryptPadSession())
 		}
 		initBackButton()
 
@@ -141,26 +141,22 @@ function showError(message) {
 
 /**
  *
- * @param {string} fileId the file ID
  */
-async function resetCryptPadSession(fileId) {
-	await updateSessionForFile(fileId, { old: cryptPadSession, new: null })
+async function resetCryptPadSession() {
 	document.location.reload()
 }
 
 /**
  *
- * @param {string} path the path to check
+ * @param {string} fileId the path to check
  * @param {Function} cb called, when the permissions change
  */
-async function checkForPermissionChange(path, cb) {
-	let permissions = await getFilePermission(path)
+async function checkForSessionChange(fileId, sessionKey, cb) {
 	while (true) {
 		await delay(10 * 1000)
-		const nextPermissions = await getFilePermission(path)
-		console.log('XXX checkForPermissionChange', permissions, nextPermissions)
-		if (permissions !== nextPermissions) {
-			permissions = nextPermissions
+		const nextSessionKey = await getSessionForFile(fileId)
+		if (sessionKey !== nextSessionKey) {
+			sessionKey = nextSessionKey
 			cb()
 		}
 	}
@@ -174,21 +170,6 @@ function delay(ms) {
 	return new Promise((resolve) => {
 		setTimeout(resolve, ms)
 	})
-}
-
-/**
- *
- * @param {string} path the path
- */
-async function getFilePermission(path) {
-	return [await getShares(path, false), await getShares(path, true)]
-		.flat()
-		.filter((x) => canEdit(x))
-		.map((x) => [x.share_with, x.uid_owner, x.uid_file_owner])
-		.flat()
-		.sort()
-		.filter((item, pos, ary) => !pos || item !== ary[pos - 1]) // remove duplicates
-		.join()
 }
 
 /**
@@ -277,71 +258,6 @@ async function getSessionForFile(fileId) {
 	} else {
 		throw new Error('no write permission')
 	}
-}
-
-/**
- *
- * @param {string} fileId the if of the file
- * @param {string} data the session data
- * @param {Function} cb the callback
- */
-async function updateSessionForFile(fileId, data, cb) {
-	const response = await fetch(
-		generateUrl(`/apps/openincryptpad/session/${fileId}`),
-		{
-			method: 'PUT',
-			headers: {
-				requesttoken: OC.requestToken,
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				newSessionKey: data.new,
-				oldSessionKey: data.old,
-			}),
-		},
-	)
-	if (response.ok) {
-		const body = await response.json()
-		if (cb) {
-			cb(body.sessionKey)
-		}
-		cryptPadSession = body.sessionKey
-		return body.sessionKey
-	} else {
-		return null
-	}
-}
-
-/**
- *
- * @param {string} path the path
- * @param {boolean} inherited return inherited shares?
- */
-async function getShares(path, inherited) {
-	const endpoint = inherited
-		? '/apps/files_sharing/api/v1/shares/inherited'
-		: '/apps/files_sharing/api/v1/shares'
-	const params = new URLSearchParams({
-		format: 'json',
-		reshares: 'true',
-		path,
-	})
-	const response = await fetch(
-		generateOcsUrl(`${endpoint}?${params}`),
-		{
-			method: 'GET',
-			headers: {
-				requesttoken: OC.requestToken,
-			},
-		},
-	)
-	if (response.ok) {
-		const body = await response.json()
-		if (body.ocs.meta.status === 'ok') {
-			return body.ocs.data
-		}
-	}
-	return []
 }
 
 /**
