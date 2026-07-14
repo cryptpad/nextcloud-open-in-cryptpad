@@ -62,13 +62,13 @@ window.addEventListener('DOMContentLoaded', async function() {
 		const events = viewOnlyMode
 			? {
 				onSave: (data, cb) => null,
-				onNewKey: (data, cb) => cb(data.new), // Just accept and ignore any session key CryptPad wants to use
+				// onNewKey: (data, cb) => cb(data.new), // Just accept and ignore any session key CryptPad wants to use
 				onHasUnsavedChanges: (unsavedChanges) => null,
 				onInsertImage,
 			}
 			: {
 				onSave: (data, cb) => onSave(filePath, data, cb, isShared),
-				onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb),
+				// onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb),
 				onHasUnsavedChanges: (unsavedChanges) => {
 					const elem = document.querySelector('#unsaved-indicator')
 					elem.className = unsavedChanges ? 'visible' : ''
