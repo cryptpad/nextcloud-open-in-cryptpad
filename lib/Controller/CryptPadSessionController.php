@@ -48,15 +48,8 @@ class CryptPadSessionController extends Controller {
 		}
 
 		return $this->handleNotFound(function () use ($fileId) {
-			$key = $this->randomBase64UrlSafe();
-			$session = new CryptPadSession();
-			$session->setSessionKey($key);
+			$session = $this->service->get($fileId);
 			return $session;
 		});
-	}
-
-	function randomBase64UrlSafe(int $length = 64): string
-	{
-		return rtrim(strtr(base64_encode(random_bytes($length)), '+/', '-_'), '=');
 	}
 }

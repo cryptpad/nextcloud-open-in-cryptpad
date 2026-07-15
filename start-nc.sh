@@ -31,5 +31,5 @@ fi
 create_update_user user1
 create_update_user user2
 
-tail -f /nextcloud/data/nextcloud.log &
+tail -n 0 -f /nextcloud/data/nextcloud.log &
 php -S 0.0.0.0:8080 

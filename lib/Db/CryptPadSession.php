@@ -11,8 +11,8 @@ use JsonSerializable;
 use OCP\AppFramework\Db\Entity;
 
 /**
- * @method getFileId(): int
- * @method setFileId(int $fileId): void
+ * @method getId(): int
+ * @method setId(int $fileId): void
  * @method getSessionKey(): string
  * @method setSessionKey(string $sessionKey): void
  * @method getWriteUsers(): string
@@ -27,7 +27,7 @@ class CryptPadSession extends Entity implements JsonSerializable {
 
 	public function __construct() {
 		// add types in constructor
-		$this->addType('sessonKey', 'string');
+		$this->addType('sessionKey', 'string');
 		$this->addType('createdAt', 'datetime');
 	}
 

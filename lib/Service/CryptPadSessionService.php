@@ -39,7 +39,7 @@ class CryptPadSessionService {
 			return $this->mapper->update($session);
 		} catch (DoesNotExistException $e) {
 			$session = new CryptPadSession();
-			$session->setFileId($fileId);
+			$session->setId($fileId);
 			$session->setCreatedAt(new \DateTime());
 			$session->setWriteUsers($writeUsersStr);
 			$session->setSessionKey($this->randomBase64UrlSafe());
