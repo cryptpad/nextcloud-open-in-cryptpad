@@ -16,6 +16,8 @@ __webpack_public_path__ = generateFilePath('openincryptpad', '', 'js/') // eslin
 /* global CryptPadAPI */
 
 let cryptPadSession = null
+let wantReload = false;
+let hasUnsavedChanges = false;
 
 window.addEventListener('DOMContentLoaded', async function() {
 	try {
@@ -69,10 +71,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 			: {
 				onSave: (data, cb) => onSave(filePath, data, cb, isShared),
 				// onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb),
-				onHasUnsavedChanges: (unsavedChanges) => {
-					const elem = document.querySelector('#unsaved-indicator')
-					elem.className = unsavedChanges ? 'visible' : ''
-				},
+				onHasUnsavedChanges: onHasUnsavedChanges,
 				onInsertImage,
 			}
 
@@ -142,8 +141,12 @@ function showError(message) {
 /**
  *
  */
-async function resetCryptPadSession() {
-	document.location.reload()
+function resetCryptPadSession() {
+	if (hasUnsavedChanges) {
+		wantReload = true;
+	} else {
+		document.location.reload()
+	}
 }
 
 /**
@@ -236,6 +239,16 @@ function onSave(filePath, data, cb, isShared) {
 	}
 	// if it's through a share link, we shouldn't save (read only)
 }
+
+function onHasUnsavedChanges(unsavedChanges) {
+	hasUnsavedChanges = unsavedChanges;
+	const elem = document.querySelector('#unsaved-indicator')
+	elem.className = unsavedChanges ? 'visible' : ''
+
+	if (!unsavedChanges && wantReload) {
+		document.location.reload();
+	}
+};
 
 /**
  *

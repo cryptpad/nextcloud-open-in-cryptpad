@@ -36,7 +36,6 @@ class CryptPadSession extends Entity implements JsonSerializable {
 		return [
 			'id' => $this->id,
 			'sessionKey' => $this->sessionKey,
-			'writeUsers' => $this->writeUsers,
 		];
 	}
 }
