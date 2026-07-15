@@ -75,7 +75,6 @@ async function createEmptyDrawioFile(name, folder, folderId) {
 		const backLink = await createFolderLink(folder, folderId)
 		openInCryptPad(fileInfo.id, path, 'application/x-drawio', backLink, false, name)
 	} catch (c) {
-		console.log('XXX', c);
 		showError(t('openincryptpad', 'File could not be created'))
 	}
 }

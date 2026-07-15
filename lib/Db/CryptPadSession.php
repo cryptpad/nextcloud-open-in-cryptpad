@@ -22,12 +22,13 @@ use OCP\AppFramework\Db\Entity;
  */
 class CryptPadSession extends Entity implements JsonSerializable {
 	protected string $sessionKey = '';
-	protected string $writeUsers = '';
+	protected ?string $writeUsers = null;
 	protected ?\DateTime $createdAt = null;
 
 	public function __construct() {
 		// add types in constructor
 		$this->addType('sessionKey', 'string');
+		$this->addType('writeUsers', 'string');
 		$this->addType('createdAt', 'datetime');
 	}
 

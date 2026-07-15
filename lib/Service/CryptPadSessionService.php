@@ -13,16 +13,22 @@ use OCA\OpenInCryptPad\Db\CryptPadSessionMapper;
 use OCP\AppFramework\Db\DoesNotExistException;
 use OCP\AppFramework\Db\MultipleObjectsReturnedException;
 use OCP\IDBConnection;
+use Psr\Log\LoggerInterface;
 
 class CryptPadSessionService {
 	private IDBConnection $db;
 	private CryptPadSessionMapper $mapper;
 	private FilePermissionService $filePermissionService;
+	private LoggerInterface $logger;
 
-	public function __construct(IDBConnection $db, CryptPadSessionMapper $mapper, FilePermissionService $filePermissionService) {
+	public function __construct(IDBConnection $db,
+		CryptPadSessionMapper $mapper,
+		FilePermissionService $filePermissionService,
+		LoggerInterface $logger) {
 		$this->db = $db;
 		$this->mapper = $mapper;
 		$this->filePermissionService = $filePermissionService;
+		$this->logger = $logger;
 	}
 
 	public function get(int $fileId) {
