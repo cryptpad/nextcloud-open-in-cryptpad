@@ -17,10 +17,39 @@ use OCP\IDBConnection;
 class CryptPadSessionService {
 	private IDBConnection $db;
 	private CryptPadSessionMapper $mapper;
+	private FilePermissionService $filePermissionService;
 
-	public function __construct(IDBConnection $db, CryptPadSessionMapper $mapper) {
+	public function __construct(IDBConnection $db, CryptPadSessionMapper $mapper, FilePermissionService $filePermissionService) {
 		$this->db = $db;
 		$this->mapper = $mapper;
+		$this->filePermissionService = $filePermissionService;
+	}
+
+	public function get(int $fileId) {
+		$writeUsers = $this->filePermissionService->getUsersWithWritePermission($fileId);
+		$writeUsersStr = implode(' ', $writeUsers);
+		try {
+			$session = $this->mapper->find($fileId);
+			if ($session->getWriteUsers() == $writeUsersStr) {
+				return $session;
+			}
+
+			$session->setWriteUsers($writeUsersStr);
+			$session->setSessionKey($this->randomBase64UrlSafe());
+			return $this->mapper->update($session);
+		} catch (DoesNotExistException $e) {
+			$session = new CryptPadSession();
+			$session->setFileId($fileId);
+			$session->setCreatedAt(new \DateTime());
+			$session->setWriteUsers($writeUsersStr);
+			$session->setSessionKey($this->randomBase64UrlSafe());
+			return $this->mapper->insert($session);
+		}
+	}
+
+	private function randomBase64UrlSafe(int $length = 64): string
+	{
+		return rtrim(strtr(base64_encode(random_bytes($length)), '+/', '-_'), '=');
 	}
 
 	/**
@@ -32,73 +61,6 @@ class CryptPadSessionService {
 			throw new CryptPadSessionNotFound($e->getMessage());
 		} else {
 			throw $e;
-		}
-	}
-
-	public function find(int $id): CryptPadSession {
-		try {
-			return $this->mapper->find($id);
-		} catch (Exception $e) {
-			$this->handleException($e);
-		}
-	}
-
-	public function optimisticUpdate(int $id, ?string $oldSessionKey, string $newSessionKey): CryptPadSession {
-		$this->db->beginTransaction();
-		try {
-			$result = $this->optimisticUpdateImpl($id, $oldSessionKey, $newSessionKey);
-			$this->db->commit();
-			return $result;
-		} catch (Throwable $e) {
-			$this->db->rollBack();
-			throw $e;
-		}
-	}
-
-	public function optimisticUpdateImpl(int $id, ?string $oldSessionKey, string $newSessionKey): CryptPadSession {
-		try {
-			$dbSession = $this->find($id);
-			if ($dbSession == null) {
-				$actualOldKey = null;
-			} else {
-				$actualOldKey = $dbSession->getSessionKey();
-			}
-		} catch (CryptPadSessionNotFound $e) {
-			$actualOldKey = null;
-			$dbSession = null;
-		}
-
-		if ($actualOldKey == $oldSessionKey) {
-			if ($newSessionKey == null) {
-				return $this->delete($id);
-			} else {
-				if ($actualOldKey == null) {
-					return $this->create($id, $newSessionKey);
-				} else {
-					return $this->update($id, $newSessionKey);
-				}
-			}
-		} else {
-			return $dbSession;
-		}
-	}
-
-	public function create(int $id, string $sessionKey): CryptPadSession {
-		$dbSession = new CryptPadSession();
-		$dbSession->setId($id);
-		$dbSession->setSessionKey($sessionKey);
-		$dbSession->setCreatedAt(new \DateTime());
-		return $this->mapper->insert($dbSession);
-	}
-
-	public function update(int $id, string $sessionKey): CryptPadSession {
-		try {
-			$dbSession = $this->mapper->find($id);
-			$dbSession->setSessionKey($sessionKey);
-			$dbSession->setCreatedAt(new \DateTime());
-			return $this->mapper->update($dbSession);
-		} catch (Exception $e) {
-			$this->handleException($e);
 		}
 	}
 
