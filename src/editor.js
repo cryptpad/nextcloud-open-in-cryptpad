@@ -103,9 +103,13 @@ window.addEventListener('DOMContentLoaded', async function() {
  *
  */
 function initBackButton() {
-	const params = new URLSearchParams(location.search)
 	const backButton = document.querySelector('#back-button')
-	backButton.setAttribute('href', params.get('back'))
+	backButton.setAttribute('href', getBackURL())
+}
+
+function getBackURL() {
+	const params = new URLSearchParams(location.search)
+	return params.get('back')
 }
 
 /**
@@ -158,6 +162,9 @@ async function checkForSessionChange(fileId, sessionKey, cb) {
 	while (true) {
 		await delay(10 * 1000)
 		const nextSessionKey = await getSessionForFile(fileId)
+		if (!nextSessionKey) {
+			window.location.href = getBackURL()
+		}
 		if (sessionKey !== nextSessionKey) {
 			sessionKey = nextSessionKey
 			cb()
@@ -266,10 +273,8 @@ async function getSessionForFile(fileId) {
 	if (response.ok) {
 		const body = await response.json()
 		return body.sessionKey
-	} else if (response.status === 404) {
-		return null
 	} else {
-		throw new Error('no write permission')
+		return null
 	}
 }
 
