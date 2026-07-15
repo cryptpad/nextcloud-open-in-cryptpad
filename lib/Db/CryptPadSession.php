@@ -15,11 +15,14 @@ use OCP\AppFramework\Db\Entity;
  * @method setFileId(int $fileId): void
  * @method getSessionKey(): string
  * @method setSessionKey(string $sessionKey): void
+ * @method getWriteUsers(): string
+ * @method setWriteUsers(string $writeUsers): void
  * @method getCreatedAt(): \DateTime
- * @method setCreatedAt(\DateTime createAt): void
+ * @method setCreatedAt(\DateTime $createAt): void
  */
 class CryptPadSession extends Entity implements JsonSerializable {
 	protected string $sessionKey = '';
+	protected string $writeUsers = '';
 	protected ?\DateTime $createdAt = null;
 
 	public function __construct() {
@@ -32,6 +35,7 @@ class CryptPadSession extends Entity implements JsonSerializable {
 		return [
 			'id' => $this->id,
 			'sessionKey' => $this->sessionKey,
+			'writeUsers' => $this->writeUsers,
 		];
 	}
 }
