@@ -2,6 +2,7 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { generateUrl } from '@nextcloud/router'
 import { getClient, defaultRootPath, getDefaultPropfind, resultToNode } from '@nextcloud/files/dav'
 
 /**
@@ -31,3 +32,25 @@ export async function getFileInfo(path) {
 	const node = resultToNode(result.data);
 	return node
 }
+
+/**
+ *
+ * @param {string} fileId Nextcloud ID of the file
+ * @param {string} filePath path to the file
+ * @param {string} mimeType the mime type of the file
+ * @param {string} backLink the URL back to Nextcloud
+ * @param {string} viewOnly what kind of share
+ * @param {string} fileName the file name
+ */
+export function openInCryptPad(fileId, filePath, mimeType, backLink, viewOnly, sharedWithLink, fileName) {
+	location.href = generateUrl('/apps/openincryptpad/editor?id={id}&path={path}&mimeType={mimeType}&back={back}&viewOnly={viewOnly}&sharedWithLink={sharedWithLink}&fileName={fileName}', {
+		id: fileId,
+		path: filePath,
+		mimeType,
+		back: backLink,
+		viewOnly: !viewOnly || viewOnly === 'false' ? 'false' : 'true',
+		sharedWithLink: !sharedWithLink || sharedWithLink === 'false' ? 'false' : 'true',
+		fileName,
+	})
+}
+

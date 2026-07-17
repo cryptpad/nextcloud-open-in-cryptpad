@@ -33,13 +33,14 @@ class EditorController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
-	public function page($id, $path, $mimeType, $isShared, $fileName): TemplateResponse {
+	public function page($id, $path, $mimeType, $viewOnly, $sharedWithLink, $fileName): TemplateResponse {
+		$viewOnly = $viewOnly == 'true';
+		$sharedWithLink = $sharedWithLink == 'true';
 		$app = SettingsService::APP_FOR_MIME_TYPE[$mimeType];
 		$fileType = SettingsService::FILE_TYPE_FOR_MIME_TYPE[$mimeType];
 		$cryptPadUrl = $this->settingsService->getCryptPadUrl($app);
 		$apiUrl = $cryptPadUrl . '/cryptpad-api.js';
-		$infoScript = $this->getInfoScript($id, $path, $mimeType, $fileType, $app, $cryptPadUrl, $isShared, $fileName);
-        $external = str_ends_with($isShared, "External");
+		$infoScript = $this->getInfoScript($id, $path, $mimeType, $fileType, $app, $cryptPadUrl, $viewOnly, $sharedWithLink, $fileName);
 
 		$response = new TemplateResponse(
 			'openincryptpad',
@@ -48,7 +49,7 @@ class EditorController extends Controller {
 				'infoScript' => $infoScript,
 				"apiUrl" => $apiUrl,
 			],
-            $external ? TemplateResponse::RENDER_AS_PUBLIC : TemplateResponse::RENDER_AS_USER,
+            $sharedWithLink ? TemplateResponse::RENDER_AS_PUBLIC : TemplateResponse::RENDER_AS_USER,
 		);
 		$csp = new ContentSecurityPolicy();
 		$csp->addAllowedFrameDomain($cryptPadUrl);
@@ -59,7 +60,7 @@ class EditorController extends Controller {
 		return $response;
 	}
 
-	public function getInfoScript($id, $path, $mimeType, $fileType, $app, $cryptPadUrl, $isShared, $fileName): string {
+	public function getInfoScript($id, $path, $mimeType, $fileType, $app, $cryptPadUrl, $viewOnly, $sharedWithLink, $fileName): string {
 		return 'window.OpenInCryptPadInfo = ' . json_encode([
 			'fileId' => $id,
 			'filePath' => $path,
@@ -67,7 +68,8 @@ class EditorController extends Controller {
 			'fileType' => $fileType,
 			'app' => $app,
 			'cryptPadUrl' => $cryptPadUrl,
-			'isShared' => $isShared,
+			'viewOnly' => $viewOnly,
+			'sharedWithLink' => $sharedWithLink,
 			'fileName' => $fileName
 		]);
 	}

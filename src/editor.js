@@ -33,29 +33,22 @@ window.addEventListener('DOMContentLoaded', async function() {
 			fileType,
 			app,
 			cryptPadUrl,
-			isShared,
+			sharedWithLink,
 			fileName,
 		} = window.OpenInCryptPadInfo
 
 		let blob
-		let viewMode = ''
 		document.title = fileName + ' - Nextcloud'
-		// if opening file from a share link, we don't get access to the file path, but we can download it
-		if (isShared.startsWith('true')) {
-			viewMode = 'view'
-		}
 
-		if (isShared.includes('External')) {
+		if (sharedWithLink) {
 			blob = await loadFileContentShared(filePath, mimeType)
 		} else {
 			blob = await loadFileContent(filePath, mimeType)
 		}
 
 		let viewOnlyMode = false
-		let sessionKey
-		try {
-			sessionKey = await getSessionForFile(fileId)
-		} catch (e) {
+		const sessionKey = await getSessionForFile(fileId)
+		if (!sessionKey) {
 			viewOnlyMode = true
 		}
 
@@ -64,13 +57,11 @@ window.addEventListener('DOMContentLoaded', async function() {
 		const events = viewOnlyMode
 			? {
 				onSave: (data, cb) => null,
-				// onNewKey: (data, cb) => cb(data.new), // Just accept and ignore any session key CryptPad wants to use
 				onHasUnsavedChanges: (unsavedChanges) => null,
 				onInsertImage,
 			}
 			: {
-				onSave: (data, cb) => onSave(filePath, data, cb, isShared),
-				// onNewKey: (data, cb) => updateSessionForFile(fileId, data, cb),
+				onSave: (data, cb) => onSave(filePath, data, cb),
 				onHasUnsavedChanges: onHasUnsavedChanges,
 				onInsertImage,
 			}
@@ -82,13 +73,13 @@ window.addEventListener('DOMContentLoaded', async function() {
 				fileType,
 			},
 			documentType: app,
-			mode: viewMode,
+			mode: viewOnlyMode ? 'view' : '',
 			events,
 			width: '100%',
 			height: '100%',
 		})
 
-		if (isShared !== 'trueExternal') {
+		if (!viewOnlyMode) {
 			checkForSessionChange(fileId, sessionKey, () => resetCryptPadSession())
 		}
 		initBackButton()
@@ -236,15 +227,11 @@ async function loadFileContentShared(downloadPath, mimeType) {
  * @param {string} filePath the file path
  * @param {Blob} data the data to dave
  * @param {Function} cb callback
- * @param {string} isShared if file is shared
  */
-function onSave(filePath, data, cb, isShared) {
-	if (isShared === 'false') {
-		saveFileContent(filePath, data)
-			.then(() => cb())
-			.catch(() => document.location.reload())  // We can now save? Maybe we are not allowed to? => Reload
-	}
-	// if it's through a share link, we shouldn't save (read only)
+function onSave(filePath, data, cb) {
+	saveFileContent(filePath, data)
+		.then(() => cb())
+		.catch(() => document.location.reload())  // We can now save? Maybe we are not allowed to? => Reload
 }
 
 function onHasUnsavedChanges(unsavedChanges) {
