@@ -228,10 +228,14 @@ async function loadFileContentShared(downloadPath, mimeType) {
  * @param {Blob} data the data to dave
  * @param {Function} cb callback
  */
-function onSave(filePath, data, cb) {
-	saveFileContent(filePath, data)
-		.then(() => cb())
-		.catch(() => document.location.reload())  // We can now save? Maybe we are not allowed to? => Reload
+async function onSave(filePath, data, cb) {
+	try {
+		saveFileContent(filePath, data)
+		cb()
+	} catch (e) {
+		console.error('Could not save', e)
+		document.location.reload()	
+	}
 }
 
 function onHasUnsavedChanges(unsavedChanges) {
