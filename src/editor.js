@@ -38,16 +38,20 @@ window.addEventListener('DOMContentLoaded', async function() {
 		} = window.OpenInCryptPadInfo
 
 		let blob
+		let token
 		document.title = fileName + ' - Nextcloud'
 
 		if (sharedWithLink) {
+			token = new URL(filePath).pathname.split('/').at(-1);
 			blob = await loadFileContentShared(filePath, mimeType)
 		} else {
 			blob = await loadFileContent(filePath, mimeType)
 		}
 
 		let viewOnlyMode = false
-		const sessionKey = await getSessionForFile(fileId)
+		console.log('XXX get session')
+		const sessionKey = await getSessionForFile(fileId, token)
+		console.log('XXX session', sessionKey)
 		if (!sessionKey) {
 			viewOnlyMode = true
 		}
@@ -80,7 +84,7 @@ window.addEventListener('DOMContentLoaded', async function() {
 		})
 
 		if (!viewOnlyMode) {
-			checkForSessionChange(fileId, sessionKey, () => resetCryptPadSession())
+			checkForSessionChange(fileId, token, sessionKey, () => resetCryptPadSession())
 		}
 		initBackButton()
 
@@ -149,10 +153,10 @@ function resetCryptPadSession() {
  * @param {string} fileId the path to check
  * @param {Function} cb called, when the permissions change
  */
-async function checkForSessionChange(fileId, sessionKey, cb) {
+async function checkForSessionChange(fileId, token, sessionKey, cb) {
 	while (true) {
 		await delay(10 * 1000)
-		const nextSessionKey = await getSessionForFile(fileId)
+		const nextSessionKey = await getSessionForFile(fileId, token)
 		if (!nextSessionKey) {
 			window.location.href = getBackURL()
 		}
@@ -252,9 +256,13 @@ function onHasUnsavedChanges(unsavedChanges) {
  *
  * @param {string} fileId the id of the file
  */
-async function getSessionForFile(fileId) {
+async function getSessionForFile(fileId, token=null) {
+	const params = new URLSearchParams();
+	if (token) {
+		params.append('token', token);
+	}
 	const response = await fetch(
-		generateUrl(`/apps/openincryptpad/session/${fileId}`),
+		generateUrl(`/apps/openincryptpad/session/${fileId}?${params.toString()}`),
 		{
 			headers: {
 				requesttoken: OC.requestToken,
