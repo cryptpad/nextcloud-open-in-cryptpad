@@ -2,12 +2,13 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { confirmPassword } from '@nextcloud/password-confirmation'
-import { generateUrl, generateFilePath } from '@nextcloud/router'
 import { getRequestToken } from '@nextcloud/auth'
+import { confirmPassword } from '@nextcloud/password-confirmation'
+import { generateFilePath, generateUrl } from '@nextcloud/router'
+
 import '@nextcloud/password-confirmation/style.css' // Required for dialog styles
 
-__webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
+__webpack_nonce__ = btoa(getRequestToken())
 __webpack_public_path__ = generateFilePath('openincryptpad', '', 'js/') // eslint-disable-line
 
 /**

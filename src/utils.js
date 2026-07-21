@@ -2,8 +2,8 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
+import { defaultRootPath, getClient, getDefaultPropfind, resultToNode } from '@nextcloud/files/dav'
 import { generateUrl } from '@nextcloud/router'
-import { getClient, defaultRootPath, getDefaultPropfind, resultToNode } from '@nextcloud/files/dav'
 
 /**
  *
@@ -17,13 +17,18 @@ export async function saveFileContent(path, data) {
 	} else {
 		// Use DAV for logged in users
 		const fileClient = getClient()
-	  const body = data instanceof Blob ? await data.arrayBuffer() : data
+		const body = data instanceof Blob ? await data.arrayBuffer() : data
 		await fileClient.putFileContents(`${defaultRootPath}${path}`, body)
 	}
 }
 
-async function upload(path, data) {
-	const response = await fetch(path, {
+/**
+ *
+ * @param {string} url the url
+ * @param {Blob} data the data to save
+ */
+async function upload(url, data) {
+	const response = await fetch(url, {
 		method: 'PUT',
 		body: data,
 	})
@@ -42,7 +47,7 @@ export async function getFileInfo(path) {
 		details: true,
 		data: getDefaultPropfind(),
 	})
-	const node = resultToNode(result.data);
+	const node = resultToNode(result.data)
 	return node
 }
 
@@ -52,7 +57,8 @@ export async function getFileInfo(path) {
  * @param {string} filePath path to the file
  * @param {string} mimeType the mime type of the file
  * @param {string} backLink the URL back to Nextcloud
- * @param {string} viewOnly what kind of share
+ * @param {boolean|string} viewOnly what kind of share
+ * @param {boolean|string} sharedWithLink is this a public-share link?
  * @param {string} fileName the file name
  */
 export function openInCryptPad(fileId, filePath, mimeType, backLink, viewOnly, sharedWithLink, fileName) {
@@ -66,4 +72,3 @@ export function openInCryptPad(fileId, filePath, mimeType, backLink, viewOnly, s
 		fileName,
 	})
 }
-

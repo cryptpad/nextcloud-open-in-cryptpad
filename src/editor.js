@@ -2,22 +2,21 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { generateUrl, generateOcsUrl, generateFilePath } from '@nextcloud/router'
-import { getFilePickerBuilder } from '@nextcloud/dialogs'
-import { getClient, defaultRootPath } from '@nextcloud/files/dav'
-import { saveFileContent } from './utils.js'
 import { getRequestToken } from '@nextcloud/auth'
+import { getFilePickerBuilder } from '@nextcloud/dialogs'
+import { defaultRootPath, getClient } from '@nextcloud/files/dav'
+import { generateFilePath, generateUrl } from '@nextcloud/router'
+import { saveFileContent } from './utils.js'
 
 import '@nextcloud/dialogs/style.css'  // eslint-disable-line
 
-__webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
+__webpack_nonce__ = btoa(getRequestToken())
 __webpack_public_path__ = generateFilePath('openincryptpad', '', 'js/') // eslint-disable-line
 
 /* global CryptPadAPI */
 
-let cryptPadSession = null
-let wantReload = false;
-let hasUnsavedChanges = false;
+let wantReload = false
+let hasUnsavedChanges = false
 
 window.addEventListener('DOMContentLoaded', async function() {
 	try {
@@ -42,16 +41,14 @@ window.addEventListener('DOMContentLoaded', async function() {
 		document.title = fileName + ' - Nextcloud'
 
 		if (sharedWithLink) {
-			token = new URL(filePath).pathname.split('/').at(-1);
-			blob = await loadFileContentShared(filePath, mimeType)
+			token = new URL(filePath).pathname.split('/').at(-1)
+			blob = await loadFileContentShared(filePath)
 		} else {
 			blob = await loadFileContent(filePath, mimeType)
 		}
 
 		let viewOnlyMode = false
-		console.log('XXX get session')
 		const sessionKey = await getSessionForFile(fileId, token)
-		console.log('XXX session', sessionKey)
 		if (!sessionKey) {
 			viewOnlyMode = true
 		}
@@ -60,15 +57,15 @@ window.addEventListener('DOMContentLoaded', async function() {
 
 		const events = viewOnlyMode
 			? {
-				onSave: (data, cb) => null,
-				onHasUnsavedChanges: (unsavedChanges) => null,
-				onInsertImage,
-			}
+					onSave: () => null,
+					onHasUnsavedChanges: () => null,
+					onInsertImage,
+				}
 			: {
-				onSave: (data, cb) => onSave(filePath, data, cb),
-				onHasUnsavedChanges: onHasUnsavedChanges,
-				onInsertImage,
-			}
+					onSave: (data, cb) => onSave(filePath, data).then(cb),
+					onHasUnsavedChanges,
+					onInsertImage,
+				}
 
 		CryptPadAPI(cryptPadUrl, 'editor-content', {
 			document: {
@@ -84,12 +81,11 @@ window.addEventListener('DOMContentLoaded', async function() {
 		})
 
 		if (!viewOnlyMode) {
-			checkForSessionChange(fileId, token, sessionKey, () => resetCryptPadSession())
+			waitForSessionChange(fileId, token, sessionKey).then(resetCryptPadSession)
 		}
 		initBackButton()
-
 	} catch (e) {
-		console.error(e)
+		console.error(e) // eslint-disable-line no-console
 		showError('Error while opening file')
 	}
 })
@@ -102,15 +98,29 @@ function initBackButton() {
 	backButton.setAttribute('href', getBackURL())
 }
 
+/**
+ *
+ */
 function getBackURL() {
 	const params = new URLSearchParams(location.search)
 	return params.get('back')
 }
 
 /**
+ * @typedef InsertImageCallbackParam
+ * @type {object}
+ * @property {Blob} blog - the image as Blob.
+ */
+
+/**
+ * @callback InsertImageCallback
+ * @param {InsertImageCallbackParam} param - the image
+ */
+
+/**
  *
  * @param {object} data unused for now
- * @param {Function} callback called with the selected image as blob
+ * @param {InsertImageCallback} callback called with the selected image as blob
  */
 async function onInsertImage(data, callback) {
 	const filepicker = getFilePickerBuilder(t('openincryptpad', 'Pick an image'))
@@ -125,7 +135,7 @@ async function onInsertImage(data, callback) {
 	const fileClient = getClient()
 	const blob = await getImage(fileClient.getFileDownloadLink(`${defaultRootPath}${path}`))
 
-	callback({ blob }) // eslint-disable-line n/no-callback-literal
+	callback({ blob })
 }
 
 /**
@@ -142,7 +152,7 @@ function showError(message) {
  */
 function resetCryptPadSession() {
 	if (hasUnsavedChanges) {
-		wantReload = true;
+		wantReload = true
 	} else {
 		document.location.reload()
 	}
@@ -151,9 +161,10 @@ function resetCryptPadSession() {
 /**
  *
  * @param {string} fileId the path to check
- * @param {Function} cb called, when the permissions change
+ * @param {?string} token the token of a public-share link, if there is one
+ * @param {string} sessionKey the current sessionKey
  */
-async function checkForSessionChange(fileId, token, sessionKey, cb) {
+async function waitForSessionChange(fileId, token, sessionKey) {
 	while (true) {
 		await delay(10 * 1000)
 		const nextSessionKey = await getSessionForFile(fileId, token)
@@ -161,8 +172,7 @@ async function checkForSessionChange(fileId, token, sessionKey, cb) {
 			window.location.href = getBackURL()
 		}
 		if (sessionKey !== nextSessionKey) {
-			sessionKey = nextSessionKey
-			cb()
+			return
 		}
 	}
 }
@@ -175,19 +185,6 @@ function delay(ms) {
 	return new Promise((resolve) => {
 		setTimeout(resolve, ms)
 	})
-}
-
-/**
- *
- * @param {object} a share
- * @returns true, if the user this file is shared with, can edit it
- */
-function canEdit(share) {
-	const PERM = {
-		READ: 1, UPDATE: 2, CREATE: 4, DELETE: 8, SHARE: 16, ALL: 31,
-	};
-
-	return (share.permissions & PERM.UPDATE) === PERM.UPDATE;
 }
 
 /**
@@ -208,9 +205,8 @@ async function loadFileContent(filePath, mimeType) {
 /**
  *
  * @param {string} downloadPath the download path for the file
- * @param {string} mimeType the mime type
  */
-async function loadFileContentShared(downloadPath, mimeType) {
+async function loadFileContentShared(downloadPath) {
 	try {
 		const response = await fetch(downloadPath)
 		if (!response.ok) {
@@ -220,9 +216,8 @@ async function loadFileContentShared(downloadPath, mimeType) {
 
 		return blob
 	} catch (e) {
-		console.log('MASSIVE ERROR')
-		console.log(e)
-		throw e[1]
+		console.log('Can not load file content', e) // eslint-disable-line no-console
+		throw e
 	}
 }
 
@@ -230,36 +225,39 @@ async function loadFileContentShared(downloadPath, mimeType) {
  *
  * @param {string} filePath the file path
  * @param {Blob} data the data to dave
- * @param {Function} cb callback
  */
-async function onSave(filePath, data, cb) {
+async function onSave(filePath, data) {
 	try {
-		saveFileContent(filePath, data)
-		cb()
+		await saveFileContent(filePath, data)
 	} catch (e) {
-		console.error('Could not save', e)
-		document.location.reload()	
+		console.error('Could not save', e) // eslint-disable-line no-console
+		document.location.reload()
 	}
 }
 
+/**
+ *
+ * @param {boolean} unsavedChanges - does the document has unsaved changes?
+ */
 function onHasUnsavedChanges(unsavedChanges) {
-	hasUnsavedChanges = unsavedChanges;
+	hasUnsavedChanges = unsavedChanges
 	const elem = document.querySelector('#unsaved-indicator')
 	elem.className = unsavedChanges ? 'visible' : ''
 
 	if (!unsavedChanges && wantReload) {
-		document.location.reload();
+		document.location.reload()
 	}
-};
+}
 
 /**
  *
  * @param {string} fileId the id of the file
+ * @param {?token} token the token of the public-share link, if there is one
  */
-async function getSessionForFile(fileId, token=null) {
-	const params = new URLSearchParams();
+async function getSessionForFile(fileId, token = null) {
+	const params = new URLSearchParams()
 	if (token) {
-		params.append('token', token);
+		params.append('token', token)
 	}
 	const response = await fetch(
 		generateUrl(`/apps/openincryptpad/session/${fileId}?${params.toString()}`),
@@ -283,11 +281,9 @@ async function getSessionForFile(fileId, token=null) {
  */
 async function getImage(imageUrl) {
 	const myRequest = new Request(imageUrl)
-	/* eslint-disable no-unused-vars */
+
 	const response = await fetch(myRequest)
 	const blob = await response.blob()
-	/* eslint-enable no-unused-vars */
 
 	return blob
-
 }

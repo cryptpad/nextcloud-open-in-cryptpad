@@ -2,21 +2,21 @@
 //
 // SPDX-License-Identifier: AGPL-3.0-or-later
 
-import { generateFilePath } from '@nextcloud/router'
-import { saveFileContent, getFileInfo, openInCryptPad } from './utils.js'
-import { showError } from '@nextcloud/dialogs'
 import { getRequestToken } from '@nextcloud/auth'
+import { showError } from '@nextcloud/dialogs'
 import {
-	DefaultType,
 	addNewFileMenuEntry,
-	registerFileAction,
+	DefaultType,
 	getNavigation,
 	NewMenuEntryCategory,
+	registerFileAction,
 } from '@nextcloud/files'
+import { generateFilePath } from '@nextcloud/router'
 import cryptPadIcon from '../img/app-dark.svg'
 import diagramIcon from '../img/diagram.svg'
+import { getFileInfo, openInCryptPad, saveFileContent } from './utils.js'
 
-__webpack_nonce__ = btoa(getRequestToken()) // eslint-disable-line
+__webpack_nonce__ = btoa(getRequestToken())
 __webpack_public_path__ = generateFilePath('openincryptpad', '', 'js/') // eslint-disable-line
 
 const EMPTY_DRAWIO = '<mxfile type="embed"><diagram id="bWoO5ACGZIaXrIiKNTKd" name="Page-1"><mxGraphModel dx="1259" dy="718" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0"><root><mxCell id="0"/><mxCell id="1" parent="0"/></root></mxGraphModel></diagram></mxfile>'
@@ -54,8 +54,9 @@ async function createEmptyDrawioFile(name, folder, folderId) {
 		const fileInfo = await getFileInfo(path)
 		const backLink = await createFolderLink(folder, folderId)
 		openInCryptPad(fileInfo.id, path, 'application/x-drawio', backLink, false, false, name)
-	} catch (c) {
+	} catch (e) {
 		showError(t('openincryptpad', 'File could not be created'))
+		console.error('Could not create empty file', e) // eslint-disable-line no-console
 	}
 }
 
@@ -127,7 +128,7 @@ async function main() {
 			},
 		})
 	} catch (e) {
-		console.error(e)
+		console.error(e) // eslint-disable-line no-console
 	}
 }
 

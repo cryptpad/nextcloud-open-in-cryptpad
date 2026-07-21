@@ -1,8 +1,8 @@
-import { openInCryptPad } from './utils.js'
 import {
 	DefaultType,
 	registerFileAction,
 } from '@nextcloud/files'
+import { openInCryptPad } from './utils.js'
 
 const cryptPadIconn = '<svg  viewBox="0 0 24 24" width="20" height="20"></svg>'
 const mimeTypes = ['application/x-drawio']
