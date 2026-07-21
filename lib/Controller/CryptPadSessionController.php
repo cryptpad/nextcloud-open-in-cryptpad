@@ -42,7 +42,7 @@ class CryptPadSessionController extends Controller {
 	 * @NoAdminRequired
 	 * @NoCSRFRequired
 	 */
-	public function get(int $fileId, string $token = null): DataResponse {
+	public function get(int $fileId, ?string $token = null): DataResponse {
 		if (!$this->permissionService->hasWritePermission($fileId, $token)) {
 			return new DataResponse('', Http::STATUS_FORBIDDEN);
 		}

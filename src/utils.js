@@ -11,12 +11,25 @@ import { getClient, defaultRootPath, getDefaultPropfind, resultToNode } from '@n
  * @param {Blob} data the data to save
  */
 export async function saveFileContent(path, data) {
-	const fileClient = getClient()
-  const body = data instanceof Blob ? await data.arrayBuffer() : data
-	await fileClient.putFileContents(
-		`${defaultRootPath}${path}`,
-		body,
-	)
+	if (path.startsWith('http')) {
+		// This is a publik-link share. Just upload, using the link.
+		await upload(path, data)
+	} else {
+		// Use DAV for logged in users
+		const fileClient = getClient()
+	  const body = data instanceof Blob ? await data.arrayBuffer() : data
+		await fileClient.putFileContents(`${defaultRootPath}${path}`, body)
+	}
+}
+
+async function upload(path, data) {
+	const response = await fetch(path, {
+		method: 'PUT',
+		body: data,
+	})
+	if (!response.ok) {
+		throw new Error(`Failed to save file: ${response.statusText}`)
+	}
 }
 
 /**
