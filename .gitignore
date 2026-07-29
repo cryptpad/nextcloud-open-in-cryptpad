@@ -10,3 +10,4 @@ js/*hot-update.*
 /js/
 /.php-cs-fixer.cache
 .zed
+tests/.phpunit.result.cache
