@@ -7,6 +7,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-07-29
+
+- Add support for Nextcloud 34.
+
 ## [1.0.0] - 2026-04-08
 
 - Add support for Nextcloud 33. This version is incompatible with older NC versions
