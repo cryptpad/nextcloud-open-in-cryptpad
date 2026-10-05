@@ -2,19 +2,33 @@
 #
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
+x-db: &db
+  image: postgres
+  shm_size: 128mb
+  environment:
+    POSTGRES_USER: nextcloud
+    POSTGRES_PASSWORD: postgres
+
 services:
   nc34:
-      build:
-        context: .
-        dockerfile: Dockerfile.dev
-        args:
-          NC_VERSION: 34
-      ports:
-        - 8034:8080
-      volumes:
-        - nc34-config:/nextcloud/config
-        - nc34-data:/nextcloud/data
-        - ./:/nextcloud/apps/openincryptpad:ro
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      args:
+        NC_VERSION: 34
+    ports:
+      - 8034:8080
+    environment:
+      DB_HOST: db1
+    volumes:
+      - nc34-config:/nextcloud/config
+      - nc34-data:/nextcloud/data
+      - ./:/nextcloud/apps/openincryptpad:ro
+
+  db1:
+    <<: *db
+    volumes:
+      - db1:/var/lib/postgresql
 
   nc33:
     build:
@@ -24,23 +38,39 @@ services:
         NC_VERSION: 33
     ports:
       - 8033:8080
+    environment:
+      DB_HOST: db2
     volumes:
       - nc33-config:/nextcloud/config
       - nc33-data:/nextcloud/data
       - ./:/nextcloud/apps/openincryptpad:ro
 
-  nc32:
-      build:
-        context: .
-        dockerfile: Dockerfile.dev
-        args:
-          NC_VERSION: 32
-      ports:
-        - 8032:8080
-      volumes:
-        - nc32-config:/nextcloud/config
-        - nc32-data:/nextcloud/data
-        - ./:/nextcloud/apps/openincryptpad:ro
+  db2:
+    <<: *db
+    volumes:
+      - db2:/var/lib/postgresql
+
+  # We to not support NC 32
+  #
+  # nc32:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.dev
+  #     args:
+  #       NC_VERSION: 32
+  #   ports:
+  #     - 8032:8080
+  #   environment:
+  #     DB_HOST: db3
+  #   volumes:
+  #     - nc32-config:/nextcloud/config
+  #     - nc32-data:/nextcloud/data
+  #     - ./:/nextcloud/apps/openincryptpad:ro
+
+  # db3:
+  #   <<: *db
+  #   volumes:
+  #     - db3:/var/lib/postgresql
 
 volumes:
   nc34-config:
@@ -49,3 +79,6 @@ volumes:
   nc33-data:
   nc32-config:
   nc32-data:
+  db1:
+  db2:
+  db3:

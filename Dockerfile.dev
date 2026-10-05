@@ -15,7 +15,7 @@ RUN --mount=target=/var/lib/apt/lists,type=cache,sharing=locked \
        php-mbstring \
        php-gd \
        php-curl \
-       php-sqlite3 \
+       php-pgsql \
        wget \
        unzip
 

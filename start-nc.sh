@@ -20,15 +20,26 @@ create_update_user() {
     fi
 }
 
+# Maybe the database is not ready yet. Retry until it is
+retry_if_fails() {
+    until "$@"
+        do sleep 10
+    done
+}
+
 cp mimetype*.json config
 
-# sleep 10
-
 if ! is_nc_installed; then
-    ./occ maintenance:install --admin-pass Test1234
+    retry_if_fails ./occ maintenance:install \
+        --database pgsql \
+        --database-name nextcloud \
+        --database-host "$DB_HOST" \
+        --database-user nextcloud \
+        --database-pass postgres \
+        --admin-pass Test1234
 fi
 
-./occ app:enable openincryptpad
+retry_if_fails ./occ app:enable openincryptpad
 
 ./occ app:disable password_policy
 create_update_user user1
