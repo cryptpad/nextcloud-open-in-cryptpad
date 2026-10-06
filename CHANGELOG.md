@@ -7,6 +7,10 @@ SPDX-License-Identifier: AGPL-3.0-or-later
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-10-06
+
+- Fix session handling in postgresql.
+
 ## [1.0.1] - 2026-07-29
 
 - Add support for Nextcloud 34.
