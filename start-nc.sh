@@ -6,7 +6,10 @@
 set -ex
 
 is_nc_installed() {
-    ./occ status | grep 'installed: true'
+    until ./occ status > /tmp/occ-status
+        do sleep 10
+    done
+    grep 'installed: true' /tmp/occ-status
     return $?
 }
 
