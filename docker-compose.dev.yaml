@@ -3,7 +3,7 @@
 # SPDX-License-Identifier: AGPL-3.0-or-later
 
 x-db: &db
-  image: postgres
+  image: docker.io/library/postgres
   shm_size: 128mb
   environment:
     POSTGRES_USER: nextcloud
@@ -24,11 +24,17 @@ services:
       - nc34-config:/nextcloud/config
       - nc34-data:/nextcloud/data
       - ./:/nextcloud/apps/openincryptpad:ro
+    networks:
+      devnet:
+        aliases: [nc34]
 
   db1:
     <<: *db
     volumes:
       - db1:/var/lib/postgresql
+    networks:
+      devnet:
+        aliases: [db1]
 
   nc33:
     build:
@@ -44,11 +50,17 @@ services:
       - nc33-config:/nextcloud/config
       - nc33-data:/nextcloud/data
       - ./:/nextcloud/apps/openincryptpad:ro
+    networks:
+      devnet:
+        aliases: [nc33]
 
   db2:
     <<: *db
     volumes:
       - db2:/var/lib/postgresql
+    networks:
+      devnet:
+        aliases: [db2]
 
   # We to not support NC 32
   #
@@ -82,3 +94,8 @@ volumes:
   db1:
   db2:
   db3:
+
+networks:
+  devnet:
+    name: ncdev_shared
+
